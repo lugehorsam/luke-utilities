@@ -11,6 +11,7 @@ public abstract class Layout<TData, TBehavior> : DataManager<TData, TBehavior>
     {
         for (int i = startIndex; i < Behaviors.Count; i++) {
             TBehavior behavior = Behaviors [i];
+            Debug.Log("laying out behavior " + behavior);
             Diagnostics.Log ("Laying out behavior " + behavior, LogType.Layouts);
             behavior.transform.SetParent (transform, worldPositionStays: true);
             behavior.transform.SetSiblingIndex (i);

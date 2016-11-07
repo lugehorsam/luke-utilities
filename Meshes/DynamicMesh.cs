@@ -6,6 +6,21 @@ using System.Collections;
 
 public class DynamicMesh : MonoBehaviour {
 
+    public Vector3[] Vertices
+    {
+        get
+        {
+            return vertices;
+        }
+    }
+    public int[] Triangles
+    {
+        get
+        {
+            return triangles;
+        }
+    }
+
     [SerializeField]
     Vector3 [] vertices;
     [SerializeField]
@@ -23,7 +38,7 @@ public class DynamicMesh : MonoBehaviour {
         meshRenderer = GetComponent<MeshRenderer> ();
     }
 
-	void Start () {
+	public void Rebuild () {
         Mesh mesh = meshFilter.mesh;
         mesh.Clear ();
         mesh.vertices = vertices;

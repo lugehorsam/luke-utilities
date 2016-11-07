@@ -8,18 +8,4 @@ public static class IListExtensions {
     {
         return thisIList.Select ((item) => otherList.IndexOf (item)).ToList ();
     }
-
-    public static void InsertOrAdd<T>(this IList<T> thisList, int insertionIndex, T item)
-    {
-        if (insertionIndex > thisList.Count) {
-            Diagnostics.Report (new IndexOutOfRangeException("insertion index is " + insertionIndex));
-            return;
-        }
-        else if (insertionIndex == thisList.Count) {
-            thisList.Add (item);
-        } else {
-            thisList.Insert (insertionIndex, item);
-        }
-    }
-
 }

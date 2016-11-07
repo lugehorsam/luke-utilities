@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 using System.Linq;
 
-[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Collider))]
 public class Selectable : MonoBehaviour {
 
     public event Action<Selectable, Vector3> OnSelect;

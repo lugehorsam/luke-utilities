@@ -4,11 +4,24 @@ using System;
 
 public class RotationBinding : Vector3Binding<Transform> {
 
-    public override void SetProperty(Vector3 rot) {
-        transform.localRotation = Quaternion.Euler(rot);
+    Vector3? trackedRotation; //single rotation representation for conversion to quaternions
+
+    void Awake()
+    {
+        trackedRotation = transform.localEulerAngles;
     }
 
-    public override Vector3 GetProperty() {
-        return transform.localRotation.eulerAngles;
+    public sealed override void SetProperty(Vector3 rot) {
+        trackedRotation = rot;
+        transform.localEulerAngles = trackedRotation.Value;
+    }
+
+    public sealed override Vector3 GetProperty() {
+        return trackedRotation.Value;
+    }
+
+    public sealed override Vector3 AddProperty(Vector3 v1, Vector3 v2)
+    {
+        return base.AddProperty(v1, v2);
     }
 }

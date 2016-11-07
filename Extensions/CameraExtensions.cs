@@ -7,8 +7,6 @@ public static class CameraExtensions {
         Vector3 otherViewportPoint = thisCamera.WorldToViewportPoint (referenceTransform.position);
         Vector3 viewPortDifference = otherViewportPoint - desiredViewportPos;
         Vector3 newCameraPosition = thisCamera.ViewportToWorldPoint (viewPortDifference + new Vector3(.5f, .5f, thisCamera.farClipPlane));
-        //Debug.Log ("world space difference is " + worldSpaceDifference);
-        //Vector3 newCameraPosition = thisCamera.transform.position + worldSpaceDifference;
         return newCameraPosition;
     }
         

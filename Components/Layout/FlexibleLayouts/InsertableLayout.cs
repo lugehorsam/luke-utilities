@@ -14,9 +14,9 @@ public abstract class InsertableLayout<TData, TBehavior> : FlexibleLayout<TData,
 
     public int? GetInsertionIndex (TBehavior colliderBehavior)
     {
-        MultiCollider2D multiCollider = colliderBehavior.GetComponent<MultiCollider2D> ();
-        Collider2D leftCollider = multiCollider.GetLeftOverlap ();
-        Collider2D rightCollider = multiCollider.GetRightOverlap ();
+        MultiCollider multiCollider = colliderBehavior.GetComponent<MultiCollider> ();
+        Collider leftCollider = multiCollider.GetLeftOverlap ();
+        Collider rightCollider = multiCollider.GetRightOverlap ();
         int insertionIndex;
 
         if (leftCollider == null && rightCollider == null) {
@@ -41,8 +41,8 @@ public abstract class InsertableLayout<TData, TBehavior> : FlexibleLayout<TData,
 
     public bool IsOverlap (TBehavior behavior)
     {
-        Collider2D leftOverlap = behavior.MultiCollider.GetLeftOverlap ();
-        Collider2D rightOverlap = behavior.MultiCollider.GetRightOverlap ();
+        Collider leftOverlap = behavior.MultiCollider.GetLeftOverlap ();
+        Collider rightOverlap = behavior.MultiCollider.GetRightOverlap ();
         Diagnostics.Log ("Left overlap for behavior " + behavior.gameObject + " is " + leftOverlap, LogType.Dragging);
         return (leftOverlap != null && this.Behaviors.Contains (leftOverlap.GetComponent<TBehavior> ()))
                 || (rightOverlap != null && this.Behaviors.Contains (rightOverlap.GetComponent<TBehavior> ()));

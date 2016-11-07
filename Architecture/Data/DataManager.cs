@@ -44,7 +44,7 @@ public abstract class DataManager<TData, TBehavior> : MonoBehaviour
 
     void Init ()
     {
-        Diagnostics.Log ("Init called");
+        Diagnostics.Log ("Init called", LogType.Behaviors);
         InitBehaviorPool ();
         data.OnAdd += HandleNewDatum;
         data.OnRemove += HandleRemovedDatum;
@@ -174,6 +174,8 @@ public abstract class DataManager<TData, TBehavior> : MonoBehaviour
 
     void InitBehaviorPool ()
     {
+        Debug.Log("initting pool");
+
         behaviorPool = new ObjectPool<TBehavior> (() => CreateAndInitBehavior (), initialGameObjects);
         behaviorPool.OnPool += HandleBehaviorPooled;
         behaviorPool.OnRelease += HandleBehaviorReleased;
@@ -205,6 +207,7 @@ public abstract class DataManager<TData, TBehavior> : MonoBehaviour
 
     TBehavior CreateAndInitBehavior ()
     {
+        Debug.Log("Create and init behavior");
         TBehavior behavior = dataBehaviorPrefab.Instantiate<TBehavior> ();
         behavior.Init ();
         behavior.gameObject.SetActive (false);
