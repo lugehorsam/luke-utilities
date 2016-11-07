@@ -5,66 +5,54 @@ using System;
 [RequireComponent(typeof(MultiCollider))]
 public class Draggable : Selectable {
 
-    public event Action<Draggable, Vector3, Vector3> OnDrag = (arg1, arg2, arg3) => { };
+    public event Action<Draggable, Drag> OnDrag = (arg, arg2) => { };
     public event Action<Draggable, Collider, Vector3> OnDragLeave = (arg1, arg2, arg3) => { };
 
-    RotationBinding rotationBinding;
-
-    public bool MoveToDragPosition
-    {
-        get
-        {
-            return moveToDragPosition;
-        }
-        set
-        {
-            moveToDragPosition = value;
-        }
-    }
-
     [SerializeField]
-    bool moveToDragPosition;
-
-    Vector3 offsetFromMouse;
+    float dragDetectFloor = 1f;
 
     MultiCollider multiCollider;
     Collider [] currentColliders = new Collider [] { };
 
-    Vector3? initialMouseSelectPosition;
+    Drag currentDrag;
 
     void Awake ()
     {
-        multiCollider = GetComponent<MultiCollider> ();
-        rotationBinding = GetComponent<RotationBinding>();
+        multiCollider = GetComponent<MultiCollider>();
     }
 
     protected sealed override void HandleOnSelect(Vector3 mousePosition) {
-        Vector3 worldPoint = MousePositionToWorldPoint (mousePosition);      
-        offsetFromMouse = worldPoint - transform.position;
-        initialMouseSelectPosition = mousePosition;
+        currentDrag = new Drag(mousePosition);
     }
 
     protected sealed override void HandleOnHold (Vector3 mousePosition)
     {
-        Vector3 worldPoint = MousePositionToWorldPoint (mousePosition);
-        Vector3 oldPosition = transform.position;
-        Vector3 newPosition = worldPoint - offsetFromMouse;
-
-        if (oldPosition != newPosition) {
-            if (MoveToDragPosition)
-                transform.position = newPosition;
-            HandleOnDrag (mousePosition);
-            OnDrag (this, oldPosition, mousePosition);
+        if (currentDrag == null)
+        {
+            currentDrag = new Drag(mousePosition);
+        }
+        else if (!currentDrag.MousePositionLast.HasValue)
+        {
+            currentDrag.MousePositionLast = mousePosition;
+        }
+        else if ((mousePosition - currentDrag.MousePositionLast.Value).magnitude > dragDetectFloor)
+        {
+            currentDrag.ElapsedTime += Time.deltaTime;
+            currentDrag.MousePositionCurrent = mousePosition;
+            HandleOnDrag(mousePosition);
+            OnDrag(this, currentDrag);
+            currentDrag.MousePositionLast = mousePosition;
+        }
+        else {
+            currentDrag = null;
         }
     }
 
     protected sealed override void HandleOnDeselect(Vector3 mousePosition) {
-        offsetFromMouse = Vector3.zero;
+        currentDrag = null;
     }
  
     void HandleOnDrag(Vector3 mousePosition) {
-        Diagnostics.Log("On drag");
-
         Collider [] oldColliders = currentColliders.Except (multiCollider.OtherColliders).ToArray ();
         Collider [] newColliders = multiCollider.OtherColliders.Except (currentColliders).ToArray ();
 
@@ -77,7 +65,6 @@ public class Draggable : Selectable {
         foreach (Collider newCollider in newColliders) {
             /// on drag enter
         }
-
     }
 
     Vector3 MousePositionToWorldPoint(Vector3 mousePosition) {
