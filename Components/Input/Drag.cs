@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Drag {
 
-    public float ElapsedTime
+    public float? ElapsedTime
     {
         get;
         set;
@@ -30,6 +30,15 @@ public class Drag {
     {
         get;
         set;
+    }
+
+    public Vector3 Velocity
+    {
+        get
+        {
+            Diagnostics.Log("current and start are " + MousePositionCurrent + " , " + MousePositionStart);
+            return ElapsedTime.HasValue ? (MousePositionCurrent - MousePositionStart) / ElapsedTime.Value : Vector3.zero;
+        }
     }
 
     public Drag(Vector3 mousePositionStart)

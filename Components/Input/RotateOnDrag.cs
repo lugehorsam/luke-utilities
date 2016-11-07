@@ -21,6 +21,7 @@ public class RotateOnDrag : MonoBehaviour {
         draggable.OnDrag += OnDrag;
         draggable.OnSelect += OnSelect;
         draggable.OnDeselect += OnDeselect;
+        draggable.OnDragEnd += OnDragEnd;
         rotationBinding = GetComponent<RotationBinding>();
     }
 
@@ -39,6 +40,16 @@ public class RotateOnDrag : MonoBehaviour {
 
     void OnDeselect(Selectable selectable)
     {
+        
+    }
 
+    void OnDragEnd(Draggable draggable, Drag drag)
+    {
+
+        Diagnostics.Log("elpased time was " + drag.ElapsedTime);
+        Vector3 targetProperty = rotationBinding.GetProperty() + (drag.Velocity/inertia);
+
+        FiniteLerp<Vector3> newLerp = new FiniteLerp<Vector3>(targetProperty, .25f);
+        rotationBinding.EnqueueFiniteLerp(newLerp, stopOtherEnumerators: true);
     }
 }
