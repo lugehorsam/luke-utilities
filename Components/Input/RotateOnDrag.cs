@@ -10,18 +10,20 @@ public class RotateOnDrag : MonoBehaviour {
 
     [SerializeField]
     float unitsPerSwipePixel;
+
     [SerializeField]
-    float maxVectorLength;
-    [SerializeField]
-    float inertia;
+    LerpAsset inertiaCurve;
+    const float FRICTION = 6f;
+    const float MAX_DRAG_VECTOR_LENGTH = 25f;
+    const float MAX_OFFSET_VECTOR_LENGTH = 50f;
+
 
     void Awake()
     {
         draggable = GetComponent<Draggable>();
         draggable.OnDrag += OnDrag;
         draggable.OnSelect += OnSelect;
-        draggable.OnDeselect += OnDeselect;
-        draggable.OnDragEnd += OnDragEnd;
+        draggable.OnDragDeselect += OnDragDeselect;
         rotationBinding = GetComponent<RotationBinding>();
     }
 
@@ -33,23 +35,23 @@ public class RotateOnDrag : MonoBehaviour {
     void OnDrag(Draggable draggable, Drag drag)
     {
         Vector3 swipeVector = drag.MousePositionCurrent - drag.MousePositionLast.Value;
-        swipeVector = Vector3.ClampMagnitude(swipeVector, maxVectorLength);
-        Vector3 targetRotation = rotationBinding.GetProperty() + new Vector3(swipeVector.y, -swipeVector.x, swipeVector.z) * unitsPerSwipePixel;
+        swipeVector = Vector3.ClampMagnitude(swipeVector, MAX_DRAG_VECTOR_LENGTH);
+        Vector3 targetRotation = rotationBinding.GetProperty() + SwipeToRotationVector(swipeVector) * unitsPerSwipePixel;
         rotationBinding.SetProperty(targetRotation);
     }
 
-    void OnDeselect(Selectable selectable)
+    void OnDragDeselect(Draggable draggable, Drag drag)
     {
-        
+        Vector3 rawRotationOffset = (SwipeToRotationVector(drag.Velocity) / FRICTION) * unitsPerSwipePixel;
+        Vector3 clampedOffset = Vector3.ClampMagnitude(rawRotationOffset, MAX_OFFSET_VECTOR_LENGTH);
+        Vector3 targetProperty = rotationBinding.GetProperty() + clampedOffset;
+        float targetTime = clampedOffset.magnitude/10f;
+        FiniteLerp<Vector3> newLerp = new FiniteLerp<Vector3>(targetProperty, targetTime, inertiaCurve);
+        rotationBinding.EnqueueFiniteLerp(newLerp, stopOtherEnumerators: true);
     }
 
-    void OnDragEnd(Draggable draggable, Drag drag)
+    Vector3 SwipeToRotationVector(Vector3 swipeVector)
     {
-
-        Diagnostics.Log("elpased time was " + drag.ElapsedTime);
-        Vector3 targetProperty = rotationBinding.GetProperty() + (drag.Velocity/inertia);
-
-        FiniteLerp<Vector3> newLerp = new FiniteLerp<Vector3>(targetProperty, .25f);
-        rotationBinding.EnqueueFiniteLerp(newLerp, stopOtherEnumerators: true);
+        return new Vector3(swipeVector.y, -swipeVector.x, swipeVector.z);
     }
 }

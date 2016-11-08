@@ -8,6 +8,8 @@ public class Draggable : Selectable {
     public event Action<Draggable, Drag> OnDrag = (arg, arg2) => { };
     public event Action<Draggable, Collider, Vector3> OnDragLeave = (arg1, arg2, arg3) => { };
     public event Action<Draggable, Drag> OnDragEnd = (arg1, arg2) => { };
+    public event Action<Draggable, Drag> OnDragDeselect = (arg1, arg2) => { };
+
 
 
     [SerializeField]
@@ -66,6 +68,7 @@ public class Draggable : Selectable {
         {
             Diagnostics.Log("Dispatching drag from deselect " + currentDrag.ElapsedTime); 
             OnDragEnd(this, currentDrag);
+            OnDragDeselect(this, currentDrag);
         }
         currentDrag = null;
     }

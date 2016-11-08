@@ -4,7 +4,7 @@ using System;
 public class FiniteLerp<TProperty>
     where TProperty : struct
 {
-	 public float TargetDuration
+	public float TargetDuration
     {
         get
         {
@@ -41,16 +41,7 @@ public class FiniteLerp<TProperty>
         }
     }
 
-    public TweenType TweenType
-    {
-        get
-        {
-            return tweenType;
-        }
-    }
-
-    [SerializeField]
-    TweenType tweenType;
+    Func<float, float> easing;
 
     public TProperty TargetProperty
     {
@@ -91,15 +82,23 @@ public class FiniteLerp<TProperty>
 
     public TProperty GetLerpedProperty(TProperty startProperty, Func<TProperty, TProperty, float, TProperty> lerpDelegate)
     {
-        Func<float, float> easing = TweenType.TweenTypeToFunction();
         float scaledTime = easing(CurrentTime / TargetDuration);
         TProperty lerpedValue = lerpDelegate(startProperty, TargetProperty, scaledTime);
         return lerpedValue;
     }
 
-    public FiniteLerp(TProperty targetProperty, float targetDuration)
+    public FiniteLerp(TProperty targetProperty, float targetDuration, TweenType tweenType)
     {
         this.targetProperty = targetProperty;
         this.targetDuration = targetDuration;
+        this.easing = tweenType.TweenTypeToFunction();
     }
+
+    public FiniteLerp(TProperty targetProperty, float targetDuration, Func<float, float> easing)
+    {
+        this.targetProperty = targetProperty;
+        this.targetDuration = targetDuration;
+        this.easing = easing;
+    }
+
 }
