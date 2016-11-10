@@ -13,7 +13,7 @@ public class RotateOnDrag : MonoBehaviour {
 
     [SerializeField]
     LerpAsset inertiaCurve;
-    const float FRICTION = 6f;
+    const float FRICTION = 2f;
     const float MAX_DRAG_VECTOR_LENGTH = 25f;
     const float MAX_OFFSET_VECTOR_LENGTH = 50f;
 
@@ -45,7 +45,7 @@ public class RotateOnDrag : MonoBehaviour {
         Vector3 rawRotationOffset = (SwipeToRotationVector(drag.Velocity) / FRICTION) * unitsPerSwipePixel;
         Vector3 clampedOffset = Vector3.ClampMagnitude(rawRotationOffset, MAX_OFFSET_VECTOR_LENGTH);
         Vector3 targetProperty = rotationBinding.GetProperty() + clampedOffset;
-        float targetTime = clampedOffset.magnitude/10f;
+        float targetTime = clampedOffset.magnitude/5f;
         FiniteLerp<Vector3> newLerp = new FiniteLerp<Vector3>(targetProperty, targetTime, inertiaCurve);
         rotationBinding.EnqueueFiniteLerp(newLerp, stopOtherEnumerators: true);
     }
