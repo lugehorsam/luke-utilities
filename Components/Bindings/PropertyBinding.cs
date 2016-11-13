@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 [Serializable]
-public abstract class PropertyBinding<TProperty, TComponent> : MonoBehaviour
+public abstract class PropertyBinding<TProperty, TComponent> : GameBehavior
     where TComponent : Component {
 
     public TComponent Component {
@@ -18,14 +18,4 @@ public abstract class PropertyBinding<TProperty, TComponent> : MonoBehaviour
     public abstract TProperty GetProperty();
     public abstract void SetProperty(TProperty property);
 
-    void Awake ()
-    {
-        component = GetComponent<TComponent> ();
-        OnGetComponent ();
-    }
-
-    protected virtual void OnGetComponent ()
-    {
-
-    }
 }

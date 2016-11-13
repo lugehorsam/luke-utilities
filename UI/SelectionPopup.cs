@@ -9,9 +9,10 @@ public class SelectionPopup : UIPopup {
 
     bool madeSelection = false;
 
-    void Awake ()
+    void Start()
     {
-        foreach (UIButton button in buttons) {
+        foreach (UIButton button in buttons)
+        {
             button.OnClick += () => madeSelection = true;
         }
     }

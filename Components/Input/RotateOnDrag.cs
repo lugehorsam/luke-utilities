@@ -3,55 +3,62 @@ using System.Collections;
 
 [RequireComponent(typeof(Draggable))]
 [RequireComponent(typeof(RotationBinding))]
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Collider))]
 
-public class RotateOnDrag : MonoBehaviour {
-    RotationBinding rotationBinding;
+public class RotateOnDrag : GameBehavior {
+    
     Draggable draggable;
+    Rigidbody rigidBody;
 
     [SerializeField]
-    float unitsPerSwipePixel;
+    float rotationUnitsPerSwipePixel;
 
-    [SerializeField]
-    LerpAsset inertiaCurve;
-    const float FRICTION = 2f;
-    const float MAX_DRAG_VECTOR_LENGTH = 25f;
-    const float MAX_OFFSET_VECTOR_LENGTH = 50f;
+    Drag currentDrag = null;
 
-
-    void Awake()
+    protected sealed override void AddEventHandlers()
     {
-        draggable = GetComponent<Draggable>();
         draggable.OnDrag += OnDrag;
         draggable.OnSelect += OnSelect;
         draggable.OnDragDeselect += OnDragDeselect;
-        rotationBinding = GetComponent<RotationBinding>();
+    }
+
+    protected sealed override void RemoveEventHandlers()
+    {
+        draggable.OnDrag -= OnDrag;
+        draggable.OnSelect -= OnSelect;
+        draggable.OnDragDeselect -= OnDragDeselect;
+    }
+
+    protected override void InitComponents()
+    {
+        draggable = GetComponent<Draggable>();
+        rigidBody = GetComponent<Rigidbody>();
     }
 
     void OnSelect(Selectable selectable, Vector3 selectMousePosition)
     {
-        rotationBinding.StopAllLerps();
+        rigidBody.velocity = rigidBody.angularVelocity = Vector3.zero;
     }
 
     void OnDrag(Draggable draggable, Drag drag)
     {
-        Vector3 swipeVector = drag.MousePositionCurrent - drag.MousePositionLast.Value;
-        swipeVector = Vector3.ClampMagnitude(swipeVector, MAX_DRAG_VECTOR_LENGTH);
-        Vector3 targetRotation = rotationBinding.GetProperty() + SwipeToRotationVector(swipeVector) * unitsPerSwipePixel;
-        rotationBinding.SetProperty(targetRotation);
+        Vector3 rawDragVector = (drag.MousePositionCurrent - drag.MousePositionLast.Value);
+        Vector3 rotationVector = SwipeToRotationVector(rawDragVector);
+        rigidBody.AddTorque(rotationVector * .02f, ForceMode.Impulse);
+
+        if (currentDrag == null) {
+            currentDrag = drag;
+        }
     }
 
     void OnDragDeselect(Draggable draggable, Drag drag)
-    {
-        Vector3 rawRotationOffset = (SwipeToRotationVector(drag.Velocity) / FRICTION) * unitsPerSwipePixel;
-        Vector3 clampedOffset = Vector3.ClampMagnitude(rawRotationOffset, MAX_OFFSET_VECTOR_LENGTH);
-        Vector3 targetProperty = rotationBinding.GetProperty() + clampedOffset;
-        float targetTime = clampedOffset.magnitude/5f;
-        FiniteLerp<Vector3> newLerp = new FiniteLerp<Vector3>(targetProperty, targetTime, inertiaCurve);
-        rotationBinding.EnqueueFiniteLerp(newLerp, stopOtherEnumerators: true);
+    {        
+
     }
 
     Vector3 SwipeToRotationVector(Vector3 swipeVector)
     {
-        return new Vector3(swipeVector.y, -swipeVector.x, swipeVector.z);
+        return new Vector3(swipeVector.y, -swipeVector.x, 0f);
     }
 }

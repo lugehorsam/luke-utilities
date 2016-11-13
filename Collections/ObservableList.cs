@@ -55,7 +55,6 @@ public class ObservableList<TData> : List<TData>
         if (previousItems.Count <= 0) {
             return;
         }
-        int count = this.Count ();
         base.Clear();
         for (int i = 0; i < previousItems.Count; i++) {
             OnRemove (previousItems[i], i);
@@ -86,7 +85,6 @@ public class ObservableList<TData> : List<TData>
         if (itemsToRemove.Count () <= 0) {
             return;
         }
-        List<int> removalIndices = itemsToRemove.MapIndices (this);
         base.RemoveAll(match);
         for (int i = 0; i < itemsToRemove.Count; i++) {
             OnRemove (itemsToRemove [i], i);

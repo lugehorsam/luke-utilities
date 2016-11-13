@@ -43,4 +43,60 @@ public static class VectorExtensions {
         newVector.z = transformation(thisVector.z);
         return newVector;
     }
+
+    public static float MaxDimension(this Vector3 thisVector)
+    {
+        if (thisVector.x > thisVector.y && thisVector.x > thisVector.z)
+        {
+            return thisVector.x;
+        }
+
+        if (thisVector.y > thisVector.x && thisVector.y > thisVector.z)
+        {
+            return thisVector.y;
+        }
+
+        if (thisVector.z > thisVector.y && thisVector.z > thisVector.x)
+        {
+            return thisVector.z;
+        }
+
+        return 0f;
+    }
+
+
+    public static Axis DominantAxis(this Vector3 thisVector)
+    {
+        if (thisVector.x > thisVector.y && thisVector.x > thisVector.z)
+        {
+            return Axis.X;
+        }
+
+        if (thisVector.y > thisVector.x && thisVector.y > thisVector.z)
+        {
+            return Axis.Y;
+        }
+
+        if (thisVector.z > thisVector.y && thisVector.z > thisVector.x)
+        {
+            return Axis.Z;
+        }
+
+        return Axis.None;
+    }
+
+    public static Vector3 RestrictToAxis(this Vector3 thisVector, Axis axis)
+    {
+        switch (axis)
+        {
+            case Axis.X:
+                return new Vector3(thisVector.x, 0f, 0f);
+            case Axis.Y: 
+                return new Vector3(0f, thisVector.y, 0f);
+            case Axis.Z:
+                return new Vector3(0f, 0f, thisVector.z);
+            default:
+                return thisVector;
+        }
+    }
 }

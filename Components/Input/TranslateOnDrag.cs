@@ -28,7 +28,7 @@ public class TranslateOnDrag : MonoBehaviour {
     {
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(drag.MousePositionCurrent);
         Vector3 newPosition = worldPoint - offsetFromMouse;
-        positionBinding.SetProperty(drag.MousePositionCurrent);
+        positionBinding.SetProperty(newPosition);
     }
 
     void OnDeselect(Selectable selectable)

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class UIElement : MonoBehaviour {
+public class UIElement : GameBehavior {
 
     public virtual IEnumerator OnModuleEnter ()
     {
@@ -13,9 +13,14 @@ public class UIElement : MonoBehaviour {
         yield return null;
     }
 
-    protected void Awake ()
+    protected sealed override void OnAwake ()
     {
         gameObject.SetActive (false);
+        OnUIElementAwake();
+    }
+
+    protected virtual void OnUIElementAwake()
+    {
 
     }
 }

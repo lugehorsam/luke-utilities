@@ -9,15 +9,26 @@ public class UIButton : UIElement {
 
     public event Action OnClick = () => { };
        
-
-    void Awake ()
+    protected override void AddEventHandlers()
     {
-        button = GetComponent<Button> ();
-        button.onClick.AddListener (() => {
-            HandleOnClick ();
-            OnClick ();
-        });
+        button.onClick.AddListener(ClickListener);
     }
 
+    void ClickListener()
+    {
+        HandleOnClick();
+        OnClick();
+    }
+
+    protected override void RemoveEventHandlers()
+    {
+        button.onClick.RemoveListener(ClickListener);
+    }
+
+    protected override void InitComponents ()
+    {
+        button = GetComponent<Button> ();
+    }
+     
     protected virtual void HandleOnClick () {}
 }

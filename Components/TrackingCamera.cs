@@ -2,7 +2,7 @@
 using System.Collections;
 using DigitalRuby.Tween;
 
-[RequireComponent(typeof(Camera))]
+/** [RequireComponent(typeof(Camera))]
 
 /// <summary>
 /// TODO REWRITE UNDER NEW LERP CLASS
@@ -20,8 +20,9 @@ public class TrackingCamera : MonoBehaviour {
         
     public void MoveToViewOnY(Transform viewObject, float desiredY) {
 
-        Vector3 objectViewPortPoint = cameraComponent.WorldToScreenPoint (viewObject.transform.position);
+        //Vector3 objectViewPortPoint = cameraComponent.WorldToScreenPoint (viewObject.transform.position);
 
-        float newY = cameraComponent.GetWorldPositionForViewport (viewObject, new Vector3(objectViewPortPoint.x, desiredY, objectViewPortPoint.z)).y;
+        //float newY = cameraComponent.GetWorldPositionForViewport (viewObject, new Vector3(objectViewPortPoint.x, desiredY, objectViewPortPoint.z)).y;
     }                    
 }
+**/

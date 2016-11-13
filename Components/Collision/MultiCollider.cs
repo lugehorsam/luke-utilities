@@ -25,14 +25,14 @@ public class MultiCollider : MonoBehaviour {
         }
     }
 
-    void OnTriggerEnter2D(Collider other) {
+    void OnTriggerEnter(Collider other) {
         otherColliders.Add (other);
         if (OnCollision != null) {
             OnCollision ();
         }
     }
 
-    void OnTriggerExit2D(Collider other) {
+    void OnTriggerExit(Collider other) {
         otherColliders.Remove (other);
         if (OnCollision != null) {
             OnCollision ();

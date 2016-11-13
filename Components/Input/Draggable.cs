@@ -22,6 +22,7 @@ public class Draggable : Selectable {
 
     void Awake ()
     {
+        
         multiCollider = GetComponent<MultiCollider>();
     }
 

@@ -2,18 +2,15 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
-/// <summary>
-/// TODO FIX THIS CLASS
-/// </summary>
 public class LineBinding : PropertyBinding<Vector3, LineRenderer> {
 
+    [SerializeField]
     Vector3[] linePositions;
 
-    protected override void OnGetComponent ()
+    protected override void InitComponents()
     {
-        Component.SetVertexCount (linePositions.Length);
+        Component.SetVertexCount(linePositions.Length);
     }
 
     public override void SetProperty(Vector3 position) {
