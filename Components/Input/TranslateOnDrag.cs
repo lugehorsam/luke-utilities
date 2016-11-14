@@ -18,7 +18,7 @@ public class TranslateOnDrag : MonoBehaviour {
         draggable.OnSelect += OnSelect;
     }
 
-    void OnSelect(Selectable selectable, Vector3 selectablePosition)
+    void OnSelect(Selectable selectable, Vector3 selectablePosition, RaycastHit hitInfo)
     {
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(selectablePosition);
         offsetFromMouse = worldPoint - transform.position;

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 [RequireComponent(typeof(Draggable))]
 [RequireComponent(typeof(RotationBinding))]
@@ -10,11 +9,11 @@ public class RotateOnDrag : GameBehavior {
     
     Draggable draggable;
     Rigidbody rigidBody;
+    Axis dominantAxis;
+    RaycastHit dragHitInfo;
 
     [SerializeField]
     float rotationUnitsPerSwipePixel;
-
-    Drag currentDrag = null;
 
     protected sealed override void AddEventHandlers()
     {
@@ -36,20 +35,19 @@ public class RotateOnDrag : GameBehavior {
         rigidBody = GetComponent<Rigidbody>();
     }
 
-    void OnSelect(Selectable selectable, Vector3 selectMousePosition)
+    void OnSelect(Selectable selectable, Vector3 selectMousePosition, RaycastHit hitInfo)
     {
         rigidBody.velocity = rigidBody.angularVelocity = Vector3.zero;
+        dominantAxis = hitInfo.normal.DominantAxis();
+        dragHitInfo = hitInfo;
     }
 
     void OnDrag(Draggable draggable, Drag drag)
     {
         Vector3 rawDragVector = (drag.MousePositionCurrent - drag.MousePositionLast.Value);
-        Vector3 rotationVector = SwipeToRotationVector(rawDragVector);
-        rigidBody.AddTorque(rotationVector * .02f, ForceMode.Impulse);
-
-        if (currentDrag == null) {
-            currentDrag = drag;
-        }
+        Vector3 rotationVector = SwipeToRotationVector(rawDragVector, dominantAxis);
+        Diagnostics.Log("adding vector " + rotationVector);
+        rigidBody.AddForceAtPosition(rotationVector * .02f, dragHitInfo.point, ForceMode.Impulse);
     }
 
     void OnDragDeselect(Draggable draggable, Drag drag)
@@ -57,8 +55,16 @@ public class RotateOnDrag : GameBehavior {
 
     }
 
-    Vector3 SwipeToRotationVector(Vector3 swipeVector)
+    Vector3 SwipeToRotationVector(Vector3 rawDragVector, Axis faceDirection)
     {
-        return new Vector3(swipeVector.y, -swipeVector.x, 0f);
+        switch(faceDirection) {
+            case Axis.Z:
+            return new Vector3(rawDragVector.x, rawDragVector.y, 0f);
+            case Axis.Y:
+            return new Vector3(rawDragVector.x, rawDragVector.y, 0f);
+            case Axis.X:
+            return new Vector3(rawDragVector.x, rawDragVector.y, 0f);
+        }
+        return Vector3.zero;
     }
 }

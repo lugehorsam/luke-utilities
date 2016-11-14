@@ -67,17 +67,21 @@ public static class VectorExtensions {
 
     public static Axis DominantAxis(this Vector3 thisVector)
     {
-        if (thisVector.x > thisVector.y && thisVector.x > thisVector.z)
+        float xMag = Math.Abs(thisVector.x);
+        float yMag = Math.Abs(thisVector.y);
+        float zMag = Math.Abs(thisVector.z);
+
+        if (xMag > yMag && xMag > zMag)
         {
             return Axis.X;
         }
 
-        if (thisVector.y > thisVector.x && thisVector.y > thisVector.z)
+        if (yMag > xMag && yMag > zMag)
         {
             return Axis.Y;
         }
 
-        if (thisVector.z > thisVector.y && thisVector.z > thisVector.x)
+        if (zMag > yMag && zMag > xMag)
         {
             return Axis.Z;
         }
@@ -98,5 +102,20 @@ public static class VectorExtensions {
             default:
                 return thisVector;
         }
+    }
+
+    public static Direction DominantDirection(this Vector3 thisVector)
+    {
+        Axis dominantAxis = thisVector.DominantAxis();
+        switch (dominantAxis)
+        {
+            case Axis.X:
+                return thisVector.x > 0 ? Direction.Right : Direction.Left;
+            case Axis.Y:
+                return thisVector.y > 0 ? Direction.Top : Direction.Bottom;
+            case Axis.Z:
+                return thisVector.z > 0 ? Direction.Forward : Direction.Back;
+        }
+        return Direction.None;
     }
 }

@@ -10,8 +10,6 @@ public class Draggable : Selectable {
     public event Action<Draggable, Drag> OnDragEnd = (arg1, arg2) => { };
     public event Action<Draggable, Drag> OnDragDeselect = (arg1, arg2) => { };
 
-
-
     [SerializeField]
     float dragDetectFloor = 1f;
 
@@ -20,9 +18,8 @@ public class Draggable : Selectable {
 
     Drag currentDrag;
 
-    void Awake ()
+    protected override void InitSelectableComponents()
     {
-        
         multiCollider = GetComponent<MultiCollider>();
     }
 
@@ -47,7 +44,6 @@ public class Draggable : Selectable {
                 currentDrag.ElapsedTime = 0f;
             }
             currentDrag.ElapsedTime += Time.deltaTime;
-            Diagnostics.Log("Incremented elapsed time" + currentDrag.ElapsedTime);
 
             currentDrag.MousePositionCurrent = mousePosition;
             HandleOnDrag(mousePosition);
@@ -57,7 +53,6 @@ public class Draggable : Selectable {
         else {
             if (currentDrag.ElapsedTime.HasValue)
             {
-                Diagnostics.Log("Elapsed time has valuea nd iti s " + currentDrag.ElapsedTime);
                 OnDragEnd(this, currentDrag);
             }
             currentDrag = null;
@@ -67,7 +62,6 @@ public class Draggable : Selectable {
     protected sealed override void HandleOnDeselect(Vector3 mousePosition) {
         if (currentDrag != null)
         {
-            Diagnostics.Log("Dispatching drag from deselect " + currentDrag.ElapsedTime); 
             OnDragEnd(this, currentDrag);
             OnDragDeselect(this, currentDrag);
         }
