@@ -66,7 +66,7 @@ public abstract class InsertableLayout<TData, TBehavior> : FlexibleLayout<TData,
         behavior.Draggable.OnDeselect -= OnDraggableDeselect;
     }
 
-    void OnDraggableSelect (Selectable selectable, Vector3 selectionPos, RaycastHit hitInfo)
+    void OnDraggableSelect (Selectable selectable, Vector3 selectionPos)
     {
         OnBehaviorSelected (selectable.GetComponent<TBehavior> ());
     }

@@ -2,87 +2,64 @@
 using System.Linq;
 using System;
 
-[RequireComponent(typeof(MultiCollider))]
 public class Draggable : Selectable {
 
-    public event Action<Draggable, Drag> OnDrag = (arg, arg2) => { };
-    public event Action<Draggable, Collider, Vector3> OnDragLeave = (arg1, arg2, arg3) => { };
-    public event Action<Draggable, Drag> OnDragEnd = (arg1, arg2) => { };
-    public event Action<Draggable, Drag> OnDragDeselect = (arg1, arg2) => { };
+    public event Action<Draggable, Motion, RaycastHit> OnMotion = (arg, arg2, arg3) => { };
+    public event Action<Draggable, Motion> OnMotionEnd = (arg1, arg2) => { };
+    public event Action<Draggable, MotionCollection> OnDragEnd = (arg1, arg2) => { };
 
     [SerializeField]
     float dragDetectFloor = 1f;
 
-    MultiCollider multiCollider;
-    Collider [] currentColliders = new Collider [] { };
-
-    Drag currentDrag;
-
-    protected override void InitSelectableComponents()
-    {
-        multiCollider = GetComponent<MultiCollider>();
-    }
+    Motion currentMotion;
+    MotionCollection currentDrag;
 
     protected sealed override void HandleOnSelect(Vector3 mousePosition) {
-        currentDrag = new Drag(mousePosition);
+        currentMotion = new Motion(mousePosition);
+        currentDrag = new MotionCollection();
+        currentDrag.AddMotion(currentMotion);
     }
 
-    protected sealed override void HandleOnHold (Vector3 mousePosition)
+    protected sealed override void HandleOnHold (Vector3 mousePosition, RaycastHit hitInfo)
     {
-        if (currentDrag == null)
+        if (currentMotion == null)
         {
-            currentDrag = new Drag(mousePosition);
+            currentMotion = new Motion(mousePosition);
         }
-        else if (!currentDrag.MousePositionLast.HasValue)
+        else if (!currentMotion.MousePositionLast.HasValue)
         {
-            currentDrag.MousePositionLast = mousePosition;
+            currentMotion.MousePositionLast = mousePosition;
         }
-        else if ((mousePosition - currentDrag.MousePositionLast.Value).magnitude > dragDetectFloor)
+        else if ((mousePosition - currentMotion.MousePositionLast.Value).magnitude > dragDetectFloor)
         {
-            if (!currentDrag.ElapsedTime.HasValue)
+            if (!currentMotion.ElapsedTime.HasValue)
             {
-                currentDrag.ElapsedTime = 0f;
+                currentMotion.ElapsedTime = 0f;
             }
-            currentDrag.ElapsedTime += Time.deltaTime;
+            currentMotion.ElapsedTime += Time.deltaTime;
 
-            currentDrag.MousePositionCurrent = mousePosition;
-            HandleOnDrag(mousePosition);
-            OnDrag(this, currentDrag);
-            currentDrag.MousePositionLast = mousePosition;
+            currentMotion.MousePositionCurrent = mousePosition;
+            OnMotion(this, currentMotion, hitInfo);
+            currentMotion.MousePositionLast = mousePosition;
         }
         else {
-            if (currentDrag.ElapsedTime.HasValue)
+            if (currentMotion.ElapsedTime.HasValue)
             {
-                OnDragEnd(this, currentDrag);
+                OnMotionEnd(this, currentMotion);
             }
-            currentDrag = null;
+            currentMotion = null;
         }
     }
 
     protected sealed override void HandleOnDeselect(Vector3 mousePosition) {
-        if (currentDrag != null)
+        if (currentMotion != null)
         {
-            OnDragEnd(this, currentDrag);
-            OnDragDeselect(this, currentDrag);
+            OnMotionEnd(this, currentMotion);
+            OnMotionEnd(this, currentMotion);
         }
-        currentDrag = null;
+        currentMotion = null;
     }
  
-    void HandleOnDrag(Vector3 mousePosition) {
-        Collider [] oldColliders = currentColliders.Except (multiCollider.OtherColliders).ToArray ();
-        Collider [] newColliders = multiCollider.OtherColliders.Except (currentColliders).ToArray ();
-
-        currentColliders = multiCollider.OtherColliders;
-
-        foreach (Collider oldCollider in oldColliders) {
-            OnDragLeave (this, oldCollider, mousePosition);
-        }
-
-        foreach (Collider newCollider in newColliders) {
-            /// on drag enter
-        }
-    }
-
     Vector3 MousePositionToWorldPoint(Vector3 mousePosition) {
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint (mousePosition);
         worldPoint.z = transform.position.z;

@@ -112,10 +112,27 @@ public static class VectorExtensions {
             case Axis.X:
                 return thisVector.x > 0 ? Direction.Right : Direction.Left;
             case Axis.Y:
-                return thisVector.y > 0 ? Direction.Top : Direction.Bottom;
+                return thisVector.y > 0 ? Direction.Up : Direction.Down;
             case Axis.Z:
                 return thisVector.z > 0 ? Direction.Forward : Direction.Back;
         }
         return Direction.None;
+    }
+
+    public static Vector3 ExceptAxis(this Vector3 thisVector, Axis axis)
+    {
+        switch (axis)
+        {
+            case Axis.X:
+                thisVector.x = 0f;
+                break;
+            case Axis.Y:
+                thisVector.y = 0f;
+                break;
+            case Axis.Z:
+                thisVector.z = 0f;
+                break;
+        }
+        return thisVector;
     }
 }

@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
-using System.Linq;
 
-[RequireComponent(typeof(Collider))]
 public class Selectable : GameBehavior {
 
-    public event Action<Selectable, Vector3, RaycastHit> OnSelect = (arg1, arg2, arg3) => { };
+    public event Action<Selectable, Vector3> OnSelect = (arg1, arg2) => { };
     public event Action OnHold = () => { };
     public event Action<Selectable> OnDeselect = (obj) => { };
 
@@ -18,9 +15,10 @@ public class Selectable : GameBehavior {
 
     bool selected;
 
-    Collider colliderComponent;
+    [SerializeField]
+    new Collider collider;
 
-    protected virtual void HandleOnHold(Vector3 mousePosition) {}
+    protected virtual void HandleOnHold(Vector3 mousePosition, RaycastHit hitInfo) {}
     protected virtual void HandleOnDeselect(Vector3 mousePosition) {}
     protected virtual void HandleOnSelect(Vector3 mousePosition) {}
 
@@ -35,7 +33,6 @@ public class Selectable : GameBehavior {
 
     protected sealed override void InitComponents()
     {
-        colliderComponent = GetComponent<Collider>();
         InitSelectableComponents();
     }
 
@@ -58,12 +55,12 @@ public class Selectable : GameBehavior {
         {
             initialMouseSelectPosition = Input.mousePosition;
             HandleOnSelect(Input.mousePosition);
-            OnSelect(this, Camera.main.ScreenToWorldPoint(Input.mousePosition), hitInfo);
+            OnSelect(this, Camera.main.ScreenToWorldPoint(Input.mousePosition));
             selected = true;
         }
         else if (hold)
         {
-            HandleOnHold(Input.mousePosition);
+            HandleOnHold(Input.mousePosition, hitInfo);
             OnHold();
         }
         else if (release)
@@ -81,7 +78,7 @@ public class Selectable : GameBehavior {
         for (int i = 0; i < hits.Length; i++)
         {
             RaycastHit hit = hits[i];
-            if (hit.collider == colliderComponent) {
+            if (hit.collider == collider) {
                 hitInfo = hit;
                 return true;
             }

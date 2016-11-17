@@ -1,69 +1,87 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(Draggable))]
-[RequireComponent(typeof(RotationBinding))]
-[RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(Collider))]
-
 public class RotateOnDrag : GameBehavior {
-    
+
     Draggable draggable;
-    Rigidbody rigidBody;
-    Axis dominantAxis;
-    RaycastHit dragHitInfo;
 
+    Direction faceDirection;
+
+    new Rigidbody rigidbody;
     [SerializeField]
-    float rotationUnitsPerSwipePixel;
-
-    protected sealed override void AddEventHandlers()
-    {
-        draggable.OnDrag += OnDrag;
-        draggable.OnSelect += OnSelect;
-        draggable.OnDragDeselect += OnDragDeselect;
-    }
-
-    protected sealed override void RemoveEventHandlers()
-    {
-        draggable.OnDrag -= OnDrag;
-        draggable.OnSelect -= OnSelect;
-        draggable.OnDragDeselect -= OnDragDeselect;
-    }
+    float stability;
+    [SerializeField]
+    float speed;
 
     protected override void InitComponents()
     {
         draggable = GetComponent<Draggable>();
-        rigidBody = GetComponent<Rigidbody>();
+        rigidbody = GetComponent<Rigidbody>();
     }
 
-    void OnSelect(Selectable selectable, Vector3 selectMousePosition, RaycastHit hitInfo)
+    protected sealed override void AddEventHandlers()
     {
-        rigidBody.velocity = rigidBody.angularVelocity = Vector3.zero;
-        dominantAxis = hitInfo.normal.DominantAxis();
-        dragHitInfo = hitInfo;
+        draggable.OnMotion += OnDragMotion;
+        draggable.OnDragEnd += OnDragDeselect;
     }
 
-    void OnDrag(Draggable draggable, Drag drag)
+    protected sealed override void RemoveEventHandlers()
     {
-        Vector3 rawDragVector = (drag.MousePositionCurrent - drag.MousePositionLast.Value);
-        Vector3 rotationVector = SwipeToRotationVector(rawDragVector, dominantAxis);
-        Diagnostics.Log("adding vector " + rotationVector);
-        rigidBody.AddForceAtPosition(rotationVector * .02f, dragHitInfo.point, ForceMode.Impulse);
+        draggable.OnMotion -= OnDragMotion;
+        draggable.OnDragEnd -= OnDragDeselect;
     }
 
-    void OnDragDeselect(Draggable draggable, Drag drag)
+    void OnDragMotion(Draggable draggable, Motion dragMotion, RaycastHit hitInfo) {
+        Direction potentialFaceDirection = hitInfo.normal.DominantDirection();
+        faceDirection = potentialFaceDirection == Direction.None ? faceDirection : potentialFaceDirection;
+
+        Vector3 rawDragVector = dragMotion.MousePositionCurrent - dragMotion.MousePositionLast.Value;
+        Vector3 rawRotationVector = SwipeToTorqueVector(rawDragVector, faceDirection);
+
+        rigidbody.AddTorque(rawRotationVector * speed);
+    }
+
+    void FixedUpdate()
+    {
+        Stabilize();   
+    }
+
+    void Stabilize()
+    {
+        Vector3 predictedUpRight = Quaternion.AngleAxis(
+            rigidbody.angularVelocity.magnitude * Mathf.Rad2Deg * stability / speed,
+            rigidbody.angularVelocity
+        ) * (transform.up + transform.right);
+
+       
+        Diagnostics.Log("Predicted up is " + predictedUpRight);
+        Vector3 upTorque = Vector3.Cross(predictedUpRight, (Vector3.up + Vector3.right));
+        Vector3 downTorque = Vector3.Cross(predictedUpRight, (Vector3.down + Vector3.right));
+
+        Vector3 torqueVector = upTorque.magnitude < downTorque.magnitude ? upTorque : downTorque;
+        rigidbody.AddTorque(torqueVector * speed * speed);
+    }
+
+    void OnDragDeselect(Draggable draggable, AbstractMotion drag)
     {        
 
     }
 
-    Vector3 SwipeToRotationVector(Vector3 rawDragVector, Axis faceDirection)
+    Vector3 SwipeToTorqueVector(Vector3 rawDragVector, Direction faceDirection)
     {
-        switch(faceDirection) {
-            case Axis.Z:
-            return new Vector3(rawDragVector.x, rawDragVector.y, 0f);
-            case Axis.Y:
-            return new Vector3(rawDragVector.x, rawDragVector.y, 0f);
-            case Axis.X:
-            return new Vector3(rawDragVector.x, rawDragVector.y, 0f);
+        switch (faceDirection)
+        {
+            case Direction.Forward:
+            case Direction.Back:
+                return new Vector3(rawDragVector.y, -rawDragVector.x, 0f);
+            case Direction.Up:
+                return new Vector3(rawDragVector.y, 0f, -rawDragVector.x);
+            case Direction.Down:
+                return new Vector3(rawDragVector.y, 0f, rawDragVector.x);
+            case Direction.Left:
+                return new Vector3(0f, -rawDragVector.x, -rawDragVector.y);
+            case Direction.Right:
+                return new Vector3(0f, -rawDragVector.x, rawDragVector.y);
         }
         return Vector3.zero;
     }
