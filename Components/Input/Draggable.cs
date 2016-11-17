@@ -4,60 +4,72 @@ using System;
 
 public class Draggable : Selectable {
 
-    public event Action<Draggable, Motion, RaycastHit> OnMotion = (arg, arg2, arg3) => { };
-    public event Action<Draggable, Motion> OnMotionEnd = (arg1, arg2) => { };
-    public event Action<Draggable, MotionCollection> OnDragEnd = (arg1, arg2) => { };
+    public event Action<Draggable, Drag, RaycastHit> OnDrag = (arg, arg2, arg3) => { };
+    public event Action<Draggable, Drag> OnDragGestureEnd = (arg1, arg2) => { };
+    public event Action<Draggable, Drag> OnDragEnd = (arg1, arg2) => { };
+    public event Action<Draggable, Drag> OnDragLeave = (arg1, arg2) => { };
 
     [SerializeField]
     float dragDetectFloor = 1f;
 
-    Motion currentMotion;
-    MotionCollection currentDrag;
+    DragGesture currentDragGesture;
+    Drag currentDrag;
 
     protected sealed override void HandleOnSelect(Vector3 mousePosition) {
-        currentMotion = new Motion(mousePosition);
-        currentDrag = new MotionCollection();
-        currentDrag.AddMotion(currentMotion);
+        currentDrag = new Drag();
+        CreateDragGesture(mousePosition);
+
     }
 
     protected sealed override void HandleOnHold (Vector3 mousePosition, RaycastHit hitInfo)
     {
-        if (currentMotion == null)
+        if (currentDragGesture == null)
         {
-            currentMotion = new Motion(mousePosition);
-        }
-        else if (!currentMotion.MousePositionLast.HasValue)
-        {
-            currentMotion.MousePositionLast = mousePosition;
-        }
-        else if ((mousePosition - currentMotion.MousePositionLast.Value).magnitude > dragDetectFloor)
-        {
-            if (!currentMotion.ElapsedTime.HasValue)
-            {
-                currentMotion.ElapsedTime = 0f;
-            }
-            currentMotion.ElapsedTime += Time.deltaTime;
-
-            currentMotion.MousePositionCurrent = mousePosition;
-            OnMotion(this, currentMotion, hitInfo);
-            currentMotion.MousePositionLast = mousePosition;
+            CreateDragGesture(mousePosition);
         }
         else {
-            if (currentMotion.ElapsedTime.HasValue)
+            bool isValidDrag = (mousePosition - currentDragGesture.MousePositionLast).magnitude > dragDetectFloor;
+            if (isValidDrag)
             {
-                OnMotionEnd(this, currentMotion);
+                UpdateCurrentGesture(mousePosition);
+                Diagnostics.Log("Current drag is " + currentDrag, LogType.Dragging);
+                OnDrag(this, currentDrag, hitInfo);
             }
-            currentMotion = null;
+            else {
+                currentDrag.AddGesture(currentDragGesture);
+                if (currentDragGesture.ElapsedTime > 0f)
+                {
+                    Diagnostics.Log("Ending gesture " + currentDragGesture);
+                    OnDragGestureEnd(this, currentDrag);
+                }
+                currentDragGesture = null;
+            }
         }
     }
 
+    void CreateDragGesture(Vector3 mousePosition)
+    {
+        currentDragGesture = new DragGesture(mousePosition);
+        currentDragGesture.SetMousePositionLast(mousePosition);
+        currentDrag.AddGesture(currentDragGesture);
+    }
+
+    void UpdateCurrentGesture(Vector3 mousePosition)
+    {
+        Vector3 oldMousePosition = currentDragGesture.MousePositionCurrent;
+        currentDragGesture.IncrementElapsedTime(Time.deltaTime);
+        currentDragGesture.SetMousePositionCurrent(mousePosition);
+        currentDragGesture.SetMousePositionLast(oldMousePosition);
+    }
+
     protected sealed override void HandleOnDeselect(Vector3 mousePosition) {
-        if (currentMotion != null)
+        if (currentDragGesture != null)
         {
-            OnMotionEnd(this, currentMotion);
-            OnMotionEnd(this, currentMotion);
+            OnDragGestureEnd(this, currentDrag);
+            OnDragEnd(this, currentDrag);
         }
-        currentMotion = null;
+        currentDragGesture = null;
+        currentDrag = null;
     }
  
     Vector3 MousePositionToWorldPoint(Vector3 mousePosition) {

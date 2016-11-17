@@ -1,37 +1,33 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class AbstractMotion {
+public abstract class AbstractGesture {
 
-    public abstract float? ElapsedTime
+    public abstract float ElapsedTime
     {
         get;
-        set;
     }
 
     public abstract Vector3 MousePositionStart
     {
         get;
-        set;
     }
 
-    public abstract Vector3? MousePositionLast
+    public abstract Vector3 MousePositionLast
     {
         get;
-        set;
     }
 
     public abstract Vector3 MousePositionCurrent
     {
         get;
-        set;
     }
 
     public Vector3 Velocity
     {
         get
         {
-            return ElapsedTime.HasValue ? (MousePositionCurrent - MousePositionStart) / ElapsedTime.Value : Vector3.zero;
+            return ElapsedTime > 0f ? (MousePositionCurrent - MousePositionStart) / ElapsedTime : Vector3.zero;
         }
     }
 }

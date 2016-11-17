@@ -21,29 +21,28 @@ public class RotateOnDrag : GameBehavior {
 
     protected sealed override void AddEventHandlers()
     {
-        draggable.OnMotion += OnDragMotion;
+        draggable.OnDrag += OnDragMotion;
         draggable.OnDragEnd += OnDragDeselect;
     }
 
     protected sealed override void RemoveEventHandlers()
     {
-        draggable.OnMotion -= OnDragMotion;
+        draggable.OnDrag -= OnDragMotion;
         draggable.OnDragEnd -= OnDragDeselect;
     }
 
-    void OnDragMotion(Draggable draggable, Motion dragMotion, RaycastHit hitInfo) {
+    void OnDragMotion(Draggable draggable, Drag drag, RaycastHit hitInfo) {
         Direction potentialFaceDirection = hitInfo.normal.DominantDirection();
         faceDirection = potentialFaceDirection == Direction.None ? faceDirection : potentialFaceDirection;
-
-        Vector3 rawDragVector = dragMotion.MousePositionCurrent - dragMotion.MousePositionLast.Value;
+        Vector3 rawDragVector = drag.LastGesture.MousePositionCurrent - drag.LastGesture.MousePositionLast;
+        Diagnostics.Log("Drag vector is " + rawDragVector, LogType.Dragging);
         Vector3 rawRotationVector = SwipeToTorqueVector(rawDragVector, faceDirection);
-
         rigidbody.AddTorque(rawRotationVector * speed);
     }
 
     void FixedUpdate()
     {
-        Stabilize();   
+        //Stabilize();   
     }
 
     void Stabilize()
@@ -62,7 +61,7 @@ public class RotateOnDrag : GameBehavior {
         rigidbody.AddTorque(torqueVector * speed * speed);
     }
 
-    void OnDragDeselect(Draggable draggable, AbstractMotion drag)
+    void OnDragDeselect(Draggable draggable, AbstractGesture drag)
     {        
 
     }

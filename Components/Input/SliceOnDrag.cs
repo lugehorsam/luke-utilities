@@ -7,15 +7,15 @@ public class SliceOnDrag : GameBehavior {
 
     protected sealed override void AddEventHandlers()
     {
-        draggable.OnMotion += OnDrag;
+        draggable.OnDragEnd += OnDragEnd;
     }
 
     protected sealed override void RemoveEventHandlers()
     {
-        draggable.OnMotion -= OnDrag;
+        draggable.OnDragEnd -= OnDragEnd;
     }
 
-    void OnDrag(Draggable draggable, AbstractMotion drag, RaycastHit hitInfo) {
-       
+    void OnDragEnd(Draggable draggable, Drag currentDrag) {
+        Diagnostics.Log("current drag is " + currentDrag);
     }
 }
