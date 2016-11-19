@@ -23,7 +23,7 @@ public class Gesture : AbstractGesture {
 
     Vector3 mousePositionCurrent;
 
-    public sealed override Vector3 MousePositionLast
+    public sealed override Vector3? MousePositionLast
     {
         get
         {
@@ -31,7 +31,7 @@ public class Gesture : AbstractGesture {
         }
     }
 
-    Vector3  mousePositionLast;
+    Vector3? mousePositionLast;
 
 
     public override float ElapsedTime
@@ -56,12 +56,9 @@ public class Gesture : AbstractGesture {
 
     public void SetMousePositionCurrent(Vector3 mousePositionCurrent)
     {
+        Vector3 oldCurrent = this.mousePositionCurrent;
         this.mousePositionCurrent = mousePositionCurrent;
-    }
-
-    public void SetMousePositionLast(Vector3 mousePositionLast)
-    {
-        this.mousePositionLast = mousePositionLast;
+        this.mousePositionLast = oldCurrent;
     }
 
     public void IncrementElapsedTime(float elapsedTime)

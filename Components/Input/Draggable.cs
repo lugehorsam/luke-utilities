@@ -18,31 +18,43 @@ public class Draggable : Selectable {
     protected sealed override void HandleOnSelect(Vector3 mousePosition) {
         currentDrag = new Drag();
         CreateDragGesture(mousePosition);
-
     }
 
     protected sealed override void HandleOnHold (Vector3 mousePosition, RaycastHit hitInfo)
     {
         if (currentDragGesture == null)
         {
+            Debug.Log("Creating gesture from hold " + LogType.Dragging);
+
             CreateDragGesture(mousePosition);
         }
-        else {
-            bool isValidDrag = (mousePosition - currentDragGesture.MousePositionLast).magnitude > dragDetectFloor;
-            if (isValidDrag)
+        else 
+        {
+
+            bool firstDragUpdate = !currentDragGesture.MousePositionLast.HasValue;
+            if (firstDragUpdate)
             {
                 UpdateCurrentGesture(mousePosition);
-                Diagnostics.Log("Current drag is " + currentDrag, LogType.Dragging);
-                OnDrag(this, currentDrag, hitInfo);
             }
             else {
-                currentDrag.AddGesture(currentDragGesture);
-                if (currentDragGesture.ElapsedTime > 0f)
+                bool enoughDragMagnitude = (mousePosition - currentDragGesture.MousePositionLast.Value).magnitude > dragDetectFloor;
+                if (enoughDragMagnitude)
                 {
-                    Diagnostics.Log("Ending gesture " + currentDragGesture);
-                    OnDragGestureEnd(this, currentDrag);
+                    UpdateCurrentGesture(mousePosition);
+                    if (!firstDragUpdate)
+                    {
+                        OnDrag(this, currentDrag, hitInfo);
+                    }
                 }
-                currentDragGesture = null;
+                else
+                {
+                    currentDrag.AddGesture(currentDragGesture);
+                    if (currentDragGesture.ElapsedTime > 0f)
+                    {
+                        OnDragGestureEnd(this, currentDrag);
+                    }
+                    currentDragGesture = null;
+                }
             }
         }
     }
@@ -50,16 +62,13 @@ public class Draggable : Selectable {
     void CreateDragGesture(Vector3 mousePosition)
     {
         currentDragGesture = new DragGesture(mousePosition);
-        currentDragGesture.SetMousePositionLast(mousePosition);
         currentDrag.AddGesture(currentDragGesture);
     }
 
     void UpdateCurrentGesture(Vector3 mousePosition)
     {
-        Vector3 oldMousePosition = currentDragGesture.MousePositionCurrent;
         currentDragGesture.IncrementElapsedTime(Time.deltaTime);
         currentDragGesture.SetMousePositionCurrent(mousePosition);
-        currentDragGesture.SetMousePositionLast(oldMousePosition);
     }
 
     protected sealed override void HandleOnDeselect(Vector3 mousePosition) {

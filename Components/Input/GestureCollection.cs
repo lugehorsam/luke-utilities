@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using UnityEngine;
 
 public class GestureCollection<T> : AbstractGesture where T : Gesture { 
 
@@ -18,7 +19,7 @@ public class GestureCollection<T> : AbstractGesture where T : Gesture {
         gestures.Add(gesture);
     }
 
-    public override UnityEngine.Vector3 MousePositionLast
+    public override Vector3? MousePositionLast
     {
         get
         {
@@ -26,7 +27,7 @@ public class GestureCollection<T> : AbstractGesture where T : Gesture {
         }
     }
 
-    public override UnityEngine.Vector3 MousePositionStart
+    public override Vector3 MousePositionStart
     {
         get
         {
@@ -34,7 +35,7 @@ public class GestureCollection<T> : AbstractGesture where T : Gesture {
         }
     }
 
-    public override UnityEngine.Vector3 MousePositionCurrent
+    public override Vector3 MousePositionCurrent
     {
         get
         {

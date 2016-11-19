@@ -13,7 +13,7 @@ public abstract class AbstractGesture {
         get;
     }
 
-    public abstract Vector3 MousePositionLast
+    public abstract Vector3? MousePositionLast
     {
         get;
     }
