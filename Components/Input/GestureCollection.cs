@@ -2,19 +2,19 @@
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class GestureCollection<T> : AbstractGesture where T : Gesture { 
+public class GestureCollection : AbstractGesture { 
 
-    public ReadOnlyCollection<T> DragGestures
+    public ReadOnlyCollection<AbstractGesture> DragGestures
     {
         get
         {
-            return new ReadOnlyCollection<T>(gestures);
+            return new ReadOnlyCollection<AbstractGesture>(gestures);
         }
     }
 
-    List<T> gestures = new List<T>();
+    List<AbstractGesture> gestures = new List<AbstractGesture>();
 
-    public void AddGesture(T gesture)
+    public void AddGesture(AbstractGesture gesture)
     {
         gestures.Add(gesture);
     }
@@ -52,7 +52,7 @@ public class GestureCollection<T> : AbstractGesture where T : Gesture {
         }
     }
 
-    public T FirstGesture
+    public AbstractGesture FirstGesture
     {
         get
         {
@@ -60,7 +60,7 @@ public class GestureCollection<T> : AbstractGesture where T : Gesture {
         }
     }
 
-    public T LastGesture
+    public AbstractGesture LastGesture
     {
         get
         {
@@ -68,7 +68,7 @@ public class GestureCollection<T> : AbstractGesture where T : Gesture {
         }
     }
 
-    public GestureCollection(T firstGesture)
+    public GestureCollection(AbstractGesture firstGesture)
     {
         AddGesture(firstGesture);
     }

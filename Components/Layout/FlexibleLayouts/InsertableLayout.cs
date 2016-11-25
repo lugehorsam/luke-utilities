@@ -1,12 +1,12 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using System;
 
 public abstract class InsertableLayout<TData, TBehavior> : FlexibleLayout<TData, TBehavior> 
     where TData : struct
     where TBehavior : DatumBehavior<TData>, 
-    IDraggable,
-    IMultiCollider2D, 
+    IMultiCollider2D,
+    ITouchDispatcher,
     ILayoutMember
 {
     public event Action<TBehavior> OnBehaviorSelected = (behavior) => { };
@@ -53,8 +53,8 @@ public abstract class InsertableLayout<TData, TBehavior> : FlexibleLayout<TData,
         if (behavior == null) {
             Diagnostics.Report ("Trying to add handlers to a null behavior");
         }
-        behavior.Draggable.OnSelect += OnDraggableSelect;
-        behavior.Draggable.OnDeselect += OnDraggableDeselect;
+        behavior.TouchDispatcher.OnTouch += OnDraggableSelect;
+        behavior.TouchDispatcher.OnRelease += OnDraggableDeselect;
     }
      
     protected override void RemoveHandlers (TBehavior behavior)
@@ -62,16 +62,16 @@ public abstract class InsertableLayout<TData, TBehavior> : FlexibleLayout<TData,
         if (behavior == null) {
             Diagnostics.Report ("Trying to remove handlers from a null behavior");
         }
-        behavior.Draggable.OnSelect -= OnDraggableSelect;
-        behavior.Draggable.OnDeselect -= OnDraggableDeselect;
+        behavior.TouchDispatcher.OnTouch -= OnDraggableSelect;
+        behavior.TouchDispatcher.OnRelease -= OnDraggableDeselect;
     }
 
-    void OnDraggableSelect (Selectable selectable, Vector3 selectionPos)
+    void OnDraggableSelect (TouchDispatcher selectable, AbstractGesture gesture)
     {
         OnBehaviorSelected (selectable.GetComponent<TBehavior> ());
     }
 
-    void OnDraggableDeselect (Selectable selectable)
+    void OnDraggableDeselect (TouchDispatcher selectable, AbstractGesture gesture)
     {
         OnBehaviorDeselected (selectable.GetComponent<TBehavior> ());
     }

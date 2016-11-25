@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
 
 public class Gesture : AbstractGesture {
 
@@ -7,63 +9,57 @@ public class Gesture : AbstractGesture {
     {
         get
         {
-            return mousePositionStart;
+            return FirstFrame.Position;
         }
     }
-
-    Vector3 mousePositionStart;
 
     public sealed override Vector3 MousePositionCurrent
     {
         get
         {
-            return mousePositionCurrent;
+            return CurrentFrame.Position;
         }
     }
-
-    Vector3 mousePositionCurrent;
 
     public sealed override Vector3? MousePositionLast
     {
         get
         {
-            return mousePositionLast;
+            return LastFrame.Position;
         }
     }
-
-    Vector3? mousePositionLast;
-
 
     public override float ElapsedTime
     {
         get
         {
-            return elapsedTime;
+            return FirstFrame.Time - CurrentFrame.Time;
         }
     }
 
-    float elapsedTime;
 
-    public Gesture(Vector3 mousePositionStart)
+    GestureFrame FirstFrame
     {
-        this.mousePositionStart = mousePositionStart;
+        get
+        {
+            return gestureFrames[0];
+        }
     }
 
-    public void SetMousePositionStart(Vector3 mousePositionStart)
+    GestureFrame CurrentFrame
     {
-        this.mousePositionStart = mousePositionStart;
+        get
+        {
+            return gestureFrames[gestureFrames.Count - 1];
+        }
     }
 
-    public void SetMousePositionCurrent(Vector3 mousePositionCurrent)
+    GestureFrame LastFrame
     {
-        Vector3 oldCurrent = this.mousePositionCurrent;
-        this.mousePositionCurrent = mousePositionCurrent;
-        this.mousePositionLast = oldCurrent;
-    }
-
-    public void IncrementElapsedTime(float elapsedTime)
-    {
-        this.elapsedTime += elapsedTime;
+        get
+        {
+            return gestureFrames[gestureFrames.Count - 2];
+        }
     }
 
     public override string ToString()

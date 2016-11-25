@@ -1,13 +1,16 @@
-﻿using UnityEngine;
+using UnityEngine;
+using System.Linq;
 
-[RequireComponent(typeof(Draggable))]
-public class RotateOnDrag : GameBehavior {
+[RequireComponent(typeof(TouchDispatcher))]
+public class RotateOnDrag : GameBehavior
+{
 
-    Draggable draggable;
+    TouchDispatcher draggable;
 
     Direction faceDirection;
-
+    new Collider collider;
     new Rigidbody rigidbody;
+
     [SerializeField]
     float stability;
     [SerializeField]
@@ -15,24 +18,33 @@ public class RotateOnDrag : GameBehavior {
 
     protected override void InitComponents()
     {
-        draggable = GetComponent<Draggable>();
+        draggable = GetComponent<TouchDispatcher>();
         rigidbody = GetComponent<Rigidbody>();
+        collider = GetComponent<Collider>();
     }
 
     protected sealed override void AddEventHandlers()
     {
         draggable.OnDrag += OnDrag;
-        draggable.OnDragEnd += OnDragDeselect;
+        draggable.OnRelease += OnDragDeselect;
     }
 
     protected sealed override void RemoveEventHandlers()
     {
         draggable.OnDrag -= OnDrag;
-        draggable.OnDragEnd -= OnDragDeselect;
+        draggable.OnRelease -= OnDragDeselect;
     }
 
-    void OnDrag(Draggable draggable, Drag drag, RaycastHit hitInfo) {
-        Direction potentialFaceDirection = hitInfo.normal.DominantDirection();
+    void OnDrag(TouchDispatcher draggable, AbstractGesture drag)
+    {
+        GestureFrame lastFrame = drag.GestureFrames.Last();
+        RaycastHit? hitForCollider = lastFrame.HitForCollider(collider);
+        if (!hitForCollider.HasValue)
+        {
+            return;
+        }
+
+        Direction potentialFaceDirection = hitForCollider.Value.normal.DominantDirection();
         faceDirection = potentialFaceDirection == Direction.None ? faceDirection : potentialFaceDirection;
         Vector3 rawDragVector = drag.MousePositionCurrent - drag.MousePositionLast.Value;
         Debug.Log("Current is " + drag.MousePositionCurrent);
@@ -54,7 +66,7 @@ public class RotateOnDrag : GameBehavior {
             rigidbody.angularVelocity
         ) * (transform.up + transform.right);
 
-       
+
         Diagnostics.Log("Predicted up is " + predictedUpRight);
         Vector3 upTorque = Vector3.Cross(predictedUpRight, (Vector3.up + Vector3.right));
         Vector3 downTorque = Vector3.Cross(predictedUpRight, (Vector3.down + Vector3.right));
@@ -63,8 +75,8 @@ public class RotateOnDrag : GameBehavior {
         rigidbody.AddTorque(torqueVector * speed * speed);
     }
 
-    void OnDragDeselect(Draggable draggable, AbstractGesture drag)
-    {        
+    void OnDragDeselect(TouchDispatcher draggable, AbstractGesture drag)
+    {
 
     }
 

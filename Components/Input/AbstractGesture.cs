@@ -1,7 +1,16 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 public abstract class AbstractGesture {
+
+    public ReadOnlyCollection<GestureFrame> GestureFrames
+    {
+        get
+        {
+            return new ReadOnlyCollection<GestureFrame>(gestureFrames);
+        }
+    }
 
     public abstract float ElapsedTime
     {
@@ -29,5 +38,12 @@ public abstract class AbstractGesture {
         {
             return ElapsedTime > 0f ? (MousePositionCurrent - MousePositionStart) / ElapsedTime : Vector3.zero;
         }
+    }
+
+    protected List<GestureFrame> gestureFrames;
+
+    public void AddGestureFrame(GestureFrame frame)
+    {
+        gestureFrames.Add(frame);
     }
 }

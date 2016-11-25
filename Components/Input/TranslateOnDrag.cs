@@ -1,36 +1,36 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Draggable))]
+[RequireComponent(typeof(TouchDispatcher))]
 [RequireComponent(typeof(PositionBinding))]
 public class TranslateOnDrag : MonoBehaviour {
 
-    Draggable draggable;
+    TouchDispatcher draggable;
     PositionBinding positionBinding;
     Vector3 offsetFromMouse;
 
     void Awake()
     {
-        draggable = GetComponent<Draggable>();
+        draggable = GetComponent<TouchDispatcher>();
         positionBinding = GetComponent<PositionBinding>();
         draggable.OnDrag += OnDrag;
-        draggable.OnDeselect += OnDeselect;
+        draggable.OnRelease += OnDeselect;
     }
 
-    void OnSelect(Selectable selectable, Vector3 selectablePosition, RaycastHit hitInfo)
+    void OnSelect(TouchDispatcher listener, AbstractGesture gesture)
     {
-        Vector3 worldPoint = Camera.main.ScreenToWorldPoint(selectablePosition);
+        Vector3 worldPoint = Camera.main.ScreenToWorldPoint(gesture.MousePositionCurrent);
         offsetFromMouse = worldPoint - transform.position;
     }
 
-    void OnDrag(Draggable draggable, Drag drag, RaycastHit hitInfo)
+    void OnDrag(TouchDispatcher draggable, AbstractGesture drag)
     {
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(drag.MousePositionCurrent);
         Vector3 newPosition = worldPoint - offsetFromMouse;
         positionBinding.SetProperty(newPosition);
     }
 
-    void OnDeselect(Selectable selectable)
+    void OnDeselect(TouchDispatcher draggable, AbstractGesture drag)
     {
         offsetFromMouse = Vector3.zero;
     }

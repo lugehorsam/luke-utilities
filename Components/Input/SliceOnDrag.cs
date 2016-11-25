@@ -1,21 +1,21 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-[RequireComponent(typeof(Draggable))]
+[RequireComponent(typeof(TouchDispatcher))]
 public class SliceOnDrag : GameBehavior {
 
-    Draggable draggable;
+    TouchDispatcher draggable;
 
     protected sealed override void AddEventHandlers()
     {
-        draggable.OnDragEnd += OnDragEnd;
+        draggable.OnRelease += OnDragEnd;
     }
 
     protected sealed override void RemoveEventHandlers()
     {
-        draggable.OnDragEnd -= OnDragEnd;
+        draggable.OnRelease -= OnDragEnd;
     }
 
-    void OnDragEnd(Draggable draggable, Drag currentDrag) {
+    void OnDragEnd(TouchDispatcher draggable, AbstractGesture currentDrag) {
         Diagnostics.Log("current drag is " + currentDrag);
     }
 }
