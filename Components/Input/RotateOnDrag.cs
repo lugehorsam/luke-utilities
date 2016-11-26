@@ -4,12 +4,14 @@ using System.Linq;
 [RequireComponent(typeof(TouchDispatcher))]
 public class RotateOnDrag : GameBehavior
 {
-
-    TouchDispatcher draggable;
-
     Direction faceDirection;
+
+    TouchDispatcher touchDispatcher;
     new Collider collider;
     new Rigidbody rigidbody;
+
+    [SerializeField]
+    bool debugMode;
 
     [SerializeField]
     float stability;
@@ -18,38 +20,37 @@ public class RotateOnDrag : GameBehavior
 
     protected override void InitComponents()
     {
-        draggable = GetComponent<TouchDispatcher>();
+        touchDispatcher = GetComponent<TouchDispatcher>();
         rigidbody = GetComponent<Rigidbody>();
         collider = GetComponent<Collider>();
     }
 
     protected sealed override void AddEventHandlers()
     {
-        draggable.OnDrag += OnDrag;
-        draggable.OnRelease += OnDragDeselect;
+        touchDispatcher.OnDrag += OnDrag;
+        touchDispatcher.OnRelease += OnDragDeselect;
     }
 
     protected sealed override void RemoveEventHandlers()
     {
-        draggable.OnDrag -= OnDrag;
-        draggable.OnRelease -= OnDragDeselect;
+        touchDispatcher.OnDrag -= OnDrag;
+        touchDispatcher.OnRelease -= OnDragDeselect;
     }
 
-    void OnDrag(TouchDispatcher draggable, AbstractGesture drag)
+    void OnDrag(TouchDispatcher draggable, Gesture drag)
     {
-        GestureFrame lastFrame = drag.GestureFrames.Last();
-        RaycastHit? hitForCollider = lastFrame.HitForCollider(collider);
-        if (!hitForCollider.HasValue)
+        Debug.Log("First frame is " + drag.GestureFrames[0]);
+        if (drag.GestureFrames[0].HitForCollider(collider) == null)
         {
             return;
         }
 
-        Direction potentialFaceDirection = hitForCollider.Value.normal.DominantDirection();
+        GestureFrame lastFrame = drag.GestureFrames.Last();
+        RaycastHit? hitForCollider = lastFrame.HitForCollider(collider);
+
+        Direction potentialFaceDirection = hitForCollider.HasValue ? hitForCollider.Value.normal.DominantDirection() : Direction.None;
         faceDirection = potentialFaceDirection == Direction.None ? faceDirection : potentialFaceDirection;
         Vector3 rawDragVector = drag.MousePositionCurrent - drag.MousePositionLast.Value;
-        Debug.Log("Current is " + drag.MousePositionCurrent);
-        Debug.Log("Last is " + drag.MousePositionLast);
-        Diagnostics.Log("Drag vector is " + rawDragVector, LogType.Dragging);
         Vector3 rawRotationVector = SwipeToTorqueVector(rawDragVector, faceDirection);
         rigidbody.AddTorque(rawRotationVector * speed);
     }
@@ -75,9 +76,13 @@ public class RotateOnDrag : GameBehavior
         rigidbody.AddTorque(torqueVector * speed * speed);
     }
 
-    void OnDragDeselect(TouchDispatcher draggable, AbstractGesture drag)
+    void OnDragDeselect(TouchDispatcher draggable, Gesture drag)
     {
-
+        if (debugMode)
+        {
+            Diagnostics.Log("Drawing drag");
+            Diagnostics.DrawGesture(drag);
+        }
     }
 
     Vector3 SwipeToTorqueVector(Vector3 rawDragVector, Direction faceDirection)

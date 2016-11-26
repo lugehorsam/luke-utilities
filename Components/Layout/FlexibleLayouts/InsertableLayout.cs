@@ -66,12 +66,12 @@ public abstract class InsertableLayout<TData, TBehavior> : FlexibleLayout<TData,
         behavior.TouchDispatcher.OnRelease -= OnDraggableDeselect;
     }
 
-    void OnDraggableSelect (TouchDispatcher selectable, AbstractGesture gesture)
+    void OnDraggableSelect (TouchDispatcher selectable, Gesture gesture)
     {
         OnBehaviorSelected (selectable.GetComponent<TBehavior> ());
     }
 
-    void OnDraggableDeselect (TouchDispatcher selectable, AbstractGesture gesture)
+    void OnDraggableDeselect (TouchDispatcher selectable, Gesture gesture)
     {
         OnBehaviorDeselected (selectable.GetComponent<TBehavior> ());
     }

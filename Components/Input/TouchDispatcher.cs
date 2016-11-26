@@ -4,34 +4,36 @@ using System.Collections.Generic;
 
 public class TouchDispatcher : GameBehavior
 {
-    [SerializeField]
-    protected new Collider collider;
+    new Collider collider;
 
-    public event Action<TouchDispatcher, AbstractGesture> OnTouch = (arg1, arg2) => { };
-    public event Action<TouchDispatcher, AbstractGesture> OnHold = (arg1, arg2) => { };
-    public event Action<TouchDispatcher, AbstractGesture> OnRelease = (arg1, arg2) => { };
-    public event Action<TouchDispatcher, AbstractGesture> OnDrag = (arg1, arg2) => { };
+    public event Action<TouchDispatcher, Gesture> OnTouch = (arg1, arg2) => { };
+    public event Action<TouchDispatcher, Gesture> OnHold = (arg1, arg2) => { };
+    public event Action<TouchDispatcher, Gesture> OnRelease = (arg1, arg2) => { };
+    public event Action<TouchDispatcher, Gesture> OnDrag = (arg1, arg2) => { };
 
-    protected virtual void HandleOnTouch(TouchDispatcher touchDispatcher, AbstractGesture gestureFrame) { }
-    protected virtual void HandleOnHold(TouchDispatcher touchDispatcher, AbstractGesture gestureFrame) { }
-    protected virtual void HandleOnRelease(TouchDispatcher touchDispatcher, AbstractGesture gestureFrame) { }
-    protected virtual void HandleOnDrag(TouchDispatcher touchDispatcher, AbstractGesture gestureFrame) { }
+    protected virtual void HandleOnTouch(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
+    protected virtual void HandleOnHold(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
+    protected virtual void HandleOnRelease(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
+    protected virtual void HandleOnDrag(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
 
-    protected AbstractGesture currentGesture;
+    protected Gesture currentGesture;
+
+    void Awake()
+    {
+        collider = GetComponent<Collider>();
+    }
 
     void Update()
     {
         bool mouseIsDown = Input.GetMouseButton(0);
         bool mouseWasDown = currentGesture != null;
 
-        RaycastHit overlapInfo;
+        RaycastHit? hitInfo = GetHitInfo(Input.mousePosition);
 
-        bool overlap = IsOverlapped(out overlapInfo, Input.mousePosition);
         bool firstTouch = !mouseWasDown && mouseIsDown;
         bool hold = mouseWasDown && mouseIsDown;
-        bool release = mouseIsDown && !mouseIsDown;
+        bool release = mouseWasDown && !mouseIsDown;
         bool drag = hold && currentGesture.MousePositionCurrent != currentGesture.MousePositionLast;
-
         if (firstTouch)
         {
             currentGesture = new Gesture();
@@ -41,7 +43,7 @@ public class TouchDispatcher : GameBehavior
 
         if (firstTouch || hold)
         {
-            GestureFrame gestureFrame = new GestureFrame(Input.mousePosition, overlapInfo);
+            GestureFrame gestureFrame = new GestureFrame(Input.mousePosition, hitInfo);
             currentGesture.AddGestureFrame(gestureFrame);
             HandleOnHold(this, currentGesture);
             OnHold(this, currentGesture);
@@ -57,12 +59,12 @@ public class TouchDispatcher : GameBehavior
         {
             HandleOnRelease(this, currentGesture);
             OnRelease(this, currentGesture);
+            currentGesture = null;
         }    
     }
 
-    bool IsOverlapped(out RaycastHit hitInfo, Vector3 mousePosition)
+    RaycastHit? GetHitInfo(Vector3 mousePosition)
     {
-        hitInfo = default(RaycastHit);
         Vector3 origin = Camera.main.ScreenToWorldPoint(mousePosition);
         RaycastHit[] hits = Physics.RaycastAll(origin, Vector3.forward, 100f);
         for (int i = 0; i < hits.Length; i++)
@@ -70,10 +72,9 @@ public class TouchDispatcher : GameBehavior
             RaycastHit hit = hits[i];
             if (hit.collider == collider)
             {
-                hitInfo = hit;
-                return true;
+                return hit;
             }
         }
-        return false;
+        return null;
     }
 }

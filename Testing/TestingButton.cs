@@ -7,7 +7,7 @@ using System;
 
 [RequireComponent(typeof(UIButton))]
 
-public class TestingButton : DatumBehavior<TestingMethodData>, ILayoutMember {
+public class TestingButton : DatumBehavior<DiagnosticsData>, ILayoutMember {
 
     UIButton button;
 
@@ -19,7 +19,7 @@ public class TestingButton : DatumBehavior<TestingMethodData>, ILayoutMember {
         button = GetComponent<UIButton> ();
     }
 
-    protected override void HandleDataUpdate (TestingMethodData oldData, TestingMethodData newData)
+    protected override void HandleDataUpdate (DiagnosticsData oldData, DiagnosticsData newData)
     {
         text.text = newData.DisplayName;
         button.OnClick += newData.Action;

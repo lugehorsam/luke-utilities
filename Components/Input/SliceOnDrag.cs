@@ -1,21 +1,47 @@
 using UnityEngine;
+using System.Linq;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(TouchDispatcher))]
 public class SliceOnDrag : GameBehavior {
 
-    TouchDispatcher draggable;
+    TouchDispatcher touchDispatcher;
+    new Collider collider;
+
+    [SerializeField]
+    bool debugMode;
+
+    protected override void InitComponents()
+    {
+        touchDispatcher = GetComponent<TouchDispatcher>();
+        collider = GetComponent<Collider>();
+    }
 
     protected sealed override void AddEventHandlers()
     {
-        draggable.OnRelease += OnDragEnd;
+        touchDispatcher.OnRelease += OnDragEnd;
     }
 
     protected sealed override void RemoveEventHandlers()
     {
-        draggable.OnRelease -= OnDragEnd;
+        touchDispatcher.OnRelease -= OnDragEnd;
     }
 
-    void OnDragEnd(TouchDispatcher draggable, AbstractGesture currentDrag) {
-        Diagnostics.Log("current drag is " + currentDrag);
+    void OnDragEnd(TouchDispatcher dispatcher, Gesture currentDrag) {
+
+        Gesture[] collisionGestures = currentDrag.Filter((frame) =>
+        {
+            RaycastHit? hit = frame.HitForCollider(collider);
+            return hit.HasValue && hit.Value.collider == collider;
+        });
+
+        List<Gesture> sliceGestures = new List<Gesture>();
+        for (int gestureIndex = 0; gestureIndex < collisionGestures.Length; gestureIndex++)
+        {
+            if (debugMode)
+            {
+                Debug.DrawLine(collisionGestures[gestureIndex].MousePositionStart, (collisionGestures[gestureIndex].MousePositionCurrent));
+            }
+        }
     }
 }

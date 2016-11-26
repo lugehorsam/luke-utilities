@@ -7,27 +7,29 @@ using UnityEngine.UI;
 [RequireComponent (typeof (CanvasRenderer))]
 [RequireComponent (typeof (GraphicRaycaster))]
 
-public class TestingManager : DataManager<TestingMethodData, TestingButton> {
+public class TestingManager : DataManager<DiagnosticsData, TestingButton> {
 
     [SerializeField]
-    RectTransform panelHolder;
+    RectTransform buttonHolder;
 
     protected override void AddLocalData ()
     {
-        data.Add (new TestingMethodData (TogglePanel, "Open Console", KeyCode.C));
-        data.Add (new TestingMethodData (() => DataSource.EnableCache = false, "Disable Cache"));
-        data.Add (new TestingMethodData (() => PlayerPrefs.DeleteAll (), "Clear Cache"));
+        data.Add (new DiagnosticsData (TogglePanel, "Open Console", KeyCode.C));
+        data.Add (new DiagnosticsData (() => DataSource.EnableCache = false, "Disable Cache"));
+        data.Add (new DiagnosticsData (() => PlayerPrefs.DeleteAll (), "Clear Cache"));
         LogType[] logTypes = Enum.GetValues (typeof(LogType)) as LogType[];
         foreach (LogType logType in logTypes) {
             LogType type = logType;
-            data.Add (new TestingMethodData (() => Diagnostics.CurrentLogType = type, "Toggle Log To " + logType));
+            data.Add (new DiagnosticsData (() => Diagnostics.CurrentLogType = type, "Toggle Log To " + logType));
         }
     }
 
     void Update ()
     {
-        foreach (TestingMethodData datum in data) {
-            if (datum.Key.HasValue && Input.GetKeyDown (datum.Key.Value)) {
+        foreach (DiagnosticsData datum in data) 
+        {
+            if (datum.Key.HasValue && Input.GetKeyDown (datum.Key.Value)) 
+            {
                 datum.Action ();
             }
         }
@@ -35,7 +37,7 @@ public class TestingManager : DataManager<TestingMethodData, TestingButton> {
 
     protected override void HandleNewBehavior (TestingButton behavior)
     {
-        behavior.transform.SetParent (panelHolder.transform);
+        behavior.transform.SetParent (buttonHolder.transform);
     }
 
     protected override void HandleRemovedBehavior (TestingButton behaviors)
@@ -44,7 +46,6 @@ public class TestingManager : DataManager<TestingMethodData, TestingButton> {
 
     void TogglePanel ()
     {
-        Diagnostics.Log ("Toggling panel");
-        panelHolder.gameObject.SetActive (!panelHolder.gameObject.activeSelf);
+        buttonHolder.gameObject.SetActive (!buttonHolder.gameObject.activeSelf);
     }
 }

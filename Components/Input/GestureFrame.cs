@@ -37,4 +37,9 @@ public struct GestureFrame {
                       hitInfo :
                       null;
     }
+
+    public override string ToString()
+    {
+        return string.Format("[GestureFrame: Position={0}, Time={1}, HitInfo={2}]", Position, Time, hitInfo);
+    }
 }

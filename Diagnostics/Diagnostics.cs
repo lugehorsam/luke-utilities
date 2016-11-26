@@ -5,6 +5,12 @@ using System.Collections.Generic;
 
 public static class Diagnostics {
 
+    const float GESTURE_DRAW_DURATION = 1f; //in seconds
+
+    static string text;
+    static TextAnchor textAlignment; 
+    static Color color;
+
     public static LogType CurrentLogType {
         get {
             return currentLogType;
@@ -36,5 +42,32 @@ public static class Diagnostics {
     public static void LogWarning (string log)
     {
         Debug.LogWarning (log);
+    }
+    public static void DrawGesture(Gesture gesture)
+    {
+        for (int frameIndex = 0; frameIndex < gesture.GestureFrames.Count - 1; frameIndex++)
+        {
+            GestureFrame currFrame = gesture.GestureFrames[frameIndex];
+            GestureFrame nextFrame = gesture.GestureFrames[frameIndex + 1];
+            Debug.DrawLine(currFrame.Position, nextFrame.Position, Color.red, GESTURE_DRAW_DURATION);
+        }
+    }
+
+    public static void Display(string text, TextAnchor textAlignment, Color color)
+    {
+        Diagnostics.text = text;
+        Diagnostics.textAlignment = textAlignment;
+        Diagnostics.color = color;  
+    }
+
+    static void OnGUI()
+    {
+        GUIStyle guiStyle = new GUIStyle();
+        guiStyle.normal.textColor = color;
+        int w = Screen.width, h = Screen.height;
+        Rect guiRect = new Rect(30, 30, w, h);
+        guiStyle.alignment = TextAnchor.UpperLeft;
+        guiStyle.fontSize = h * 2 / 100;
+        GUI.Label(guiRect, text, guiStyle);
     }
 }

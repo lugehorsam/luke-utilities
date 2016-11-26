@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public struct TestingMethodData {
+public struct DiagnosticsData {
     public string DisplayName {
         get {
             return displayName;
@@ -26,7 +26,7 @@ public struct TestingMethodData {
 
     Action action;
 
-    public TestingMethodData (Action action, string displayName, KeyCode? key = null)
+    public DiagnosticsData (Action action, string displayName, KeyCode? key = null)
     {
         this.displayName = displayName;
         this.action = action;
