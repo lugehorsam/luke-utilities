@@ -63,7 +63,7 @@ public class Gesture {
         gestureFrames.Add(frame);
     }
 
-    GestureFrame FirstFrame
+    public GestureFrame FirstFrame
     {
         get
         {
@@ -71,7 +71,7 @@ public class Gesture {
         }
     }
 
-    GestureFrame CurrentFrame
+    public GestureFrame CurrentFrame
     {
         get
         {
@@ -79,7 +79,7 @@ public class Gesture {
         }
     }
 
-    GestureFrame? LastFrame
+    public GestureFrame? LastFrame
     {
         get
         {
@@ -103,10 +103,10 @@ public class Gesture {
 
     }
 
-    public Gesture[] Filter(Func<GestureFrame, bool> filterCriteria)
+    public Gesture[] Filter(Func<GestureFrame, bool> filterCriteria, bool includeEdgeFrames = false)
     {
         List<Gesture> subGestures = new List<Gesture>();
-        Gesture currentGesture = new Gesture();
+        Gesture currentGesture = null;
 
         for (int frameIndex = 0; frameIndex < gestureFrames.Count; frameIndex++)
         {
@@ -115,10 +115,19 @@ public class Gesture {
                 if (currentGesture == null)
                 {
                     currentGesture = new Gesture();
+                    if (includeEdgeFrames && frameIndex > 0)
+                    {
+                        currentGesture.AddGestureFrame((gestureFrames[frameIndex - 1]));
+                    }
                 }
+
                 currentGesture.AddGestureFrame(gestureFrames[frameIndex]);
             }
-            else {
+            else if (currentGesture != null) {
+                if (includeEdgeFrames && frameIndex < gestureFrames.Count - 1)
+                {
+                    currentGesture.AddGestureFrame((gestureFrames[frameIndex + 1]));
+                }
                 subGestures.Add(currentGesture);
                 currentGesture = null;
             }

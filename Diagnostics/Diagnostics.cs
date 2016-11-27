@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public static class Diagnostics {
 
-    const float GESTURE_DRAW_DURATION = 1f; //in seconds
+    const float GESTURE_DRAW_DURATION = 1000f; //in seconds
 
     static string text;
     static TextAnchor textAlignment; 
@@ -49,7 +49,7 @@ public static class Diagnostics {
         {
             GestureFrame currFrame = gesture.GestureFrames[frameIndex];
             GestureFrame nextFrame = gesture.GestureFrames[frameIndex + 1];
-            Debug.DrawLine(currFrame.Position, nextFrame.Position, Color.red, GESTURE_DRAW_DURATION);
+            Debug.DrawLine(currFrame.Position, nextFrame.Position, Color.red, GESTURE_DRAW_DURATION, depthTest: false);
         }
     }
 

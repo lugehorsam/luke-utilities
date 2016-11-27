@@ -39,7 +39,6 @@ public class RotateOnDrag : GameBehavior
 
     void OnDrag(TouchDispatcher draggable, Gesture drag)
     {
-        Debug.Log("First frame is " + drag.GestureFrames[0]);
         if (drag.GestureFrames[0].HitForCollider(collider) == null)
         {
             return;

@@ -1,47 +1,39 @@
 using UnityEngine;
-using System.Linq;
-using System.Collections.Generic;
 
 [RequireComponent(typeof(TouchDispatcher))]
 public class SliceOnDrag : GameBehavior {
 
     TouchDispatcher touchDispatcher;
     new Collider collider;
+    MeshFilter meshFilter;
 
     [SerializeField]
     bool debugMode;
 
     protected override void InitComponents()
     {
+        meshFilter = GetComponent<MeshFilter>();
         touchDispatcher = GetComponent<TouchDispatcher>();
         collider = GetComponent<Collider>();
     }
 
     protected sealed override void AddEventHandlers()
     {
-        touchDispatcher.OnRelease += OnDragEnd;
+        touchDispatcher.OnDragLeave += OnDragLeave;
     }
 
     protected sealed override void RemoveEventHandlers()
     {
-        touchDispatcher.OnRelease -= OnDragEnd;
+        touchDispatcher.OnDragLeave -= OnDragLeave;
     }
 
-    void OnDragEnd(TouchDispatcher dispatcher, Gesture currentDrag) {
-
-        Gesture[] collisionGestures = currentDrag.Filter((frame) =>
+    void OnDragLeave(TouchDispatcher dispatcher, Gesture currentDrag)
+    {
+        SliceDatum[] sliceData = SliceDatum.FromGesture(currentDrag, collider);
+        foreach (SliceDatum slice in sliceData)
         {
-            RaycastHit? hit = frame.HitForCollider(collider);
-            return hit.HasValue && hit.Value.collider == collider;
-        });
-
-        List<Gesture> sliceGestures = new List<Gesture>();
-        for (int gestureIndex = 0; gestureIndex < collisionGestures.Length; gestureIndex++)
-        {
-            if (debugMode)
-            {
-                Debug.DrawLine(collisionGestures[gestureIndex].MousePositionStart, (collisionGestures[gestureIndex].MousePositionCurrent));
-            }
+            slice.SliceMesh(meshFilter.mesh);
         }
+
     }
 }

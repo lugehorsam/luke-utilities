@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 public class TouchDispatcher : GameBehavior
 {
@@ -10,11 +10,13 @@ public class TouchDispatcher : GameBehavior
     public event Action<TouchDispatcher, Gesture> OnHold = (arg1, arg2) => { };
     public event Action<TouchDispatcher, Gesture> OnRelease = (arg1, arg2) => { };
     public event Action<TouchDispatcher, Gesture> OnDrag = (arg1, arg2) => { };
+    public event Action<TouchDispatcher, Gesture> OnDragLeave = (arg1, arg2) => { };
 
     protected virtual void HandleOnTouch(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
     protected virtual void HandleOnHold(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
     protected virtual void HandleOnRelease(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
     protected virtual void HandleOnDrag(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
+    protected virtual void HandleOnDragLeave(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
 
     protected Gesture currentGesture;
 
@@ -53,6 +55,13 @@ public class TouchDispatcher : GameBehavior
         {
             HandleOnDrag(this, currentGesture);
             OnDrag(this, currentGesture);
+            bool collisionLastFrame = currentGesture.LastFrame.Value.HitForCollider(collider).HasValue;
+            bool collisionThisFrame = currentGesture.CurrentFrame.HitForCollider(collider).HasValue;
+            if (collisionLastFrame && !collisionThisFrame)
+            {
+                HandleOnDragLeave(this, currentGesture);
+                OnDragLeave(this, currentGesture);
+            }
         }
 
         if (release)
