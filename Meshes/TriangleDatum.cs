@@ -93,6 +93,56 @@ public struct TriangleDatum {
         return triangles.ToArray();
     }
 
+    public static Mesh ToMesh(TriangleDatum[] triangles)
+    {
+        Mesh mesh = new Mesh();
+
+        List<int> triangleIndices = new List<int> ();
+        List<Vector3> vertices = new List<Vector3>();
+
+        foreach (TriangleDatum triangle in triangles)
+        {
+            foreach (VertexDatum vertex in triangle.VertexData)
+            {
+                int vertexIndex = vertices.IndexOf(vertex);
+
+                if (vertexIndex < 0)
+                {
+                    vertexIndex = vertices.Count;
+                    vertices.Add(vertex);  
+                }
+
+                triangleIndices.Add(vertexIndex);
+            }
+        }
+
+        Mesh newMesh = new Mesh();
+        newMesh.vertices = vertices.ToArray();
+        newMesh.triangles = triangleIndices.ToArray();
+        return newMesh;
+    }
+
+    public static Dictionary<VertexDatum, List<TriangleDatum>> GetVertexTriangleMap(TriangleDatum[] triangles)
+    {
+
+        Dictionary<VertexDatum, List<TriangleDatum>> map = new Dictionary<VertexDatum, List<TriangleDatum>>();
+        for (int i = 0; i < triangles.Length; i++)
+        {
+            TriangleDatum currentTriangle = triangles[i];
+            ReadOnlyCollection<VertexDatum> vertexData = currentTriangle.VertexData;
+            for (int j = 0; j < vertexData.Count; i++)
+            {
+                VertexDatum datum = vertexData[j];
+                if (!map.ContainsKey(datum))
+                {
+                    map[datum] = new List<TriangleDatum>();
+                }
+                map[datum].Add(currentTriangle);
+            }
+        }
+        return map;
+    }
+
     public int NumSharedVertices(TriangleDatum otherTriangle)
     {
         int numShared = 0;

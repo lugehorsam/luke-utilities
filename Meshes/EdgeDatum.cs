@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 
 public struct EdgeDatum {
     public VertexDatum Vertex1
@@ -52,8 +53,15 @@ public struct EdgeDatum {
         this.Vertex2 = vertex2;
     }
 
+    public EdgeDatum(IList<Vector3> vectorList)
+    {
+        this.Vertex1 = vectorList.First();
+        this.Vertex2 = vectorList.Last();
+    }
+
     public Vector3? GetIntersection(EdgeDatum otherEdge)
     {
+        Diagnostics.Log("Get intersection passed edge " + otherEdge);
         float thisYDiff = Vertex2.Y - Vertex1.Y;
         float thisXDiff = Vertex1.X - Vertex2.X;
         float thisC = thisYDiff * this.Vertex1.X + thisXDiff * this.Vertex1.Y;
@@ -64,6 +72,7 @@ public struct EdgeDatum {
 
         float det = thisYDiff * otherXDiff - otherYDiff * thisXDiff;
 
+        Diagnostics.Log("det is " + det);
         if (det == 0f)
         {
             return null;
@@ -73,5 +82,10 @@ public struct EdgeDatum {
             float y = (thisYDiff * otherC - otherYDiff * thisC) / det;
             return new Vector3(x, y, 0f);
         }
+    }
+
+    public override string ToString()
+    {
+        return string.Format("[EdgeDatum: Vertex1={0}, Vertex2={1}, MinY={2}, MaxY={3}, MinX={4}, MaxX={5}]", Vertex1, Vertex2, MinY, MaxY, MinX, MaxX);
     }
 }

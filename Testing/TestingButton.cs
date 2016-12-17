@@ -14,7 +14,7 @@ public class TestingButton : DatumBehavior<DiagnosticsData>, ILayoutMember {
     [SerializeField]
     Text text;
 
-    public override void Init ()
+    protected override void InitComponents ()
     {
         button = GetComponent<UIButton> ();
     }

@@ -20,7 +20,7 @@ public static class Diagnostics {
         }
     }
 
-    static LogType currentLogType = LogType.Dragging; //override here
+    static LogType currentLogType = LogType.All; //override here
 
     public static void Report (string message)
     {

@@ -1,8 +1,10 @@
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(TouchDispatcher))]
 public class SliceOnDrag : GameBehavior {
 
+    public Action<SliceDatum> OnSlice = (slice) => { };
     TouchDispatcher touchDispatcher;
     new Collider collider;
     MeshFilter meshFilter;
@@ -30,9 +32,11 @@ public class SliceOnDrag : GameBehavior {
     void OnDragLeave(TouchDispatcher dispatcher, Gesture currentDrag)
     {
         SliceDatum[] sliceData = SliceDatum.FromGesture(currentDrag, collider);
+        Diagnostics.Log("Slice data length is " + sliceData.Length);
         foreach (SliceDatum slice in sliceData)
         {
             slice.SliceMesh(meshFilter.mesh);
+            OnSlice(slice);
         }
 
     }

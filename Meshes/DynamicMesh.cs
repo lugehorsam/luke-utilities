@@ -31,18 +31,55 @@ public class DynamicMesh : MonoBehaviour {
 
     MeshFilter meshFilter;
     MeshRenderer meshRenderer;
+    MeshCollider meshCollider;
+
+    [SerializeField]
+    bool rebuildOnAwake = true;
+
+    [SerializeField]
+    bool useMeshAsset;
+
+    [SerializeField]
+    MeshAsset meshAsset;
 
     void Awake ()
     {
         meshFilter = GetComponent<MeshFilter> ();
         meshRenderer = GetComponent<MeshRenderer> ();
+        meshCollider = GetComponent<MeshCollider>();
+
+        if (rebuildOnAwake)
+        {
+            Rebuild();
+        }
     }
 
-	public void Rebuild () {
-        Mesh mesh = meshFilter.mesh;
-        mesh.Clear ();
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
+    public void Rebuild()
+    {
+
+        Mesh mesh;
+        if (useMeshAsset)
+        {
+            mesh = meshAsset.ToMesh();
+            Debug.Log("Mesh is " + mesh);
+        }
+        else
+        {
+            mesh = meshFilter.mesh;
+            mesh.Clear();
+            mesh.vertices = vertices;
+            mesh.triangles = triangles;
+        }
+
+        meshFilter.mesh = mesh;
         meshRenderer.material.color = color;
+      
+        if (meshCollider != null)
+        {
+            DestroyImmediate(meshCollider);
+            meshCollider = gameObject.AddComponent<MeshCollider>();
+        }
+
+        meshCollider.sharedMesh = mesh;
     }
 }

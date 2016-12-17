@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class DatumBehavior<TData> : MonoBehaviour
+public abstract class DatumBehavior<TData> : GameBehavior
     where TData : struct {
 
     public event Action<TData, TData> OnDataChanged = (d1, d2) => { };
@@ -26,8 +26,6 @@ public abstract class DatumBehavior<TData> : MonoBehaviour
     {
         yield return null;
     }
-
-    public abstract void Init ();
 
     protected virtual void HandleDataUpdate (TData oldData, TData newData) {}
 }

@@ -64,4 +64,9 @@ public struct VertexDatum {
         this.y = y;
         this.z = z;
     }
+
+    public override string ToString()
+    {
+        return string.Format("[VertexDatum: X={0}, Y={1}, Z={2}]", X, Y, Z);
+    }
 }

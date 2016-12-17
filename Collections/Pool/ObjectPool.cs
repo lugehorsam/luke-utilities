@@ -42,6 +42,7 @@ public class ObjectPool<T>  {
         try {
             T objectToRelease = pooledObjects.Dequeue ();
             releasedObjects.Add (objectToRelease);
+            HandleOnRelease(objectToRelease);
             OnRelease (objectToRelease);
             return objectToRelease;
         } catch (InvalidOperationException) {
@@ -52,6 +53,18 @@ public class ObjectPool<T>  {
     public void Pool(T objectToPool) {
         releasedObjects.Remove(objectToPool);
         pooledObjects.Enqueue(objectToPool);
+        HandleOnPool(objectToPool);
+        OnPool(objectToPool);
+    }
+
+    protected virtual void HandleOnPool(T objectToPool)
+    {
+
+    }
+
+    protected virtual void HandleOnRelease(T objectToRelease)
+    {
+
     }
 
     public void SetNumReleased (int numReleased)

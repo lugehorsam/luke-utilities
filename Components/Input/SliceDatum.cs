@@ -1,8 +1,21 @@
 ﻿using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 public struct SliceDatum {
+
+    /// <summary>
+    /// Gets the slice positions in screen coordinates.
+    /// </summary>
+    /// <value>The slice positions.</value>
+    public ReadOnlyCollection<Vector3> SlicePositions
+    {
+        get
+        {
+            return new ReadOnlyCollection<Vector3>(slicePositions);
+        }
+    }
 
     Vector3[] slicePositions;
 
@@ -29,16 +42,7 @@ public struct SliceDatum {
         {
             foreach (GestureFrame frame in collisionGesture.GestureFrames)
             {
-                RaycastHit? hit = frame.HitForCollider(collider);
-                if (hit.HasValue)
-                {
-                    hitPositions.Add(frame.Position);
-                }
-                else 
-                {
-                    Vector3 worldPoint = frame.Position;
-                    hitPositions.Add(worldPoint);
-                }
+                hitPositions.Add(frame.Position);
             }
             sliceData.Add(new SliceDatum(hitPositions));
         }
@@ -49,12 +53,14 @@ public struct SliceDatum {
     public Mesh[] SliceMesh(Mesh mesh)
     {
         TriangleDatum[] triangles = TriangleDatum.FromMesh(mesh);
-        Debug.Log("Triangles count is " + triangles.Length);
+        SliceTriangle(triangles[0]);
         return null;
     }
 
     TriangleDatum[] SliceTriangle(TriangleDatum triangle)
     {
+        Vector3? intersectionPoint = triangle.EdgeData[0].GetIntersection(new EdgeDatum(slicePositions));
+        Diagnostics.Log("Intersesction point is " + intersectionPoint);
         TriangleDatum[] newTriangles = new TriangleDatum[3];
         return null;
 

@@ -209,7 +209,6 @@ public abstract class DataManager<TData, TBehavior> : MonoBehaviour
     {
         Debug.Log("Create and init behavior");
         TBehavior behavior = dataBehaviorPrefab.Instantiate<TBehavior> ();
-        behavior.Init ();
         behavior.gameObject.SetActive (false);
         OnBehaviorInitialized (behavior);
         return behavior;

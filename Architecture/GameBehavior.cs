@@ -5,6 +5,7 @@ public class GameBehavior : MonoBehaviour {
      void Awake()
     {
         InitComponents();
+        InitObjects();
         AddEventHandlers();
         OnAwake();
     }
@@ -25,7 +26,10 @@ public class GameBehavior : MonoBehaviour {
 
     protected virtual void OnAwake()
     {
-        
+    }
+
+    protected virtual void InitObjects()
+    {
     }
 
     void Destroy()
