@@ -51,12 +51,15 @@ public class TouchDispatcher : GameBehavior
             OnHold(this, currentGesture);
         }
 
+
         if (drag)
         {
             HandleOnDrag(this, currentGesture);
             OnDrag(this, currentGesture);
             bool collisionLastFrame = currentGesture.LastFrame.Value.HitForCollider(collider).HasValue;
             bool collisionThisFrame = currentGesture.CurrentFrame.HitForCollider(collider).HasValue;
+            Diagnostics.Log("collision last frame is " + collisionLastFrame + " and collision this frame is " + collisionThisFrame);
+
             if (collisionLastFrame && !collisionThisFrame)
             {
                 HandleOnDragLeave(this, currentGesture);

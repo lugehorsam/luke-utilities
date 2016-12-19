@@ -8,27 +8,23 @@ public class TimedGameObjectPool<T> : GameObjectPool<T> where T : Component, ITi
                                bool allowResize = true)
         : base(prefab,
                initialSize,
-               allowResize)
-    {
-
-    }
+               allowResize) {}
 
 
     protected sealed override void HandleAfterEnabled(T enabledObject)
     {
         enabledObject.TimedBehavior.ResetTimer();
-        enabledObject.TimedBehavior.OnExpire += HandleExpiredGameObject;
+        enabledObject.TimedBehavior.OnExpire += HandleExpiration;
     }
 
     protected override void HandleAfterDisabled(T disabledObject)
     {
-        Pool(disabledObject.GetComponent<T>());
-        disabledObject.OnExpire -= HandleExpiredGameObject;
+        disabledObject.TimedBehavior.OnExpire -= HandleExpiration;
     }
 
 
-    void HandleExpiration(T expiredObject)
+    void HandleExpiration(TimedBehavior expiredObject)
     {
-
+        Pool(expiredObject.GetComponent<T>());
     }
 }

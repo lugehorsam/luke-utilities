@@ -31,6 +31,7 @@ public class SliceOnDrag : GameBehavior {
 
     void OnDragLeave(TouchDispatcher dispatcher, Gesture currentDrag)
     {
+        Diagnostics.Log("slice on drag caled");
         SliceDatum[] sliceData = SliceDatum.FromGesture(currentDrag, collider);
         Diagnostics.Log("Slice data length is " + sliceData.Length);
         foreach (SliceDatum slice in sliceData)

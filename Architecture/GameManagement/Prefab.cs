@@ -9,16 +9,23 @@ public class Prefab {
     GameObject prefab;
 
     [SerializeField]
+    Transform holder;
+
+    [SerializeField]
     Vector3 localPosition;
 
     public GameObject Instantiate ()
     {
         GameObject instance = GameObject.Instantiate (prefab, Vector2.zero, Quaternion.Euler (Vector3.zero)) as GameObject;
+        if (holder != null)
+        {
+            instance.transform.SetParent(holder, worldPositionStays: false);
+        }
         instance.transform.localPosition = localPosition;
         return instance;
     }
 
-    public T Instantiate<T> () where T : Component
+    public T Instantiate<T> (Transform holder = null) where T : Component
     {
         return Instantiate ().GetComponent<T> ();
     }

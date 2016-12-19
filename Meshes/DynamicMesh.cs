@@ -73,13 +73,8 @@ public class DynamicMesh : MonoBehaviour {
 
         meshFilter.mesh = mesh;
         meshRenderer.material.color = color;
-      
-        if (meshCollider != null)
-        {
-            DestroyImmediate(meshCollider);
-            meshCollider = gameObject.AddComponent<MeshCollider>();
-        }
 
+        mesh.RecalculateBounds();
         meshCollider.sharedMesh = mesh;
     }
 }

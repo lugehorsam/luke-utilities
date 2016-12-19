@@ -2,11 +2,21 @@
 using System.Collections;
 
 public class GameBehavior : MonoBehaviour {
+
+    protected virtual float InitialZ
+    {
+        get
+        {
+            return 0f;
+        }
+    }
+
      void Awake()
     {
         InitComponents();
         InitObjects();
         AddEventHandlers();
+        transform.position.Set(0, 0, InitialZ);
         OnAwake();
     }
 
