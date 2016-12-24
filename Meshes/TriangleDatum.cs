@@ -78,25 +78,23 @@ public struct TriangleDatum {
     public static TriangleDatum[] FromMesh(Mesh mesh)
     {
         List<TriangleDatum> triangles = new List<TriangleDatum>();
-        TriangleDatum currTriangle = default(TriangleDatum);
+        TriangleDatum currTriangle = new TriangleDatum();
         for (int i = 0; i < mesh.triangles.Length; i++)
         {
-            Debug.Log("i is " + i);
-            if (i % 3 == 0)
+
+            Vector3 currVertex = mesh.vertices[mesh.triangles[i]];
+            currTriangle[i % 3] = currVertex;
+            if ((i + 1) % 3 == 0)
             {
-                Debug.Log("creating new triangle");
-                currTriangle = new TriangleDatum();
                 triangles.Add(currTriangle);
+                currTriangle = new TriangleDatum();
             }
-            currTriangle[i % 3] = mesh.vertices[mesh.triangles[i]];
         }
         return triangles.ToArray();
     }
 
     public static Mesh ToMesh(TriangleDatum[] triangles)
     {
-        Mesh mesh = new Mesh();
-
         List<int> triangleIndices = new List<int> ();
         List<Vector3> vertices = new List<Vector3>();
 
@@ -159,5 +157,12 @@ public struct TriangleDatum {
     public bool HasSharedEdge(TriangleDatum otherTriangle)
     {
         return NumSharedVertices(otherTriangle) > 1;
+    }
+
+    public TriangleDatum(Vector3 vertex1, Vector3 vertex2, Vector3 vertex3)
+    {
+        this.vertex1 = vertex1;
+        this.vertex2 = vertex2;
+        this.vertex3 = vertex3;
     }
 }

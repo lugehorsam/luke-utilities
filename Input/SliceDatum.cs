@@ -15,7 +15,7 @@ public struct SliceDatum {
 
             for (int i = 0; i < gestureFrames.Count; i++)
             {
-                hitPositions.Add(gestureFrames[i].Position);
+                hitPositions.Add(Camera.main.ScreenToWorldPoint(gestureFrames[i].Position));
             }
 
             return hitPositions.ToArray();
@@ -60,7 +60,7 @@ public struct SliceDatum {
             (frame) => {
                RaycastHit? hit = frame.HitForCollider(sliceable.Collider);
                return hit.HasValue && hit.Value.collider == sliceable.Collider;
-            }, 
+            },
             includeEdgeFrames: true
         );
 

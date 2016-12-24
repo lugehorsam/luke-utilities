@@ -72,7 +72,6 @@ public struct EdgeDatum {
 
         float det = thisYDiff * otherXDiff - otherYDiff * thisXDiff;
 
-        Diagnostics.Log("det is " + det);
         if (det == 0f)
         {
             return null;
