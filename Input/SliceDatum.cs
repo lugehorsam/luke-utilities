@@ -41,14 +41,9 @@ public struct SliceDatum {
         Sliceable = sliceable;
 
         TriangleDatum[] triangles = TriangleDatum.FromMesh(sliceable.Mesh);
-        List<Vector3> intersectionPoints = new List<Vector3>();
         foreach (TriangleDatum triangle in triangles)
         {
-            Vector3? intersectionWithTriangle = GetIntersectionWithTriangle(triangle);
-            if (intersectionWithTriangle.HasValue)
-            {
-                intersectionPoints.Add(intersectionWithTriangle.Value);
-            }
+            intersectionPoints = GetIntersectionsWithTriangle(triangle);
         }
     }
 
@@ -78,16 +73,17 @@ public struct SliceDatum {
         return null;
     }
 
-    public Vector3? GetIntersectionWithTriangle(TriangleDatum triangle)
+    public List<Vector3> GetIntersectionsWithTriangle(TriangleDatum triangle)
     {
+        List<Vector3> intersectionPoints = new List<Vector3>();
         foreach (EdgeDatum edge in triangle.EdgeData)
         {
             Vector3? intersectionPoint = edge.GetIntersectionWithEdge(new EdgeDatum(SlicePositions));
             if (intersectionPoint.HasValue)
             {
-                return intersectionPoint;
+                intersectionPoints.Add(intersectionPoint.Value);
             }
         }
-        return null;
+        return intersectionPoints;
     }
 }

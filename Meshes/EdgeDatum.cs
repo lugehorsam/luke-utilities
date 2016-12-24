@@ -47,6 +47,12 @@ public struct EdgeDatum {
         }
     }
 
+    public bool VertexLiesOnEdge(VertexDatum vertex)
+    {
+        return MinX <= vertex.X && vertex.X <= MaxX
+            && MinY <= vertex.Y && vertex.Y <= MaxY;
+    }
+
     public EdgeDatum(VertexDatum vertex1, VertexDatum vertex2)
     {
         this.Vertex1 = vertex1;
@@ -59,6 +65,11 @@ public struct EdgeDatum {
         this.Vertex2 = vectorList.Last();
     }
 
+    /// <summary>
+    /// See https://www.topcoder.com/community/data-science/data-science-tutorials/geometry-concepts-line-intersection-and-its-applications
+    /// </summary>
+    /// <param name="otherEdge"></param>
+    /// <returns></returns>
     public Vector3? GetIntersectionWithEdge(EdgeDatum otherEdge)
     {
         Diagnostics.Log("Get intersection passed edge " + otherEdge);
@@ -79,7 +90,16 @@ public struct EdgeDatum {
         else {
             float x = (otherXDiff * thisC - thisXDiff * otherC) / det;
             float y = (thisYDiff * otherC - otherYDiff * thisC) / det;
-            return new Vector3(x, y, 0f);
+            Vector3 intersectionPoint = new Vector3(x, y, 0f);
+            if (VertexLiesOnEdge(intersectionPoint))
+            {
+                Diagnostics.Log("returning intersection point" + intersectionPoint);
+                return intersectionPoint;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 
