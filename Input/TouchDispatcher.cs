@@ -64,6 +64,7 @@ public class TouchDispatcher : GameBehavior
             {
                 HandleOnDragLeave(this, currentGesture);
                 OnDragLeave(this, currentGesture);
+                Diagnostics.Log("dispatching");
             }
         }
 

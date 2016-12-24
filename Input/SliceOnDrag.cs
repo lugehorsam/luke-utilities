@@ -2,10 +2,20 @@ using UnityEngine;
 using System;
 
 [RequireComponent(typeof(TouchDispatcher))]
-public class SliceOnDrag : GameBehavior {
+public class SliceOnDrag : GameBehavior, ISliceable {
 
     public Action<SliceDatum> OnSlice = (slice) => { };
     TouchDispatcher touchDispatcher;
+
+    public Collider Collider
+    {
+        get { return collider; }
+    }
+
+    public Mesh Mesh
+    {
+        get { return meshFilter.mesh; }
+    }
     new Collider collider;
     MeshFilter meshFilter;
 
@@ -31,12 +41,9 @@ public class SliceOnDrag : GameBehavior {
 
     void OnDragLeave(TouchDispatcher dispatcher, Gesture currentDrag)
     {
-        Diagnostics.Log("slice on drag caled");
-        SliceDatum[] sliceData = SliceDatum.FromGesture(currentDrag, collider);
-        Diagnostics.Log("Slice data length is " + sliceData.Length);
+        SliceDatum[] sliceData = SliceDatum.FromGesture(currentDrag, this);
         foreach (SliceDatum slice in sliceData)
         {
-            slice.SliceMesh(meshFilter.mesh);
             OnSlice(slice);
         }
 

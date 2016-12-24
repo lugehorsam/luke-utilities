@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System;
+﻿using System;
 
 public class LazyReference<T> where T : class {
     public T Value {
@@ -12,7 +10,7 @@ public class LazyReference<T> where T : class {
 
     T value;
 
-    Func<T> getValue;
+    readonly Func<T> getValue;
 
     public LazyReference (Func<T> getValue)
     {
