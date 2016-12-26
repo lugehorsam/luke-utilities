@@ -82,7 +82,6 @@ public struct EdgeDatum {
     /// <returns></returns>
     public Vector3? GetIntersectionWithEdge(EdgeDatum otherEdge)
     {
-        Diagnostics.Log("Get intersection passed edge " + otherEdge);
         float thisYDiff = Vertex2.Y - Vertex1.Y;
         float thisXDiff = Vertex1.X - Vertex2.X;
         float thisC = thisYDiff * this.Vertex1.X + thisXDiff * this.Vertex1.Y;

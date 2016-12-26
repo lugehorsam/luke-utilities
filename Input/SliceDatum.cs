@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+
 /// <summary>
 /// https://gamedevelopment.tutsplus.com/tutorials/how-to-dynamically-slice-a-convex-shape--gamedev-14479
 /// </summary>
@@ -9,6 +10,9 @@ public struct SliceDatum {
 
     readonly IList<GestureFrame> gestureFrames;
 
+    /// <summary>
+    /// In local coordinates relative to the triangle it sliced.
+    /// </summary>
     public Vector3[] SlicePositions
     {
         get
@@ -17,7 +21,9 @@ public struct SliceDatum {
 
             for (int i = 0; i < gestureFrames.Count; i++)
             {
-                hitPositions.Add(Camera.main.ScreenToWorldPoint(gestureFrames[i].Position));
+                Vector3 worldPoint = Camera.main.ScreenToWorldPoint(gestureFrames[i].Position);
+                Vector3 localPoint = Sliceable.Collider.transform.InverseTransformVector(worldPoint);
+                hitPositions.Add(localPoint);
             }
 
             return hitPositions.ToArray();
@@ -76,19 +82,20 @@ public struct SliceDatum {
         List<TriangleDatum> newTriangles = new List<TriangleDatum>();
         foreach (TriangleDatum triangleToSlice in trianglesToSlice)
         {
-            newTriangles.Add(CreateSubTriangle(triangleToSlice[0], triangleToSlice));
-            newTriangles.Add(CreateSubTriangle(triangleToSlice[1], triangleToSlice));
-            newTriangles.Add(CreateSubTriangle(triangleToSlice[2], triangleToSlice));
+            newTriangles.Add(CreateSubTriangle(triangleToSlice[0]));
+            newTriangles.Add(CreateSubTriangle(triangleToSlice[1]));
+            newTriangles.Add(CreateSubTriangle(triangleToSlice[2]));
         }
         return newTriangles.ToArray();
     }
 
-    TriangleDatum CreateSubTriangle(VertexDatum initialVertex, TriangleDatum initialTriangle)
+    TriangleDatum CreateSubTriangle(VertexDatum initialVertex)
     {
         TriangleDatum triangle = new TriangleDatum();
         triangle[0] = initialVertex;
         triangle[1] = intersectionPoints[0];
         triangle[2] = intersectionPoints[1];
+        triangle.SortVertices(CycleDirection.Clockwise);
         return triangle;
     }
 

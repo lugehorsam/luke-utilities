@@ -19,9 +19,15 @@ public class DynamicMesh : DatumBehavior<DynamicMeshDatum> {
 
     protected override void HandleDataUpdate(DynamicMeshDatum oldData, DynamicMeshDatum newData)
     {
+        if (meshFilter.mesh != null)
+        {
+            meshFilter.mesh.Clear();
+        }
         meshFilter.mesh = newData.Mesh;
-        meshFilter.mesh.RecalculateBounds();
         meshRenderer.material.color = newData.Color;
         meshCollider.sharedMesh = newData.Mesh;
+        meshFilter.mesh.RecalculateBounds();
+        meshFilter.mesh.RecalculateNormals();
+
     }
 }

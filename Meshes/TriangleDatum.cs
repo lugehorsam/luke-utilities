@@ -153,6 +153,14 @@ public struct TriangleDatum {
         return numShared;
     }
 
+    public void SortVertices(CycleDirection cycleDirection)
+    {
+        VertexDatum[] sortedVertices = VertexDatum.SortByCycle(VertexData.ToArray(), cycleDirection);
+        vertex1 = sortedVertices[0];
+        vertex2 = sortedVertices[1];
+        vertex3 = sortedVertices[2];
+    }
+
     public bool HasSharedEdge(TriangleDatum otherTriangle)
     {
         return NumSharedVertices(otherTriangle) > 1;
@@ -168,5 +176,10 @@ public struct TriangleDatum {
         this.vertex1 = vertex1;
         this.vertex2 = vertex2;
         this.vertex3 = vertex3;
+    }
+
+    public override string ToString()
+    {
+        return VertexData.ToFormattedString();
     }
 }
