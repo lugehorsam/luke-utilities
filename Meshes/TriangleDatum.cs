@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Collections;
 
 [Serializable]
 public struct TriangleDatum {
@@ -157,6 +156,11 @@ public struct TriangleDatum {
     public bool HasSharedEdge(TriangleDatum otherTriangle)
     {
         return NumSharedVertices(otherTriangle) > 1;
+    }
+
+    public IEnumerable<EdgeDatum> EdgesContaining(VertexDatum vertex)
+    {
+        return EdgeData.Where((edge) => edge.Vertices.Contains(vertex));
     }
 
     public TriangleDatum(Vector3 vertex1, Vector3 vertex2, Vector3 vertex3)

@@ -1,8 +1,18 @@
 ﻿using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 public struct EdgeDatum {
+
+    public ReadOnlyCollection<VertexDatum> Vertices
+    {
+        get
+        {
+            return new ReadOnlyCollection<VertexDatum>(new []{Vertex1, Vertex2});
+        }
+    }
+
     public VertexDatum Vertex1
     {
         get;

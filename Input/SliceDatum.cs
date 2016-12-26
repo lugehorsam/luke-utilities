@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-
+/// <summary>
+/// https://gamedevelopment.tutsplus.com/tutorials/how-to-dynamically-slice-a-convex-shape--gamedev-14479
+/// </summary>
 public struct SliceDatum {
 
     readonly IList<GestureFrame> gestureFrames;
@@ -30,6 +32,8 @@ public struct SliceDatum {
         }
     }
 
+    private readonly TriangleDatum[] trianglesToSlice;
+
     private readonly List<Vector3> intersectionPoints;
 
     public ISliceable Sliceable { get; private set; }
@@ -40,8 +44,8 @@ public struct SliceDatum {
         this.intersectionPoints = new List<Vector3>();
         Sliceable = sliceable;
 
-        TriangleDatum[] triangles = TriangleDatum.FromMesh(sliceable.Mesh);
-        foreach (TriangleDatum triangle in triangles)
+        trianglesToSlice = TriangleDatum.FromMesh(sliceable.Mesh);
+        foreach (TriangleDatum triangle in trianglesToSlice)
         {
             intersectionPoints = GetIntersectionsWithTriangle(triangle);
         }
@@ -67,10 +71,25 @@ public struct SliceDatum {
         return sliceData.ToArray();
     }
 
-    TriangleDatum[] SliceTriangle(TriangleDatum triangle)
+    public TriangleDatum[] ApplySlice()
     {
-        TriangleDatum[] newTriangles = new TriangleDatum[3];
-        return null;
+        List<TriangleDatum> newTriangles = new List<TriangleDatum>();
+        foreach (TriangleDatum triangleToSlice in trianglesToSlice)
+        {
+            newTriangles.Add(CreateSubTriangle(triangleToSlice[0], triangleToSlice));
+            newTriangles.Add(CreateSubTriangle(triangleToSlice[1], triangleToSlice));
+            newTriangles.Add(CreateSubTriangle(triangleToSlice[2], triangleToSlice));
+        }
+        return newTriangles.ToArray();
+    }
+
+    TriangleDatum CreateSubTriangle(VertexDatum initialVertex, TriangleDatum initialTriangle)
+    {
+        TriangleDatum triangle = new TriangleDatum();
+        triangle[0] = initialVertex;
+        triangle[1] = intersectionPoints[0];
+        triangle[2] = intersectionPoints[1];
+        return triangle;
     }
 
     public List<Vector3> GetIntersectionsWithTriangle(TriangleDatum triangle)

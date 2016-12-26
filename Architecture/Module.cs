@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 [System.Serializable]
-public abstract class Module : MonoBehaviour
+public abstract class Module : GameBehavior
 {
 
     public UIElement [] UIElements {
@@ -13,9 +13,9 @@ public abstract class Module : MonoBehaviour
         }
     }
 
-    List<UIElement> uiElements = new List<UIElement> ();
+    readonly List<UIElement> uiElements = new List<UIElement> ();
 
-    void Awake ()
+    protected sealed override void OnAwake ()
     {
         uiElements.AddRange (GetComponentsInChildren<UIElement> ());
     }

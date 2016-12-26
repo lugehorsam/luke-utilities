@@ -18,9 +18,9 @@ public abstract class FlexibleLayout<TTargetData, TBehavior> : Layout<TTargetDat
     [SerializeField]
     FlexibleFlowPolicy flowPolicy;
     [SerializeField]
-    float xPadding;
+    float xSpacing;
     [SerializeField]
-    float yPadding;
+    float ySpacing;
 
     //TODO Optimize rec calls with dynamic programming
     protected override Vector2 GetIdealLocalPosition(TBehavior behavior) {
@@ -50,7 +50,7 @@ public abstract class FlexibleLayout<TTargetData, TBehavior> : Layout<TTargetDat
         switch (flowPolicy) {
         case FlexibleFlowPolicy.Horizontal:
         default:            
-            return new Vector2 (0, newPosition.y - yPadding);
+            return new Vector2 (0, newPosition.y - ySpacing);
         }
     }
 
@@ -71,7 +71,7 @@ public abstract class FlexibleLayout<TTargetData, TBehavior> : Layout<TTargetDat
     }
 
     Vector2 GetPaddingVector() {
-        return new Vector2 (xPadding, yPadding);
+        return new Vector2 (xSpacing, ySpacing);
     }
 
     Vector2 ClampByFlow(Vector2 lastItemPos, Vector2 newGameObjPos) {
