@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -59,8 +60,13 @@ public struct EdgeDatum {
 
     public bool VertexLiesOnEdge(VertexDatum vertex)
     {
+        return ((Vertex1 - vertex) + (vertex - Vertex2) == (Vertex1 - Vertex2)) && VertexWithinEdgeRect(vertex);
+    }
+
+    public bool VertexWithinEdgeRect(VertexDatum vertex)
+    {
         return MinX <= vertex.X && vertex.X <= MaxX
-            && MinY <= vertex.Y && vertex.Y <= MaxY;
+               && MinY <= vertex.Y && vertex.Y <= MaxY;
     }
 
     public EdgeDatum(VertexDatum vertex1, VertexDatum vertex2)
@@ -102,7 +108,6 @@ public struct EdgeDatum {
             Vector3 intersectionPoint = new Vector3(x, y, 0f);
             if (VertexLiesOnEdge(intersectionPoint))
             {
-                Diagnostics.Log("returning intersection point" + intersectionPoint);
                 return intersectionPoint;
             }
             else

@@ -69,6 +69,37 @@ public struct VertexDatum {
         return new Vector3(vertex.X, vertex.Y);
     }
 
+    public static VertexDatum operator + (VertexDatum vertex1, VertexDatum vertex2)
+    {
+        return (Vector3) vertex1 + (Vector3) vertex2;
+    }
+
+    public static bool operator > (VertexDatum vertex1, VertexDatum vertex2)
+    {
+        return vertex1.X + vertex1.Y > vertex2.X + vertex2.Y;
+    }
+
+    public static bool operator < (VertexDatum vertex1, VertexDatum vertex2)
+    {
+        return vertex1.X + vertex1.Y < vertex2.X + vertex2.Y;
+    }
+
+    public static VertexDatum operator - (VertexDatum vertex1, VertexDatum vertex2)
+    {
+        return ((Vector3) vertex1) - ((Vector3) vertex2);
+    }
+
+    public static bool operator == (VertexDatum vertex1, VertexDatum vertex2)
+    {
+        return ((Vector3) vertex1) == ((Vector3) vertex2);
+    }
+
+    public static bool operator != (VertexDatum vertex1, VertexDatum vertex2)
+    {
+        return ((Vector3) vertex1) != ((Vector3) vertex2);
+    }
+
+
     public VertexDatum(float x, float y, float z)
     {
         this.x = x;
@@ -79,14 +110,5 @@ public struct VertexDatum {
     public override string ToString()
     {
         return string.Format("[VertexDatum: X={0}, Y={1}, Z={2}]", X, Y, Z);
-    }
-
-    public static VertexDatum[] SortByCycle(VertexDatum[] vertices, CycleDirection cycleDirection)
-    {
-        Diagnostics.Log("pre sort is " + vertices.ToFormattedString());
-        Array.Sort(vertices, new VertexCycleComparer(cycleDirection));
-        Diagnostics.Log("post sort is " + vertices.ToFormattedString());
-
-        return vertices;
     }
 }

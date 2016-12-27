@@ -79,29 +79,58 @@ public struct SliceDatum {
 
     public TriangleDatum[] ApplySlice()
     {
-        List<TriangleDatum> newTriangles = new List<TriangleDatum>();
-        foreach (TriangleDatum triangleToSlice in trianglesToSlice)
+        var newTriangles = new List<TriangleDatum>();
+        foreach (var triangleToSlice in trianglesToSlice)
         {
-            newTriangles.Add(CreateSubTriangle(triangleToSlice[0]));
-            newTriangles.Add(CreateSubTriangle(triangleToSlice[1]));
-            newTriangles.Add(CreateSubTriangle(triangleToSlice[2]));
+            var tri1 = CreateSubTriangle(triangleToSlice, triangleToSlice[0]);
+            var tri2 = CreateSubTriangle(triangleToSlice, triangleToSlice[1]);
+            var tri3 = CreateSubTriangle(triangleToSlice, triangleToSlice[2]);
+            newTriangles.Add(tri1);
+            newTriangles.Add(tri2);
+            newTriangles.Add(tri3);
         }
         return newTriangles.ToArray();
     }
 
-    TriangleDatum CreateSubTriangle(VertexDatum initialVertex)
+    TriangleDatum CreateSubTriangle(TriangleDatum originalTriangle, VertexDatum initialVertex)
     {
-        TriangleDatum triangle = new TriangleDatum();
+        var triangle = new TriangleDatum();
         triangle[0] = initialVertex;
-        triangle[1] = intersectionPoints[0];
-        triangle[2] = intersectionPoints[1];
-        triangle.SortVertices(CycleDirection.Clockwise);
+
+        var otherCandidates = originalTriangle.Vertices.Except(new[] {initialVertex}).ToArray();
+
+        var vertIndex = 1;
+        foreach (var candidate in otherCandidates)
+        {
+            var candidateEdge = new EdgeDatum(initialVertex, candidate);
+
+            VertexDatum? intersectionOnEdge = null;
+            foreach (var intersectionPoint in intersectionPoints)
+            {
+                if (candidateEdge.VertexLiesOnEdge(intersectionPoint))
+                {
+                    intersectionOnEdge = intersectionPoint;
+                    break;
+                }
+            }
+
+            if (intersectionOnEdge.HasValue)
+            {
+                triangle[vertIndex] = intersectionOnEdge.Value;
+            }
+            else
+            {
+                triangle[vertIndex] = candidate;
+            }
+            vertIndex++;
+        }
+        //triangle.SortVertices();
         return triangle;
     }
 
     public List<Vector3> GetIntersectionsWithTriangle(TriangleDatum triangle)
     {
-        List<Vector3> intersectionPoints = new List<Vector3>();
+        var intersectionPoints = new List<Vector3>();
         foreach (EdgeDatum edge in triangle.EdgeData)
         {
             Vector3? intersectionPoint = edge.GetIntersectionWithEdge(new EdgeDatum(SlicePositions));

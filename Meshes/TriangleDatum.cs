@@ -5,9 +5,22 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 [Serializable]
-public struct TriangleDatum {
+public struct TriangleDatum : IComparer<VertexDatum> {
 
-    public ReadOnlyCollection<VertexDatum> VertexData
+    public CycleDirection CycleDirection {
+        get
+        {
+            return cycleDirection;
+        }
+        set
+        {
+            cycleDirection = value;
+        }
+    }
+
+    private CycleDirection cycleDirection;
+
+    public ReadOnlyCollection<VertexDatum> Vertices
     {
         get
         {
@@ -99,7 +112,7 @@ public struct TriangleDatum {
 
         foreach (TriangleDatum triangle in triangles)
         {
-            foreach (VertexDatum vertex in triangle.VertexData)
+            foreach (VertexDatum vertex in triangle.Vertices)
             {
                 int vertexIndex = vertices.IndexOf(vertex);
 
@@ -126,7 +139,7 @@ public struct TriangleDatum {
         for (int i = 0; i < triangles.Length; i++)
         {
             TriangleDatum currentTriangle = triangles[i];
-            ReadOnlyCollection<VertexDatum> vertexData = currentTriangle.VertexData;
+            ReadOnlyCollection<VertexDatum> vertexData = currentTriangle.Vertices;
             for (int j = 0; j < vertexData.Count; i++)
             {
                 VertexDatum datum = vertexData[j];
@@ -145,7 +158,7 @@ public struct TriangleDatum {
         int numShared = 0;
         for (int i = 0; i < 3; i++)
         {
-            if (Array.IndexOf(otherTriangle.VertexData.ToArray(), this[i], 0) > -1)
+            if (Array.IndexOf(otherTriangle.Vertices.ToArray(), this[i], 0) > -1)
             {
                 numShared++;
             }
@@ -153,12 +166,34 @@ public struct TriangleDatum {
         return numShared;
     }
 
-    public void SortVertices(CycleDirection cycleDirection)
+    public Vector3 GetCenterPoint()
     {
-        VertexDatum[] sortedVertices = VertexDatum.SortByCycle(VertexData.ToArray(), cycleDirection);
-        vertex1 = sortedVertices[0];
-        vertex2 = sortedVertices[1];
-        vertex3 = sortedVertices[2];
+        return new Vector3(
+            (vertex1.X + vertex2.X + vertex3.X) / 3f,
+            (vertex1.Y + vertex2.Y + vertex3.Y) / 3f,
+            (vertex1.Z + vertex2.Z + vertex3.Z) / 3f
+        );
+    }
+
+    public int Compare(VertexDatum vertex1, VertexDatum vertex2)
+    {
+        if (vertex1 == vertex2)
+        {
+            return 0;
+        }
+        VertexDatum anchorVertex = GetCenterPoint();
+        float angle = MathUtils.GetSignedAngle(vertex1 - anchorVertex, vertex2 - anchorVertex);
+        int sign = Math.Sign(angle);
+        return cycleDirection == CycleDirection.Clockwise ? sign : -sign;
+    }
+
+    public void SortVertices()
+    {
+        VertexDatum[] newVertices = Vertices.ToArray();
+        Array.Sort(newVertices, this);
+        vertex1 = newVertices[0];
+        vertex2 = newVertices[1];
+        vertex3 = newVertices[2];
     }
 
     public bool HasSharedEdge(TriangleDatum otherTriangle)
@@ -176,10 +211,11 @@ public struct TriangleDatum {
         this.vertex1 = vertex1;
         this.vertex2 = vertex2;
         this.vertex3 = vertex3;
+        cycleDirection = CycleDirection.Clockwise;
     }
 
     public override string ToString()
     {
-        return VertexData.ToFormattedString();
+        return Vertices.ToFormattedString();
     }
 }
