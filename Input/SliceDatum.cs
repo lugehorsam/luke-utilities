@@ -2,11 +2,14 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 
 /// <summary>
 /// https://gamedevelopment.tutsplus.com/tutorials/how-to-dynamically-slice-a-convex-shape--gamedev-14479
 /// </summary>
-public struct SliceDatum {
+public struct SliceDatum
+{
+    const float CONNECTION_MARGIN = .3f;
 
     readonly IList<GestureFrame> gestureFrames;
 
@@ -32,28 +35,25 @@ public struct SliceDatum {
 
     public ReadOnlyCollection<Vector3> IntersectionPoints
     {
-        get
-        {
-            return new ReadOnlyCollection<Vector3>(intersectionPoints);
-        }
+        get { return new ReadOnlyCollection<Vector3>(intersectionVertices); }
     }
 
     private readonly TriangleDatum[] trianglesToSlice;
 
-    private readonly List<Vector3> intersectionPoints;
+    private readonly List<Vector3> intersectionVertices;
 
     public ISliceable Sliceable { get; private set; }
 
     private SliceDatum(IList<GestureFrame> gestureFrames, ISliceable sliceable)
     {
         this.gestureFrames = gestureFrames;
-        this.intersectionPoints = new List<Vector3>();
+        this.intersectionVertices = new List<Vector3>();
         Sliceable = sliceable;
 
         trianglesToSlice = TriangleDatum.FromMesh(sliceable.Mesh);
         foreach (TriangleDatum triangle in trianglesToSlice)
         {
-            intersectionPoints = GetIntersectionsWithTriangle(triangle);
+            intersectionVertices = GetIntersectionsWithTriangle(triangle);
         }
     }
 
@@ -62,9 +62,10 @@ public struct SliceDatum {
         List<SliceDatum> sliceData = new List<SliceDatum>();
 
         Gesture[] collisionGestures = gesture.Filter(
-            (frame) => {
-               RaycastHit? hit = frame.HitForCollider(sliceable.Collider);
-               return hit.HasValue && hit.Value.collider == sliceable.Collider;
+            (frame) =>
+            {
+                RaycastHit? hit = frame.HitForCollider(sliceable.Collider);
+                return hit.HasValue && hit.Value.collider == sliceable.Collider;
             },
             includeEdgeFrames: true
         );
@@ -83,8 +84,8 @@ public struct SliceDatum {
         foreach (var triangleToSlice in trianglesToSlice)
         {
             var tri1 = CreateSubTriangle(triangleToSlice, triangleToSlice[0]);
-            var tri2 = CreateSubTriangle(triangleToSlice, triangleToSlice[1]);
-            var tri3 = CreateSubTriangle(triangleToSlice, triangleToSlice[2]);
+            var tri2 = CreateSubTriangle(triangleToSlice, triangleToSlice[1], new[] {tri1});
+            var tri3 = CreateSubTriangle(triangleToSlice, triangleToSlice[2], new[] {tri1, tri2});
             newTriangles.Add(tri1);
             newTriangles.Add(tri2);
             newTriangles.Add(tri3);
@@ -92,41 +93,37 @@ public struct SliceDatum {
         return newTriangles.ToArray();
     }
 
-    TriangleDatum CreateSubTriangle(TriangleDatum originalTriangle, VertexDatum initialVertex)
+    TriangleDatum CreateSubTriangle(TriangleDatum originalTriangle,
+        VertexDatum initialVertex,
+        TriangleDatum[] otherNewTriangles = null)
     {
-        var triangle = new TriangleDatum();
-        triangle[0] = initialVertex;
+        var subTriangle = new TriangleDatum();
+        subTriangle[0] = initialVertex;
 
-        var otherCandidates = originalTriangle.Vertices.Except(new[] {initialVertex}).ToArray();
+        var vertexQueue = new PriorityQueue<int, VertexDatum>();
+        vertexQueue.Enqueue(0, intersectionVertices[0]);
+        vertexQueue.Enqueue(0, intersectionVertices[1]);
+
+        var origTriVertices = originalTriangle.Vertices.Except(new[] { initialVertex }).ToArray();
+        vertexQueue.Enqueue(1, origTriVertices[0]);
+        vertexQueue.Enqueue(1, origTriVertices[1]);
 
         var vertIndex = 1;
-        foreach (var candidate in otherCandidates)
+        while (vertIndex <= 2)
         {
-            var candidateEdge = new EdgeDatum(initialVertex, candidate);
-
-            VertexDatum? intersectionOnEdge = null;
-            foreach (var intersectionPoint in intersectionPoints)
+            var candidateVertex = vertexQueue.DequeueValue();
+            if (otherNewTriangles != null && otherNewTriangles.Any(
+                    (newTri) => newTri.HasEdgeThatIntersects(new EdgeDatum(initialVertex, candidateVertex), CONNECTION_MARGIN)))
             {
-                if (candidateEdge.VertexLiesOnEdge(intersectionPoint))
-                {
-                    intersectionOnEdge = intersectionPoint;
-                    break;
-                }
+                continue;
             }
-
-            if (intersectionOnEdge.HasValue)
-            {
-                triangle[vertIndex] = intersectionOnEdge.Value;
-            }
-            else
-            {
-                triangle[vertIndex] = candidate;
-            }
+            subTriangle[vertIndex] = candidateVertex;
             vertIndex++;
         }
-        //triangle.SortVertices();
-        return triangle;
+        subTriangle.SortVertices();
+        return subTriangle;
     }
+
 
     public List<Vector3> GetIntersectionsWithTriangle(TriangleDatum triangle)
     {

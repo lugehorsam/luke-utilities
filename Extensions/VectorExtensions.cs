@@ -135,4 +135,12 @@ public static class VectorExtensions {
         }
         return thisVector;
     }
+
+
+    public static bool ApproximatelyEquals(this Vector3 thisVector, Vector3 otherVector, float differenceCap)
+    {
+        return thisVector.x.ApproximatelyEquals(otherVector.x, differenceCap) &&
+               thisVector.y.ApproximatelyEquals(otherVector.y, differenceCap) &&
+               thisVector.z.ApproximatelyEquals(otherVector.z, differenceCap);
+    }
 }

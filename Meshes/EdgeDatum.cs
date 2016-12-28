@@ -71,23 +71,54 @@ public struct EdgeDatum {
 
     public EdgeDatum(VertexDatum vertex1, VertexDatum vertex2)
     {
-        this.Vertex1 = vertex1;
-        this.Vertex2 = vertex2;
+        Vertex1 = vertex1;
+        Vertex2 = vertex2;
     }
 
     public EdgeDatum(IList<Vector3> vectorList)
     {
-        this.Vertex1 = vectorList.First();
-        this.Vertex2 = vectorList.Last();
+        Vertex1 = vectorList.First();
+        Vertex2 = vectorList.Last();
+    }
+
+    /// <summary>
+    /// </summary>
+    /// <param name="otherEdge"></param>
+    /// <param name="connectionMargin"></param>
+    /// <returns></returns>
+    public bool HasIntersectionWithEdge(EdgeDatum otherEdge, float connectionMargin = 0f)
+    {
+        VertexDatum? intersectionPoint = GetIntersectionWithEdge(otherEdge, connectionMargin);
+        return intersectionPoint.HasValue;
+    }
+
+    public bool ConnectsToEdge(EdgeDatum otherEdge, float acceptableDifference = 0f)
+    {
+        Vector3 vertex1 = Vertex1;
+        Vector3 vertex2 = Vertex2;
+        bool isConnection = otherEdge.Vertices.Any(
+            (otherVertex) => ((Vector3) otherVertex).ApproximatelyEquals(vertex1, acceptableDifference) ||
+                             ((Vector3) otherVertex).ApproximatelyEquals(vertex2, acceptableDifference)
+        );
+        return isConnection;
     }
 
     /// <summary>
     /// See https://www.topcoder.com/community/data-science/data-science-tutorials/geometry-concepts-line-intersection-and-its-applications
+    /// Returns false if edges are connected at the point of intersection.
     /// </summary>
     /// <param name="otherEdge"></param>
+    /// <param name="connectionMargin">Any vertices whose distance from one another
+    /// fall under the connection margin will not belong to edges that can intersect one another.
+    /// </param>
     /// <returns></returns>
-    public Vector3? GetIntersectionWithEdge(EdgeDatum otherEdge)
+    public Vector3? GetIntersectionWithEdge(EdgeDatum otherEdge, float connectionMargin = 0f)
     {
+        if (otherEdge.ConnectsToEdge(this, connectionMargin))
+        {
+            return null;
+        }
+
         float thisYDiff = Vertex2.Y - Vertex1.Y;
         float thisXDiff = Vertex1.X - Vertex2.X;
         float thisC = thisYDiff * this.Vertex1.X + thisXDiff * this.Vertex1.Y;

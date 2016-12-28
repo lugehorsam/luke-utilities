@@ -175,6 +175,11 @@ public struct TriangleDatum : IComparer<VertexDatum> {
         );
     }
 
+    public bool HasEdgeThatIntersects(EdgeDatum otherEdge, float connectionMargin = 0f)
+    {
+        return EdgeData.Any((edge) => edge.HasIntersectionWithEdge(otherEdge, connectionMargin));
+    }
+
     public int Compare(VertexDatum vertex1, VertexDatum vertex2)
     {
         if (vertex1 == vertex2)
@@ -184,7 +189,7 @@ public struct TriangleDatum : IComparer<VertexDatum> {
         VertexDatum anchorVertex = GetCenterPoint();
         float angle = MathUtils.GetSignedAngle(vertex1 - anchorVertex, vertex2 - anchorVertex);
         int sign = Math.Sign(angle);
-        return cycleDirection == CycleDirection.Clockwise ? sign : -sign;
+        return cycleDirection == CycleDirection.Clockwise ? -sign : sign;
     }
 
     public void SortVertices()
