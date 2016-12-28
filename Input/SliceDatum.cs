@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 /// </summary>
 public struct SliceDatum
 {
-    const float CONNECTION_MARGIN = .3f;
+    const float CONNECTION_MARGIN = .0001f;
 
     readonly IList<GestureFrame> gestureFrames;
 
@@ -53,7 +53,7 @@ public struct SliceDatum
         trianglesToSlice = TriangleDatum.FromMesh(sliceable.Mesh);
         foreach (TriangleDatum triangle in trianglesToSlice)
         {
-            intersectionVertices = GetIntersectionsWithTriangle(triangle);
+           // intersectionVertices = GetIntersectionsWithTriangle(triangle);
         }
     }
 
@@ -100,18 +100,18 @@ public struct SliceDatum
         var subTriangle = new TriangleDatum();
         subTriangle[0] = initialVertex;
 
-        var vertexQueue = new PriorityQueue<int, VertexDatum>();
-        vertexQueue.Enqueue(0, intersectionVertices[0]);
-        vertexQueue.Enqueue(0, intersectionVertices[1]);
+        var vertexQueue = new Queue<VertexDatum>();
+        vertexQueue.Enqueue(intersectionVertices[0]);
+        vertexQueue.Enqueue(intersectionVertices[1]);
 
         var origTriVertices = originalTriangle.Vertices.Except(new[] { initialVertex }).ToArray();
-        vertexQueue.Enqueue(1, origTriVertices[0]);
-        vertexQueue.Enqueue(1, origTriVertices[1]);
+        vertexQueue.Enqueue(origTriVertices[0]);
+        vertexQueue.Enqueue(origTriVertices[1]);
 
         var vertIndex = 1;
         while (vertIndex <= 2)
         {
-            var candidateVertex = vertexQueue.DequeueValue();
+            var candidateVertex = vertexQueue.Dequeue();
             if (otherNewTriangles != null && otherNewTriangles.Any(
                     (newTri) => newTri.HasEdgeThatIntersects(new EdgeDatum(initialVertex, candidateVertex), CONNECTION_MARGIN)))
             {

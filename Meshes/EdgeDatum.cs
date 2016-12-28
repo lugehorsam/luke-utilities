@@ -60,7 +60,11 @@ public struct EdgeDatum {
 
     public bool VertexLiesOnEdge(VertexDatum vertex)
     {
-        return ((Vertex1 - vertex) + (vertex - Vertex2) == (Vertex1 - Vertex2)) && VertexWithinEdgeRect(vertex);
+        Vector3 combinedMidpointDist = (Vertex1 - vertex) + (vertex - Vertex2);
+        Vector3 endpointDist = (Vertex1 - Vertex2);
+        bool vertexWithinEdgeRect = VertexWithinEdgeRect(vertex);
+        bool liesOnEdge = combinedMidpointDist == endpointDist && vertexWithinEdgeRect;
+        return liesOnEdge;
     }
 
     public bool VertexWithinEdgeRect(VertexDatum vertex)
@@ -94,12 +98,9 @@ public struct EdgeDatum {
 
     public bool ConnectsToEdge(EdgeDatum otherEdge, float acceptableDifference = 0f)
     {
-        Vector3 vertex1 = Vertex1;
-        Vector3 vertex2 = Vertex2;
+        EdgeDatum thisEdge = this;
         bool isConnection = otherEdge.Vertices.Any(
-            (otherVertex) => ((Vector3) otherVertex).ApproximatelyEquals(vertex1, acceptableDifference) ||
-                             ((Vector3) otherVertex).ApproximatelyEquals(vertex2, acceptableDifference)
-        );
+            (otherVertex) => otherVertex == thisEdge.Vertex1 || otherVertex == thisEdge.Vertex2);
         return isConnection;
     }
 
@@ -129,23 +130,20 @@ public struct EdgeDatum {
 
         float det = thisYDiff * otherXDiff - otherYDiff * thisXDiff;
 
-        if (det == 0f)
+        if (det != 0f)
         {
-            return null;
-        }
-        else {
+
             float x = (otherXDiff * thisC - thisXDiff * otherC) / det;
             float y = (thisYDiff * otherC - otherYDiff * thisC) / det;
             Vector3 intersectionPoint = new Vector3(x, y, 0f);
-            if (VertexLiesOnEdge(intersectionPoint))
+            if (VertexLiesOnEdge(intersectionPoint) &&
+                otherEdge.VertexLiesOnEdge(intersectionPoint))
             {
                 return intersectionPoint;
             }
-            else
-            {
-                return null;
-            }
         }
+        
+        return null;
     }
 
     public override string ToString()
