@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
 
 /// <summary>
 /// https://gamedevelopment.tutsplus.com/tutorials/how-to-dynamically-slice-a-convex-shape--gamedev-14479
@@ -11,27 +10,15 @@ public struct SliceDatum
 {
     const float CONNECTION_MARGIN = .0001f;
 
-    readonly IList<GestureFrame> gestureFrames;
-
     /// <summary>
     /// In local coordinates relative to the triangle it sliced.
     /// </summary>
-    public Vector3[] SlicePositions
+    public ReadOnlyCollection<Vector3> SlicePositions
     {
-        get
-        {
-            List<Vector3> hitPositions = new List<Vector3>();
-
-            for (int i = 0; i < gestureFrames.Count; i++)
-            {
-                Vector3 worldPoint = Camera.main.ScreenToWorldPoint(gestureFrames[i].Position);
-                Vector3 localPoint = Sliceable.Collider.transform.InverseTransformVector(worldPoint);
-                hitPositions.Add(localPoint);
-            }
-
-            return hitPositions.ToArray();
-        }
+        get { return new ReadOnlyCollection<Vector3>(slicePositions); }
     }
+
+    private Vector3[] slicePositions;
 
     public ReadOnlyCollection<Vector3> IntersectionPoints
     {
@@ -46,14 +33,25 @@ public struct SliceDatum
 
     private SliceDatum(IList<GestureFrame> gestureFrames, ISliceable sliceable)
     {
-        this.gestureFrames = gestureFrames;
-        this.intersectionVertices = new List<Vector3>();
+        intersectionVertices = new List<Vector3>();
         Sliceable = sliceable;
 
         trianglesToSlice = TriangleDatum.FromMesh(sliceable.Mesh);
+
+        List<Vector3> slicePositionsList = new List<Vector3>();
+
+        for (int i = 0; i < gestureFrames.Count; i++)
+        {
+            Vector3 worldPoint = Camera.main.ScreenToWorldPoint(gestureFrames[i].Position);
+            Vector3 localPoint = Sliceable.Collider.transform.InverseTransformVector(worldPoint);
+            slicePositionsList.Add(localPoint);
+        }
+
+        this.slicePositions = slicePositionsList.ToArray();
+
         foreach (TriangleDatum triangle in trianglesToSlice)
         {
-           // intersectionVertices = GetIntersectionsWithTriangle(triangle);
+            intersectionVertices = GetIntersectionsWithTriangle(triangle);
         }
     }
 

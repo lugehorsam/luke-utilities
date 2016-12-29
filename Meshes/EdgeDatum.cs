@@ -4,7 +4,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-public struct EdgeDatum {
+public struct EdgeDatum
+{
+    private const float POINT_ON_EDGE_TOLERANCE = .1f;
 
     public ReadOnlyCollection<VertexDatum> Vertices
     {
@@ -69,8 +71,10 @@ public struct EdgeDatum {
 
     public bool VertexWithinEdgeRect(VertexDatum vertex)
     {
-        return MinX <= vertex.X && vertex.X <= MaxX
-               && MinY <= vertex.Y && vertex.Y <= MaxY;
+        return MinX.ApproximatelyLessThan(vertex.X, POINT_ON_EDGE_TOLERANCE) &&
+               vertex.X.ApproximatelyLessThan(MaxX, POINT_ON_EDGE_TOLERANCE) &&
+               MinY.ApproximatelyLessThan(vertex.Y, POINT_ON_EDGE_TOLERANCE) &&
+               vertex.Y.ApproximatelyLessThan(MaxY, POINT_ON_EDGE_TOLERANCE);
     }
 
     public EdgeDatum(VertexDatum vertex1, VertexDatum vertex2)
@@ -142,7 +146,7 @@ public struct EdgeDatum {
                 return intersectionPoint;
             }
         }
-        
+
         return null;
     }
 
