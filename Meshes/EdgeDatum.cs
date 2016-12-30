@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 public struct EdgeDatum
 {
-    private const float POINT_ON_EDGE_TOLERANCE = .1f;
+    private const float POINT_ON_EDGE_TOLERANCE = .01f;
 
     public ReadOnlyCollection<VertexDatum> Vertices
     {
@@ -94,9 +94,9 @@ public struct EdgeDatum
     /// <param name="otherEdge"></param>
     /// <param name="connectionMargin"></param>
     /// <returns></returns>
-    public bool HasIntersectionWithEdge(EdgeDatum otherEdge, float connectionMargin = 0f)
+    public bool HasIntersectionWithEdge(EdgeDatum otherEdge, bool onThisEdge = true, bool onOtherEdge = true)
     {
-        VertexDatum? intersectionPoint = GetIntersectionWithEdge(otherEdge, connectionMargin);
+        VertexDatum? intersectionPoint = GetIntersectionWithEdge(otherEdge, onThisEdge, onOtherEdge);
         return intersectionPoint.HasValue;
     }
 
@@ -117,31 +117,30 @@ public struct EdgeDatum
     /// fall under the connection margin will not belong to edges that can intersect one another.
     /// </param>
     /// <returns></returns>
-    public Vector3? GetIntersectionWithEdge(EdgeDatum otherEdge, float connectionMargin = 0f)
+    public Vector3? GetIntersectionWithEdge(EdgeDatum otherEdge, bool onThisEdge = true, bool onOtherEdge = true)
     {
-        if (otherEdge.ConnectsToEdge(this, connectionMargin))
+        if (otherEdge.ConnectsToEdge(this))
         {
             return null;
         }
 
         float thisYDiff = Vertex2.Y - Vertex1.Y;
         float thisXDiff = Vertex1.X - Vertex2.X;
-        float thisC = thisYDiff * this.Vertex1.X + thisXDiff * this.Vertex1.Y;
+        double thisC = thisYDiff * Vertex1.X + thisXDiff * Vertex1.Y;
 
         float otherYDiff = otherEdge.Vertex2.Y - otherEdge.Vertex1.Y;
         float otherXDiff = otherEdge.Vertex1.X - otherEdge.Vertex2.X;
-        float otherC = otherYDiff * otherEdge.Vertex1.X + otherXDiff * otherEdge.Vertex1.Y;
+        double otherC = otherYDiff * otherEdge.Vertex1.X + otherXDiff * otherEdge.Vertex1.Y;
 
-        float det = thisYDiff * otherXDiff - otherYDiff * thisXDiff;
+        double det = thisYDiff * otherXDiff - otherYDiff * thisXDiff;
 
         if (det != 0f)
         {
-
-            float x = (otherXDiff * thisC - thisXDiff * otherC) / det;
-            float y = (thisYDiff * otherC - otherYDiff * thisC) / det;
-            Vector3 intersectionPoint = new Vector3(x, y, 0f);
-            if (VertexLiesOnEdge(intersectionPoint) &&
-                otherEdge.VertexLiesOnEdge(intersectionPoint))
+            double x = (otherXDiff * thisC - thisXDiff * otherC) / det;
+            double y = (thisYDiff * otherC - otherYDiff * thisC) / det;
+            Vector3 intersectionPoint = new Vector3((float) x, (float) y, 0f);
+            if ((!onThisEdge || VertexLiesOnEdge(intersectionPoint)) &&
+                (!onOtherEdge || otherEdge.VertexLiesOnEdge(intersectionPoint)))
             {
                 return intersectionPoint;
             }

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System;
-using System.Linq;
 
 [Serializable]
 public struct VertexDatum {
@@ -98,7 +97,6 @@ public struct VertexDatum {
     {
         return ((Vector3) vertex1) != ((Vector3) vertex2);
     }
-
 
     public VertexDatum(float x, float y, float z)
     {

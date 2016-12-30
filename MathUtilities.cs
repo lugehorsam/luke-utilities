@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Runtime.Remoting.Messaging;
 
 public static class MathUtils
 {
@@ -59,7 +57,7 @@ public static class MathUtils
     {
         float angle = Vector2.Angle(vectorA, vectorB);
         Vector3 cross = Vector3.Cross(vectorA, vectorB);
-        if (cross.y < 0) angle = -angle;
+        if (cross.z < 0) angle = -angle;
         return angle;
     }
 }

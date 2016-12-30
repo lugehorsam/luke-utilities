@@ -18,7 +18,7 @@ public struct SliceDatum
         get { return new ReadOnlyCollection<Vector3>(slicePositions); }
     }
 
-    private Vector3[] slicePositions;
+    private readonly Vector3[] slicePositions;
 
     public ReadOnlyCollection<Vector3> IntersectionPoints
     {
@@ -42,9 +42,12 @@ public struct SliceDatum
 
         for (int i = 0; i < gestureFrames.Count; i++)
         {
-            Vector3 worldPoint = Camera.main.ScreenToWorldPoint(gestureFrames[i].Position);
-            Vector3 localPoint = Sliceable.Collider.transform.InverseTransformVector(worldPoint);
-            slicePositionsList.Add(localPoint);
+            if (gestureFrames[i].HitForCollider(this.Sliceable.Collider) != null)
+            {
+                Vector3 worldPoint = Camera.main.ScreenToWorldPoint(gestureFrames[i].Position);
+                Vector3 localPoint = Sliceable.Collider.transform.InverseTransformVector(worldPoint);
+                slicePositionsList.Add(localPoint);
+            }
         }
 
         this.slicePositions = slicePositionsList.ToArray();
@@ -78,6 +81,12 @@ public struct SliceDatum
 
     public TriangleDatum[] ApplySlice()
     {
+        if (IntersectionPoints.Count < 2)
+        {
+            Diagnostics.LogWarning("Trying to apply a slice with less than two intersection points");
+            return null;
+        }
+
         var newTriangles = new List<TriangleDatum>();
         foreach (var triangleToSlice in trianglesToSlice)
         {
@@ -111,7 +120,7 @@ public struct SliceDatum
         {
             var candidateVertex = vertexQueue.Dequeue();
             if (otherNewTriangles != null && otherNewTriangles.Any(
-                    (newTri) => newTri.HasEdgeThatIntersects(new EdgeDatum(initialVertex, candidateVertex), CONNECTION_MARGIN)))
+                    (newTri) => newTri.HasEdgeThatIntersects(new EdgeDatum(initialVertex, candidateVertex))))
             {
                 continue;
             }
@@ -128,7 +137,7 @@ public struct SliceDatum
         var intersectionPoints = new List<Vector3>();
         foreach (EdgeDatum edge in triangle.EdgeData)
         {
-            Vector3? intersectionPoint = edge.GetIntersectionWithEdge(new EdgeDatum(SlicePositions));
+            Vector3? intersectionPoint = edge.GetIntersectionWithEdge(new EdgeDatum(SlicePositions), onThisEdge: true, onOtherEdge: false); //avoid precision issues when comparing to slice
             if (intersectionPoint.HasValue)
             {
                 intersectionPoints.Add(intersectionPoint.Value);
