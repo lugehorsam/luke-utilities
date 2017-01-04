@@ -105,7 +105,7 @@ public struct TriangleDatum : IComparer<VertexDatum> {
         return triangles.ToArray();
     }
 
-    public static Mesh ToMesh(TriangleDatum[] triangles)
+    public static Mesh ToMesh(ICollection<TriangleDatum> triangles)
     {
         List<int> triangleIndices = new List<int> ();
         List<Vector3> vertices = new List<Vector3>();

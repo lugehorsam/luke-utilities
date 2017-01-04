@@ -4,7 +4,7 @@ using System.Collections;
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent (typeof (MeshFilter))]
 
-public class DynamicMesh : DatumBehavior<DynamicMeshDatum> {
+public class DynamicMesh : DatumBehavior<MeshDatum> {
 
     MeshFilter meshFilter;
     MeshRenderer meshRenderer;
@@ -17,7 +17,7 @@ public class DynamicMesh : DatumBehavior<DynamicMeshDatum> {
         meshCollider = GetComponent<MeshCollider>();
     }
 
-    protected override void HandleDataUpdate(DynamicMeshDatum oldData, DynamicMeshDatum newData)
+    protected override void HandleDataUpdate(MeshDatum oldData, MeshDatum newData)
     {
         if (meshFilter.mesh != null)
         {

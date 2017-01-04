@@ -11,7 +11,7 @@ public struct SliceDatum
     const float CONNECTION_MARGIN = .0001f;
 
     /// <summary>
-    /// In local coordinates relative to the triangle it sliced.
+    /// In local coordinates relative to the triangleToSlice it sliced.
     /// </summary>
     public ReadOnlyCollection<Vector3> SlicePositions
     {
@@ -20,7 +20,7 @@ public struct SliceDatum
 
     private readonly Vector3[] slicePositions;
 
-    public ReadOnlyCollection<Vector3> IntersectionPoints
+    public ReadOnlyCollection<Vector3> IntersectionVertices
     {
         get { return new ReadOnlyCollection<Vector3>(intersectionVertices); }
     }
@@ -56,6 +56,7 @@ public struct SliceDatum
         {
             intersectionVertices = GetIntersectionsWithTriangle(triangle);
         }
+        Diagnostics.Log("intersection vertices are " + intersectionVertices);
     }
 
     public static SliceDatum[] FromGesture(Gesture gesture, ISliceable sliceable)
@@ -79,25 +80,57 @@ public struct SliceDatum
         return sliceData.ToArray();
     }
 
-    public TriangleDatum[] ApplySlice()
+    public MeshDatum[] ApplySlice()
     {
-        if (IntersectionPoints.Count < 2)
+        if (IntersectionVertices.Count < 2)
         {
             Diagnostics.LogWarning("Trying to apply a slice with less than two intersection points");
             return null;
         }
 
-        var newTriangles = new List<TriangleDatum>();
+        var newMeshes = new List<MeshDatum>();
+
         foreach (var triangleToSlice in trianglesToSlice)
         {
-            var tri1 = CreateSubTriangle(triangleToSlice, triangleToSlice[0]);
-            var tri2 = CreateSubTriangle(triangleToSlice, triangleToSlice[1], new[] {tri1});
-            var tri3 = CreateSubTriangle(triangleToSlice, triangleToSlice[2], new[] {tri1, tri2});
-            newTriangles.Add(tri1);
-            newTriangles.Add(tri2);
-            newTriangles.Add(tri3);
+            newMeshes.AddRange(
+                SliceTriangle(triangleToSlice)
+            );
         }
-        return newTriangles.ToArray();
+
+        return newMeshes.ToArray();
+    }
+
+    MeshDatum[] SliceTriangle(TriangleDatum triangleToSlice)
+    {
+        List<MeshDatum> newMeshes = new List<MeshDatum>();
+
+        var singleMesh = new MeshDatum(new List<TriangleDatum>());
+        var combinedMesh = new MeshDatum(new List<TriangleDatum>());
+
+        newMeshes.Add(singleMesh);
+        newMeshes.Add(combinedMesh);
+
+        var tri1 = CreateSubTriangle(triangleToSlice, triangleToSlice[0]);
+        var tri2 = CreateSubTriangle(triangleToSlice, triangleToSlice[1], new[] {tri1});
+        var tri3 = CreateSubTriangle(triangleToSlice, triangleToSlice[2], new[] {tri1, tri2});
+
+        AddSubTriangle(tri1, singleMesh, combinedMesh);
+        AddSubTriangle(tri2, singleMesh, combinedMesh);
+        AddSubTriangle(tri3, singleMesh, combinedMesh);
+
+        return new []{singleMesh, combinedMesh};
+    }
+
+    void AddSubTriangle(TriangleDatum subTriangle, MeshDatum singleMesh, MeshDatum combinedMesh)
+    {
+        if (SliceWasAlongTriangle(subTriangle))
+        {
+            combinedMesh.AddTriangle(subTriangle);
+        }
+        else
+        {
+            singleMesh.AddTriangle(subTriangle);
+        }
     }
 
     TriangleDatum CreateSubTriangle(TriangleDatum originalTriangle,
@@ -132,17 +165,37 @@ public struct SliceDatum
     }
 
 
+    public bool SliceWasAlongTriangle(TriangleDatum triangle)
+    {
+        EdgeDatum thisEdge = ToEdge();
+
+        foreach (EdgeDatum edge in triangle.EdgeData)
+        {
+            bool edgesAreEqual = edge.Equals(thisEdge);
+            if (edgesAreEqual)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<Vector3> GetIntersectionsWithTriangle(TriangleDatum triangle)
     {
         var intersectionPoints = new List<Vector3>();
         foreach (EdgeDatum edge in triangle.EdgeData)
         {
-            Vector3? intersectionPoint = edge.GetIntersectionWithEdge(new EdgeDatum(SlicePositions), onThisEdge: true, onOtherEdge: false); //avoid precision issues when comparing to slice
+            Vector3? intersectionPoint = edge.GetIntersectionWithEdge(ToEdge(), onThisEdge: true, onOtherEdge: false); //avoid precision issues when comparing to slice
             if (intersectionPoint.HasValue)
             {
                 intersectionPoints.Add(intersectionPoint.Value);
             }
         }
         return intersectionPoints;
+    }
+
+    public EdgeDatum ToEdge()
+    {
+        return new EdgeDatum(SlicePositions);
     }
 }

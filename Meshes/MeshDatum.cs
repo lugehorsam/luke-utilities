@@ -1,8 +1,9 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 [Serializable]
-public struct DynamicMeshDatum
+public struct MeshDatum
 {
     public Mesh Mesh
     {
@@ -10,7 +11,7 @@ public struct DynamicMeshDatum
     }
 
     [SerializeField]
-    private TriangleDatum[] triangles;
+    private List<TriangleDatum> triangles;
 
     public Color Color
     {
@@ -23,11 +24,17 @@ public struct DynamicMeshDatum
     [SerializeField] private MeshAsset meshAsset;
     [SerializeField] private bool useMeshAsset;
 
-    public DynamicMeshDatum(TriangleDatum[] triangles, Color color, MeshAsset meshAsset = null, bool useMeshAsset = false)
+    public MeshDatum(List<TriangleDatum> triangles, Color color = default(Color), MeshAsset meshAsset = null, bool useMeshAsset = false)
     {
-        this.triangles = triangles;
+        this.triangles = triangles ?? new List<TriangleDatum>();
         this.color = color;
         this.meshAsset = meshAsset;
         this.useMeshAsset = useMeshAsset;
+    }
+
+    public void AddTriangle(TriangleDatum triangle)
+    {
+        triangles = triangles ?? new List<TriangleDatum>();
+        triangles.Add(triangle);
     }
 }
