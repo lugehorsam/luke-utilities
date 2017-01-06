@@ -98,6 +98,7 @@ public abstract class DataManager<TData, TBehavior> : MonoBehaviour
         };
 
         newDataSource.OnDataPublish += OnDataPublished;
+        OnDataPublished(newDataSource.Data.ToArray());
     }
 
     public void Push ()

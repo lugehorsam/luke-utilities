@@ -5,22 +5,25 @@ using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Collections;
 
-public abstract class DataSource<TData> : DataSource
+public class DataSource<TData> : DataSource
     where TData : struct {
 
     public ReadOnlyCollection<TData> Data {
         get {
-            return new ReadOnlyCollection<TData> (data);
+            return new ReadOnlyCollection<TData> (shouldOverrideData ? overrideData : data);
         }
     }
 
     List<TData> data = new List<TData>();
 
-    string cacheKey {
+    string CacheKey {
         get {
-            return baseUrl;
+            return cacheKey;
         }
     }
+
+    [SerializeField]
+    private string cacheKey;
 
     [SerializeField]
     string baseUrl;
@@ -37,8 +40,9 @@ public abstract class DataSource<TData> : DataSource
 
     event Action<TData[]> onDataPublish = (data) => { };
 
-    [SerializeField]
-    protected NetworkConfig networkConfig;
+    [SerializeField] protected NetworkConfig networkConfig;
+    [SerializeField] private bool shouldOverrideData;
+    [SerializeField] private List<TData> overrideData;
 
     protected IEnumerator FetchData (string endPoint, Dictionary<string, string> postData)
     {

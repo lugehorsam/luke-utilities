@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public abstract class Layout<TData, TBehavior> : DataManager<TData, TBehavior>
+public class Layout<TData, TBehavior> : DataManager<TData, TBehavior>
     where TData : struct
-    where TBehavior : DatumBehavior<TData>, ILayoutMember
+    where TBehavior : DatumBehavior<TData>
 {
 
     public void DoLayout (int startIndex = 0)
     {
         for (int i = startIndex; i < Behaviors.Count; i++) {
             TBehavior behavior = Behaviors [i];
-            Debug.Log("laying out behavior " + behavior);
-            Diagnostics.Log ("Laying out behavior " + behavior, LogType.Layouts);
             behavior.transform.SetParent (transform, worldPositionStays: true);
             behavior.transform.SetSiblingIndex (i);
-            behavior.OnLocalLayout (GetIdealLocalPosition (behavior));
+            ILayoutMember layoutMember = behavior as ILayoutMember;
+            if (layoutMember != null)
+            {
+                layoutMember.OnLocalLayout(GetIdealLocalPosition(behavior));
+            }
         }
     }
 
@@ -29,5 +31,8 @@ public abstract class Layout<TData, TBehavior> : DataManager<TData, TBehavior>
         DoLayout ();
     }
 
-    protected abstract Vector2 GetIdealLocalPosition (TBehavior behavior);
+    protected virtual Vector2 GetIdealLocalPosition(TBehavior behavior)
+    {
+        return default(Vector2);
+    }
 }
