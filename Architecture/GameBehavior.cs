@@ -20,6 +20,16 @@ public class GameBehavior : MonoBehaviour {
         OnAwake();
     }
 
+    void Start()
+    {
+        OnStart();
+    }
+
+    protected virtual void OnStart()
+    {
+
+    }
+
     protected virtual void InitComponents()
     {
     }

@@ -4,7 +4,7 @@ using System.Linq;
 using System;
 using System.Collections.ObjectModel;
 
-public abstract class DataManager<TData, TBehavior> : MonoBehaviour
+public abstract class DataManager<TData, TBehavior> : GameBehavior
     where TData : struct
     where TBehavior : DatumBehavior<TData> {
 
@@ -37,14 +37,14 @@ public abstract class DataManager<TData, TBehavior> : MonoBehaviour
     Action unsubscribeFromSource;
     Action pushToSource;
 
-    void Awake ()
+    protected override void OnAwake ()
     {
         Init ();
     }
 
     void Init ()
     {
-        Diagnostics.Log ("Init called", LogType.Behaviors);
+
         InitBehaviorPool ();
         data.OnAdd += HandleNewDatum;
         data.OnRemove += HandleRemovedDatum;
@@ -54,7 +54,7 @@ public abstract class DataManager<TData, TBehavior> : MonoBehaviour
     public void Subscribe<TSourceData> (DataSource<TSourceData> newDataSource,
                                     int sourceDatumIndex) where TSourceData : struct, IComposite<TData>
     {
-        Diagnostics.Log ("Subscription: " + this + " to " + newDataSource, LogType.DataFlow);
+
         if (data.Count > 0) {
             data.Clear ();
             unsubscribeFromSource ();
@@ -82,7 +82,7 @@ public abstract class DataManager<TData, TBehavior> : MonoBehaviour
 
     public void Subscribe (DataSource<TData> newDataSource)
     {
-        Diagnostics.Log ("Subscription: " + this + " to " + newDataSource, LogType.DataFlow);
+
         pushToSource = () => newDataSource.Set (data.ToArray());
         if (data.Count > 0) {
             data.Clear ();
@@ -113,7 +113,7 @@ public abstract class DataManager<TData, TBehavior> : MonoBehaviour
         if (receivingManager == this) {
             Diagnostics.Report ("Data manager " + this + "Trying to transfer data to itself");
         }
-        Diagnostics.Log ("Transfer from " + this + " to" + receivingManager + "started", LogType.DataFlow);
+
         List<TData> silentData = data;
         List<TData> receivingSilentData = receivingManager.data;
 
@@ -134,12 +134,11 @@ public abstract class DataManager<TData, TBehavior> : MonoBehaviour
 
     protected virtual void AddHandlers (TBehavior behavior) { }
     protected virtual void RemoveHandlers (TBehavior behavior) { }
-    protected virtual void InitComponents () { }
     protected virtual void AddLocalData () { }
 
     void OnDataPublished (TData [] publishedData)
     {
-        Diagnostics.Log ("[Heard published data] " + this, LogType.DataFlow);
+
         List<TData> silentData = data;
         TData [] oldData = new TData [silentData.Count ()];
         silentData.CopyTo (oldData);
@@ -161,7 +160,7 @@ public abstract class DataManager<TData, TBehavior> : MonoBehaviour
     {
         TBehavior behavior = behaviorPool.Release ();
         behavior.Datum = newDatum;
-        Diagnostics.Log (this.name + ": released behavior with datum " + behavior.Datum, LogType.Behaviors);
+
         AddHandlers (behavior);
         HandleNewBehavior (behavior);
     }
@@ -175,8 +174,6 @@ public abstract class DataManager<TData, TBehavior> : MonoBehaviour
 
     void InitBehaviorPool ()
     {
-        Debug.Log("initting pool");
-
         behaviorPool = new ObjectPool<TBehavior> (() => CreateAndInitBehavior (), initialGameObjects);
         behaviorPool.OnPool += HandleBehaviorPooled;
         behaviorPool.OnRelease += HandleBehaviorReleased;
@@ -194,7 +191,7 @@ public abstract class DataManager<TData, TBehavior> : MonoBehaviour
 
     void HandleRemovedDatum (TData oldDatum, int oldDatumIndex)
     {
-        Diagnostics.Log ("Handle removed datum " + oldDatum + " from " + this.name, LogType.DataFlow);
+
         TBehavior behaviorToPool = Behaviors.First ((behavior) => behavior.Datum.Equals (oldDatum));
         RemoveHandlers (behaviorToPool);
         behaviorPool.Pool (behaviorToPool);
@@ -208,7 +205,6 @@ public abstract class DataManager<TData, TBehavior> : MonoBehaviour
 
     TBehavior CreateAndInitBehavior ()
     {
-        Debug.Log("Create and init behavior");
         TBehavior behavior = dataBehaviorPrefab.Instantiate<TBehavior> ();
         behavior.gameObject.SetActive (false);
         OnBehaviorInitialized (behavior);

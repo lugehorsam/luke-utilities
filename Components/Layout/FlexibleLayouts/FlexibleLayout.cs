@@ -26,7 +26,7 @@ public abstract class FlexibleLayout<TTargetData, TBehavior> : Layout<TTargetDat
     protected override Vector2 GetIdealLocalPosition(TBehavior behavior) {
         Vector2 newPosition = Vector2.zero;
         int currentBehaviorIndex = Behaviors.IndexOf(behavior);
-        Diagnostics.Log ("Behavior index of " + behavior + " is " + currentBehaviorIndex);
+
         if (currentBehaviorIndex <= 0) {
             return newPosition;
         }

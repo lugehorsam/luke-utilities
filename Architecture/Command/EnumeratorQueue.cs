@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System;
 using System.Collections.Generic;
 
@@ -51,13 +50,12 @@ public class EnumeratorQueue : IEnumerator
 
     public void Enqueue (IEnumerator enumerator)
     {
-        Diagnostics.Log ("Enqueuing enumerator", LogType.Tweening);
         nextEnumerators.AddLast (enumerator);
     }
 
     void MoveEnumeratorToStack (IEnumerator enumerator)
     {
-        Diagnostics.Log ("Moving iterator to stack", LogType.Tweening);
+
         nextEnumerators.RemoveFirst ();
         oldEnumerators.Push (enumerator);
     }

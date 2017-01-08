@@ -46,11 +46,11 @@ public class DataSource<TData> : DataSource
 
     protected IEnumerator FetchData (string endPoint, Dictionary<string, string> postData)
     {
-        Diagnostics.Log ("network config is on " + this + " is " + networkConfig);
+
         DataRequest<TData> request = CreateDataRequest (BuildEndpoint(endPoint), postData);
         yield return request;
         HandleDataFetched (request.Data);
-        Diagnostics.Log ("request data is " + request.Data.ToFormattedString ());
+
         Set (request.Data);
     }
 
@@ -74,7 +74,7 @@ public class DataSource<TData> : DataSource
             return;
         }
         string stringToCache = JsonUtility.ToJson (new JsonArray<TData> (data.ToArray ()));
-        Diagnostics.Log ("Source " + this + " Caching data " + stringToCache, LogType.DataFlow);
+
         PlayerPrefs.SetString (cacheKey, stringToCache);
     }
 
@@ -86,7 +86,7 @@ public class DataSource<TData> : DataSource
 
         if (PlayerPrefs.HasKey (cacheKey)) {
             Set(JsonUtility.FromJson<JsonArray<TData>> (PlayerPrefs.GetString (cacheKey)).Data);
-            Diagnostics.Log ("Source " + this + " received data " + data.ToFormattedString () + " from cache " + " length is " + data.Count, LogType.DataFlow);
+
             return true;
         }
         return false;
@@ -94,12 +94,12 @@ public class DataSource<TData> : DataSource
 
     public void Set (TData[] data)
     {
-        Diagnostics.Log (this.ToString() + " is being pushed to", LogType.DataFlow);
+
         if (this.data.SequenceEqual (data)) {
             return;
         }
         this.data = data.ToList();
-        Diagnostics.Log ("and is publishing data ", LogType.DataFlow);
+
         onDataPublish (data);
     }
 

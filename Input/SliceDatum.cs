@@ -56,7 +56,7 @@ public struct SliceDatum
         {
             intersectionVertices = GetIntersectionsWithTriangle(triangle);
         }
-        Diagnostics.Log("intersection vertices are " + intersectionVertices);
+
     }
 
     public static SliceDatum[] FromGesture(Gesture gesture, ISliceable sliceable)
@@ -84,7 +84,7 @@ public struct SliceDatum
     {
         if (IntersectionVertices.Count < 2)
         {
-            Diagnostics.LogWarning("Trying to apply a slice with less than two intersection points");
+
             return null;
         }
 

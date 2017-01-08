@@ -43,7 +43,7 @@ public class SliceOnDrag : GameBehavior, ISliceable {
     void OnDragLeave(TouchDispatcher dispatcher, Gesture currentDrag)
     {
         SliceDatum[] sliceData = SliceDatum.FromGesture(currentDrag, this);
-        Diagnostics.Log("Slice data length is " + sliceData);
+
         foreach (SliceDatum slice in sliceData)
         {
             OnSlice(slice);

@@ -139,7 +139,7 @@ public class ObservableList<TData> : List<TData>
             if (handleNewArray != null) {
                 handleNewArray (observerArray);
             }
-            Diagnostics.Log ("new array contents are " + observerArray.ToFormattedString ());
+
         };
         observedList.OnRemove += (removedData, removalIndices) => {
             observerArray = observedList.ToArray ();

@@ -11,7 +11,7 @@ public abstract class Vector3Binding<TComponent> : LerpBinding<Vector3, TCompone
     }
 
     public override Vector3 AddProperty(Vector3 v1, Vector3 v2) {
-        Diagnostics.Log("Adding " + v1 + " to " + v2, LogType.Tweening);
+
         return v1 + v2;
     }
 

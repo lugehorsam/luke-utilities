@@ -67,7 +67,7 @@ public class RotateOnDrag : GameBehavior
         ) * (transform.up + transform.right);
 
 
-        Diagnostics.Log("Predicted up is " + predictedUpRight);
+
         Vector3 upTorque = Vector3.Cross(predictedUpRight, (Vector3.up + Vector3.right));
         Vector3 downTorque = Vector3.Cross(predictedUpRight, (Vector3.down + Vector3.right));
 
@@ -79,7 +79,7 @@ public class RotateOnDrag : GameBehavior
     {
         if (debugMode)
         {
-            Diagnostics.Log("Drawing drag");
+
             Diagnostics.DrawGesture(drag);
         }
     }

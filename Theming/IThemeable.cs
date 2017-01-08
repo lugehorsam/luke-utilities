@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System;
-
-public interface IThemeable<T>
+﻿public interface IThemeable<T>
 {
     void HandleNewTheme (T theme);
 }

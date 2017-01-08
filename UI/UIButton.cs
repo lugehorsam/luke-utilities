@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System;
 
 [RequireComponent(typeof(Button))]
-public class UIButton : UIElement {
+public class UIButton : GameBehavior {
 
     protected Button button;
 
@@ -25,7 +25,7 @@ public class UIButton : UIElement {
         button.onClick.RemoveListener(ClickListener);
     }
 
-    protected override void InitComponents ()
+    protected sealed override void InitComponents ()
     {
         button = GetComponent<Button> ();
     }

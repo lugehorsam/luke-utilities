@@ -16,10 +16,10 @@ public class WebDataRequest<TData> : DataRequest<TData> where TData : struct {
             }
 
             if (request.isDone) {
-                Diagnostics.Log ("Received response from endpoint " + request.url + " , " + request.downloadHandler.text, LogType.Networking);
+
                 TData[] serializedData = JsonUtility.FromJson<JsonArray<TData>> (request.downloadHandler.text).Data;
                 data = serializedData;
-                Diagnostics.Log ("Serialized response to data " + serializedData.ToFormattedString(), LogType.Networking);
+
             }
             return !request.isDone;
         }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class UIPopup : UIElement {
+public abstract class InputScreen : GameBehavior {
 
     protected abstract bool WaitForInput {
         get;
@@ -25,7 +25,7 @@ public abstract class UIPopup : UIElement {
 
     IEnumerator Hide ()
     {
-        Diagnostics.Log ("Hide called", LogType.Popups);
+
         yield return StartCoroutine(HideTransition());
         gameObject.SetActive (false);
     }

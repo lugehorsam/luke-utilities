@@ -99,7 +99,6 @@ public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProp
     {
         while (true)
         {
-            Debug.Log("Incrementing property");
             IncrementProperty(lerp.UnitsPerSecond);
             OnLerp(this);
             yield return null;

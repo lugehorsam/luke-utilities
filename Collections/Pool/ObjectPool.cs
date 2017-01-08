@@ -69,7 +69,7 @@ public class ObjectPool<T>  {
 
     public void SetNumReleased (int numReleased)
     {
-        Diagnostics.Log ("Set num released called");
+
         while (numReleased != releasedObjects.Count) {
             if (releasedObjects.Count > numReleased) {
                 Pool (releasedObjects.FirstOrDefault ());

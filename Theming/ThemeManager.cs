@@ -5,14 +5,14 @@ using System.Collections.Generic;
 public abstract class ThemeManager<TTheme> : ScriptableObject
     where TTheme : Theme 
 {
-    TTheme CurrentBundle {
+    TTheme CurrentTheme {
         get {
-            return themeBundles [currentThemeIndex];
+            return themes [currentThemeIndex];
         }
     }
 
     [SerializeField]
-    TTheme[] themeBundles;
+    TTheme[] themes;
 
     int currentThemeIndex;
 
@@ -29,7 +29,7 @@ public abstract class ThemeManager<TTheme> : ScriptableObject
         if (!themeables.Add (themeable)) {
             Diagnostics.Report ("trying to add a duplicate theamble");
         } else {
-            themeable.HandleNewTheme (CurrentBundle);
+            themeable.HandleNewTheme (CurrentTheme);
         }
     }
 
@@ -43,7 +43,7 @@ public abstract class ThemeManager<TTheme> : ScriptableObject
     void ApplyCurrentTheme ()
     {
         foreach (IThemeable<TTheme> themeable in themeables) {
-            themeable.HandleNewTheme (CurrentBundle);
+            themeable.HandleNewTheme (CurrentTheme);
         }
     }
 }

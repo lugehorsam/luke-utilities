@@ -35,7 +35,7 @@ public abstract class InsertableLayout<TData, TBehavior> : FlexibleLayout<TData,
                 insertionIndex = Data.IndexOf (rightBehavior.Datum);
             }
         }
-        Diagnostics.Log ("Insertion index for word " + colliderBehavior + " is " + insertionIndex, LogType.Dragging);
+
         return insertionIndex;
     }
 
@@ -43,7 +43,7 @@ public abstract class InsertableLayout<TData, TBehavior> : FlexibleLayout<TData,
     {
         Collider leftOverlap = behavior.MultiCollider.GetLeftOverlap ();
         Collider rightOverlap = behavior.MultiCollider.GetRightOverlap ();
-        Diagnostics.Log ("Left overlap for behavior " + behavior.gameObject + " is " + leftOverlap, LogType.Dragging);
+
         return (leftOverlap != null && this.Behaviors.Contains (leftOverlap.GetComponent<TBehavior> ()))
                 || (rightOverlap != null && this.Behaviors.Contains (rightOverlap.GetComponent<TBehavior> ()));
     }
