@@ -9,7 +9,7 @@ public class Prefab {
     GameObject prefab;
 
     [SerializeField]
-    Transform holder;
+    Transform instantiationHolder;
 
     [SerializeField]
     Vector3 localPosition;
@@ -17,9 +17,9 @@ public class Prefab {
     public GameObject Instantiate ()
     {
         GameObject instance = GameObject.Instantiate (prefab, Vector2.zero, Quaternion.Euler (Vector3.zero)) as GameObject;
-        if (holder != null)
+        if (instantiationHolder != null)
         {
-            instance.transform.SetParent(holder, worldPositionStays: false);
+            instance.transform.SetParent(instantiationHolder, worldPositionStays: false);
         }
         instance.transform.localPosition = localPosition;
         return instance;

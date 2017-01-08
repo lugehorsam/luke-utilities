@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-public abstract class InsertableLayout<TData, TBehavior> : FlexibleLayout<TData, TBehavior> 
+public abstract class InsertableContainer<TData, TBehavior> : FlexibleContainer<TData, TBehavior> 
     where TData : struct
     where TBehavior : DatumBehavior<TData>, 
     IMultiCollider2D,

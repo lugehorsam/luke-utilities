@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 
 [Serializable]
-public abstract class FlexibleLayout<TTargetData, TBehavior> : Layout<TTargetData, TBehavior> 
+public abstract class FlexibleContainer<TTargetData, TBehavior> : Container<TTargetData, TBehavior> 
     where TTargetData : struct
     where TBehavior : DatumBehavior<TTargetData>, ILayoutMember
 { 

@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// Arbitrary grid layout. Bototm left is row 0, col 0
 /// </summary>
-public abstract class GridLayout<TData, TBehavior> : Layout<TData, TBehavior>
+public abstract class GridContainer<TData, TBehavior> : Container<TData, TBehavior>
     where TData : struct
     where TBehavior : DatumBehavior<TData>, ILayoutMember {
 

@@ -5,24 +5,23 @@ using System.Reflection;
 using System.Linq;
 using System;
 
-[RequireComponent(typeof(UIButton))]
 
 public class TestingButton : DatumBehavior<DiagnosticsData>, ILayoutMember {
 
-    UIButton button;
+    Button button;
 
     [SerializeField]
     Text text;
 
     protected override void InitComponents ()
     {
-        button = GetComponent<UIButton> ();
+        button = GetComponent<Button> ();
     }
 
     protected override void HandleDataUpdate (DiagnosticsData oldData, DiagnosticsData newData)
     {
         text.text = newData.DisplayName;
-        button.OnClick += newData.Action;
+        button.onClick.AddListener(() => newData.Action());
     }
 
     public void OnLocalLayout (Vector2 idealPosition)

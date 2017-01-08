@@ -1,15 +1,15 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 
-public abstract class InputScreen : GameBehavior {
-
+public abstract class InputScreen<TData, TBehavior> : Container<TData, TBehavior>
+    where TData : struct
+    where TBehavior : DatumBehavior<TData>
+{
     protected abstract bool WaitForInput {
         get;
     }
 
     public IEnumerator Show ()
     {
-            
         gameObject.SetActive (true);
         WaitForInput:
             while (WaitForInput) {
@@ -25,7 +25,6 @@ public abstract class InputScreen : GameBehavior {
 
     IEnumerator Hide ()
     {
-
         yield return StartCoroutine(HideTransition());
         gameObject.SetActive (false);
     }
