@@ -3,8 +3,7 @@ using UnityEngine.UI;
 using UnityEngine;
 
 public class ButtomDatumBehavior<TData> : DatumBehavior<TData>, IButton
-    where TData : struct
-{
+    where TData : struct {
 
     public event Action<IInput> OnInput
     {

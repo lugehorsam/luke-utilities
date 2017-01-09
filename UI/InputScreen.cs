@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 
 public abstract class InputScreen<TData, TBehavior> : Container<TData, TBehavior>
     where TData : struct
@@ -20,7 +21,8 @@ public abstract class InputScreen<TData, TBehavior> : Container<TData, TBehavior
             if (IsValidInput (SelectedInput))
             {
                 yield return StartCoroutine (Hide ());
-            } else
+            }
+            else
             {
                 SelectedInput = null;
                 goto WaitForInput;
@@ -40,12 +42,13 @@ public abstract class InputScreen<TData, TBehavior> : Container<TData, TBehavior
 
     protected sealed override void HandleRemovedBehaviorPreLayout(TBehavior behavior)
     {
-        behavior.OnInput += HandleInput;
+        Diagnostics.Log("attaching handler");
+        behavior.OnInput -= HandleInput;
     }
 
     protected sealed override void HandleNewBehaviorPreLayout(TBehavior behavior)
     {
-        behavior.OnInput -= HandleInput;
+        behavior.OnInput += HandleInput;
     }
 
     protected virtual bool IsValidInput (TBehavior behavior)
