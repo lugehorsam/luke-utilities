@@ -2,25 +2,34 @@
 
 public abstract class InputScreen<TData, TBehavior> : Container<TData, TBehavior>
     where TData : struct
-    where TBehavior : DatumBehavior<TData>
+    where TBehavior : DatumBehavior<TData>, IInput
 {
-    protected abstract bool WaitForInput {
+    public TBehavior SelectedInput
+    {
         get;
+        private set;
     }
 
     public IEnumerator Show ()
     {
         gameObject.SetActive (true);
         WaitForInput:
-            while (WaitForInput) {
+            while (SelectedInput == null) {
                 yield return null;
             }
-            yield return StartCoroutine(HandleInput ());
-            if (ValidInput ()) {
+            if (IsValidInput (SelectedInput))
+            {
                 yield return StartCoroutine (Hide ());
-            } else {
+            } else
+            {
+                SelectedInput = null;
                 goto WaitForInput;
             }
+    }
+
+    void HandleInput(IInput behavior)
+    {
+        SelectedInput = (TBehavior) behavior;
     }
 
     IEnumerator Hide ()
@@ -29,12 +38,17 @@ public abstract class InputScreen<TData, TBehavior> : Container<TData, TBehavior
         gameObject.SetActive (false);
     }
 
-    protected virtual IEnumerator HandleInput ()
+    protected sealed override void HandleRemovedBehaviorPreLayout(TBehavior behavior)
     {
-        yield return null;
+        behavior.OnInput += HandleInput;
     }
 
-    protected virtual bool ValidInput ()
+    protected sealed override void HandleNewBehaviorPreLayout(TBehavior behavior)
+    {
+        behavior.OnInput -= HandleInput;
+    }
+
+    protected virtual bool IsValidInput (TBehavior behavior)
     {
         return true;
     }

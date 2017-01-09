@@ -22,12 +22,12 @@ public class GameBehavior : MonoBehaviour {
 
     void Start()
     {
-        OnStart();
+        StartCoroutine(OnStartCoroutine());
     }
 
-    protected virtual void OnStart()
+    protected virtual IEnumerator OnStartCoroutine()
     {
-
+        yield return null;
     }
 
     protected virtual void InitComponents()

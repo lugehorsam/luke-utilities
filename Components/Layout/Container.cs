@@ -22,15 +22,21 @@ public class Container<TData, TBehavior> : DataManager<TData, TBehavior>
         }
     }
 
-    protected override void HandleNewBehavior (TBehavior behavior)
+    protected sealed override void HandleNewBehavior (TBehavior behavior)
     {
+        HandleNewBehaviorPreLayout(behavior);
         DoLayout ();
     }
 
-    protected override void HandleRemovedBehavior (TBehavior behavior)
+    protected sealed override void HandleRemovedBehavior (TBehavior behavior)
     {
+        HandleRemovedBehaviorPreLayout(behavior);
         DoLayout ();
     }
+
+    protected virtual void HandleNewBehaviorPreLayout(TBehavior behavior) {}
+
+    protected virtual void HandleRemovedBehaviorPreLayout(TBehavior behavior) {}
 
     protected virtual Vector2 GetIdealLocalPosition(TBehavior behavior)
     {
