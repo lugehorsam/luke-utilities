@@ -1,6 +1,6 @@
 ﻿using System;
 
-public interface IDataPublisher<TData> where TData : struct  {
+public interface IDataPublisher<TDatum> where TDatum : struct  {
 
-    void Push(TData[] newData);
+    void Push(TDatum[] newData);
 }

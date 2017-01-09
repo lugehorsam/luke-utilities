@@ -4,9 +4,9 @@ using System.Collections;
 /// <summary>
 /// Arbitrary grid layout. Bototm left is row 0, col 0
 /// </summary>
-public abstract class GridContainer<TData, TBehavior> : Container<TData, TBehavior>
-    where TData : struct
-    where TBehavior : DatumBehavior<TData>, ILayoutMember {
+public abstract class GridContainer<TDatum, TBehavior> : Container<TDatum, TBehavior>
+    where TDatum : struct
+    where TBehavior : DatumBehavior<TDatum>, ILayoutMember {
 
     [SerializeField]
     int rows;

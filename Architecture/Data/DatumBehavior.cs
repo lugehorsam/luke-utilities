@@ -3,14 +3,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class DatumBehavior<TData> : GameBehavior
-    where TData : struct {
+public abstract class DatumBehavior<TDatum> : GameBehavior
+    where TDatum : struct {
 
-    public event Action<TData, TData> OnDataChanged = (d1, d2) => { };
+    public event Action<TDatum, TDatum> OnDataChanged = (d1, d2) => { };
 
-    public virtual TData Datum {
+    public virtual TDatum Datum {
         set {
-            TData oldData = datum;
+            TDatum oldData = datum;
             datum = value;
             HandleDataUpdate (oldData, datum);
             OnDataChanged (oldData, datum);
@@ -20,12 +20,12 @@ public abstract class DatumBehavior<TData> : GameBehavior
         }
     }
 
-    TData datum;
+    TDatum datum;
 
     protected virtual IEnumerator Start ()
     {
         yield return null;
     }
 
-    protected virtual void HandleDataUpdate (TData oldData, TData newData) {}
+    protected virtual void HandleDataUpdate (TDatum oldData, TDatum newData) {}
 }

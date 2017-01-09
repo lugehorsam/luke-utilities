@@ -2,9 +2,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-public abstract class InsertableContainer<TData, TBehavior> : FlexibleContainer<TData, TBehavior> 
-    where TData : struct
-    where TBehavior : DatumBehavior<TData>, 
+public abstract class InsertableContainer<TDatum, TBehavior> : FlexibleContainer<TDatum, TBehavior>
+    where TDatum : struct
+    where TBehavior : DatumBehavior<TDatum>,
     IMultiCollider2D,
     ITouchDispatcher,
     ILayoutMember
@@ -22,7 +22,7 @@ public abstract class InsertableContainer<TData, TBehavior> : FlexibleContainer<
         if (leftCollider == null && rightCollider == null) {
             return null;
         } else {
-            List<TData> dataToIgnore = new List<TData> ();
+            List<TDatum> dataToIgnore = new List<TDatum> ();
             if (Data.Contains (colliderBehavior.Datum)) {
                 dataToIgnore.Add (colliderBehavior.Datum);
             }

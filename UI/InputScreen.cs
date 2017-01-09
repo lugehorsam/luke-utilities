@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 
-public abstract class InputScreen<TData, TBehavior> : Container<TData, TBehavior>
-    where TData : struct
-    where TBehavior : DatumBehavior<TData>, IInput
+public abstract class InputScreen<TDatum, TBehavior> : Container<TDatum, TBehavior>
+    where TDatum : struct
+    where TBehavior : DatumBehavior<TDatum>, IInput
 {
     public TBehavior SelectedInput
     {

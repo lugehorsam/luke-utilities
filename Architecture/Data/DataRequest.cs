@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class DataRequest<TData> : CustomYieldInstruction where TData : struct {
+public abstract class DataRequest<TDatum> : CustomYieldInstruction where TDatum : struct {
 
-    public TData[] Data {
+    public TDatum[] Data {
         get {
             return data;
         }
     }
 
-    protected TData[] data {
+    protected TDatum[] data {
         private get;
         set;
     }

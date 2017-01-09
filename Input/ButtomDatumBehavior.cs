@@ -2,8 +2,8 @@
 using UnityEngine.UI;
 using UnityEngine;
 
-public class ButtomDatumBehavior<TData> : DatumBehavior<TData>, IButton
-    where TData : struct {
+public class ButtomDatumBehavior<TDatum> : DatumBehavior<TDatum>, IButton
+    where TDatum : struct {
 
     public event Action<IInput> OnInput
     {

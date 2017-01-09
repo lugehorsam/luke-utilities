@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class Container<TData, TBehavior> : DataManager<TData, TBehavior>
-    where TData : struct
-    where TBehavior : DatumBehavior<TData>
-{
+public class Container<TDatum, TBehavior> : DataManager<TDatum, TBehavior>
+    where TDatum : struct
+    where TBehavior : DatumBehavior<TDatum> {
 
     [SerializeField] private int siblingOffset;
 

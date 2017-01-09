@@ -4,17 +4,17 @@ using System.Linq;
 using System;
 using System.Collections.ObjectModel;
 
-public abstract class DataManager<TData, TBehavior> : GameBehavior
-    where TData : struct
-    where TBehavior : DatumBehavior<TData> {
+public abstract class DataManager<TDatum, TBehavior> : GameBehavior
+    where TDatum : struct
+    where TBehavior : DatumBehavior<TDatum> {
 
-    public ReadOnlyCollection<TData> Data {
+    public ReadOnlyCollection<TDatum> Data {
         get {
-            return new ReadOnlyCollection<TData> (data);
+            return new ReadOnlyCollection<TDatum> (data);
         }
     }
 
-    protected readonly ObservableList<TData> data = new ObservableList<TData>();
+    protected readonly ObservableList<TDatum> data = new ObservableList<TDatum>();
 
     public ReadOnlyCollection<TBehavior> Behaviors {
         get {
@@ -52,7 +52,7 @@ public abstract class DataManager<TData, TBehavior> : GameBehavior
     }
 
     public void Subscribe<TSourceData> (DataSource<TSourceData> newDataSource,
-                                    int sourceDatumIndex) where TSourceData : struct, IComposite<TData>
+                                    int sourceDatumIndex) where TSourceData : struct, IComposite<TDatum>
     {
 
         if (data.Count > 0) {
@@ -80,7 +80,7 @@ public abstract class DataManager<TData, TBehavior> : GameBehavior
         };
     }
 
-    public void Subscribe (DataSource<TData> newDataSource)
+    public void Subscribe (DataSource<TDatum> newDataSource)
     {
 
         pushToSource = () => newDataSource.Set (data.ToArray());
@@ -106,7 +106,7 @@ public abstract class DataManager<TData, TBehavior> : GameBehavior
         pushToSource ();
     }
 
-    public void TransferTo (DataManager<TData, TBehavior> receivingManager,
+    public void TransferTo (DataManager<TDatum, TBehavior> receivingManager,
                                int insertionIndex,
                                TBehavior behavior)
     {
@@ -114,13 +114,13 @@ public abstract class DataManager<TData, TBehavior> : GameBehavior
             Diagnostics.Report ("Data manager " + this + "Trying to transfer data to itself");
         }
 
-        List<TData> silentData = data;
-        List<TData> receivingSilentData = receivingManager.data;
+        List<TDatum> silenTDatum = data;
+        List<TDatum> receivingSilenTDatum = receivingManager.data;
 
         RemoveHandlers (behavior);
         receivingManager.AddHandlers (behavior);
-        silentData.Remove (behavior.Datum);
-        receivingSilentData.Insert (insertionIndex, behavior.Datum);
+        silenTDatum.Remove (behavior.Datum);
+        receivingSilenTDatum.Insert (insertionIndex, behavior.Datum);
         behaviorPool.TransferTo (receivingManager.behaviorPool, behavior, insertionIndex);
         HandleRemovedBehavior (behavior);
         receivingManager.HandleNewBehavior (behavior);
@@ -136,14 +136,14 @@ public abstract class DataManager<TData, TBehavior> : GameBehavior
     protected virtual void RemoveHandlers (TBehavior behavior) { }
     protected virtual void AddLocalData () { }
 
-    void OnDataPublished (TData [] publishedData)
+    void OnDataPublished (TDatum [] publishedData)
     {
 
-        List<TData> silentData = data;
-        TData [] oldData = new TData [silentData.Count ()];
-        silentData.CopyTo (oldData);
-        silentData.Clear ();
-        silentData.AddRange (publishedData);
+        List<TDatum> silenTDatum = data;
+        TDatum [] oldData = new TDatum [silenTDatum.Count ()];
+        silenTDatum.CopyTo (oldData);
+        silenTDatum.Clear ();
+        silenTDatum.AddRange (publishedData);
 
         int i = 0;
         while (i < publishedData.Length || i < oldData.Length) {
@@ -156,7 +156,7 @@ public abstract class DataManager<TData, TBehavior> : GameBehavior
         }
     }
 
-    void HandleNewDatum (TData newDatum)
+    void HandleNewDatum (TDatum newDatum)
     {
         TBehavior behavior = behaviorPool.Release ();
         behavior.Datum = newDatum;
@@ -189,7 +189,7 @@ public abstract class DataManager<TData, TBehavior> : GameBehavior
         behavior.gameObject.SetActive (true);
     }
 
-    void HandleRemovedDatum (TData oldDatum, int oldDatumIndex)
+    void HandleRemovedDatum (TDatum oldDatum, int oldDatumIndex)
     {
 
         TBehavior behaviorToPool = Behaviors.First ((behavior) => behavior.Datum.Equals (oldDatum));
@@ -198,7 +198,7 @@ public abstract class DataManager<TData, TBehavior> : GameBehavior
         HandleRemovedBehavior (behaviorToPool);
     }
 
-    void HandleChangedDatum (TData changedDatum)
+    void HandleChangedDatum (TDatum changedDatum)
     {
         Behaviors.First ((behavior) => behavior.Datum.Equals (changedDatum)).Datum = changedDatum;
     }

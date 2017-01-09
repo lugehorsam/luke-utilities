@@ -2,7 +2,7 @@
 using UnityEngine.Networking;
 using System;
 
-public class WebDataRequest<TData> : DataRequest<TData> where TData : struct {
+public class WebDataRequest<TDatum> : DataRequest<TDatum> where TDatum : struct {
 
     public override bool keepWaiting {
         get {
@@ -17,7 +17,7 @@ public class WebDataRequest<TData> : DataRequest<TData> where TData : struct {
 
             if (request.isDone) {
 
-                TData[] serializedData = JsonUtility.FromJson<JsonArray<TData>> (request.downloadHandler.text).Data;
+                TDatum[] serializedData = JsonUtility.FromJson<JsonArray<TDatum>> (request.downloadHandler.text).Data;
                 data = serializedData;
 
             }
@@ -27,8 +27,8 @@ public class WebDataRequest<TData> : DataRequest<TData> where TData : struct {
 
     UnityWebRequest request;
 
-    public WebDataRequest (string url, WWWForm postData) {
-        request = UnityWebRequest.Post (url, postData);
+    public WebDataRequest (string url, WWWForm posTDatum) {
+        request = UnityWebRequest.Post (url, posTDatum);
         request.downloadHandler = new DownloadHandlerBuffer ();
         request.Send ();
     }

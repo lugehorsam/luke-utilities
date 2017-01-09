@@ -5,9 +5,9 @@ using System;
 using System.Linq;
 
 [Serializable]
-public abstract class FlexibleContainer<TTargetData, TBehavior> : Container<TTargetData, TBehavior> 
-    where TTargetData : struct
-    where TBehavior : DatumBehavior<TTargetData>, ILayoutMember
+public abstract class FlexibleContainer<TTargeTDatum, TBehavior> : Container<TTargeTDatum, TBehavior>
+    where TTargeTDatum : struct
+    where TBehavior : DatumBehavior<TTargeTDatum>, ILayoutMember
 { 
     [SerializeField]
     bool wrap;

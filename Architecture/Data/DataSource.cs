@@ -5,16 +5,16 @@ using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Collections;
 
-public class DataSource<TData> : DataSource
-    where TData : struct {
+public class DataSource<TDatum> : DataSource
+    where TDatum : struct {
 
-    public ReadOnlyCollection<TData> Data {
+    public ReadOnlyCollection<TDatum> Data {
         get {
-            return new ReadOnlyCollection<TData> (shouldOverrideData ? overrideData : data);
+            return new ReadOnlyCollection<TDatum> (shouldOverrideData ? overrideData : data);
         }
     }
 
-    List<TData> data = new List<TData>();
+    List<TDatum> data = new List<TDatum>();
 
     string CacheKey {
         get {
@@ -28,7 +28,7 @@ public class DataSource<TData> : DataSource
     [SerializeField]
     string baseUrl;
 
-    public event Action<TData []> OnDataPublish {
+    public event Action<TDatum []> OnDataPublish {
         add {
             onDataPublish += value;
             onDataPublish (data.ToArray());
@@ -38,42 +38,42 @@ public class DataSource<TData> : DataSource
         }
     }
 
-    event Action<TData[]> onDataPublish = (data) => { };
+    event Action<TDatum[]> onDataPublish = (data) => { };
 
     [SerializeField] protected NetworkConfig networkConfig;
     [SerializeField] private bool shouldOverrideData;
-    [SerializeField] private List<TData> overrideData;
+    [SerializeField] private List<TDatum> overrideData;
 
-    protected IEnumerator FetchData (string endPoint, Dictionary<string, string> postData)
+    protected IEnumerator FetchData (string endPoint, Dictionary<string, string> posTDatum)
     {
 
-        DataRequest<TData> request = CreateDataRequest (BuildEndpoint(endPoint), postData);
+        DataRequest<TDatum> request = CreateDataRequest (BuildEndpoint(endPoint), posTDatum);
         yield return request;
         HandleDataFetched (request.Data);
 
         Set (request.Data);
     }
 
-    WebDataRequest<TData> CreateDataRequest (string endpoint, Dictionary<string, string> postData)
+    WebDataRequest<TDatum> CreateDataRequest (string endpoint, Dictionary<string, string> posTDatum)
     {
         WWWForm form = new WWWForm ();
-        if (postData != null) {
-            foreach (KeyValuePair<string, string> postDatum in postData) {
+        if (posTDatum != null) {
+            foreach (KeyValuePair<string, string> postDatum in posTDatum) {
                 form.AddField (postDatum.Key, postDatum.Value);
             }
         }
-        WebDataRequest<TData> request = new WebDataRequest<TData> (endpoint, form);
+        WebDataRequest<TDatum> request = new WebDataRequest<TDatum> (endpoint, form);
         return request;
     }
 
-    protected virtual void HandleDataFetched (TData [] data) { }
+    protected virtual void HandleDataFetched (TDatum [] data) { }
 
     public void WriteToCache ()
     {
         if (cacheKey == null || !EnableCache) {
             return;
         }
-        string stringToCache = JsonUtility.ToJson (new JsonArray<TData> (data.ToArray ()));
+        string stringToCache = JsonUtility.ToJson (new JsonArray<TDatum> (data.ToArray ()));
 
         PlayerPrefs.SetString (cacheKey, stringToCache);
     }
@@ -85,14 +85,14 @@ public class DataSource<TData> : DataSource
         }
 
         if (PlayerPrefs.HasKey (cacheKey)) {
-            Set(JsonUtility.FromJson<JsonArray<TData>> (PlayerPrefs.GetString (cacheKey)).Data);
+            Set(JsonUtility.FromJson<JsonArray<TDatum>> (PlayerPrefs.GetString (cacheKey)).Data);
 
             return true;
         }
         return false;
     }
 
-    public void Set (TData[] data)
+    public void Set (TDatum[] data)
     {
 
         if (this.data.SequenceEqual (data)) {
@@ -103,9 +103,9 @@ public class DataSource<TData> : DataSource
         onDataPublish (data);
     }
 
-    public void Push (TData datum)
+    public void Push (TDatum datum)
     {
-        List<TData> listCopy = new List<TData> (data);
+        List<TDatum> listCopy = new List<TDatum> (data);
         listCopy.Add (datum);
         Set (listCopy.ToArray());
     }
