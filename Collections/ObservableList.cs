@@ -131,22 +131,40 @@ public class ObservableList<TDatum> : List<TDatum>
         return this.ToArray().ToString();
     }
 
-    public static void Observe<T> (ObservableList<T> observedList, T[] observerArray, Action<T[]> handleNewArray = null)
+    public void Bind<T>(ObservableList<T> thisList, ObservableList<T> otherList)
     {
-        observedList.OnAdd += (newData) => {
-            observerArray = observedList.ToArray ();
-            Observe (observedList, observerArray);
-            if (handleNewArray != null) {
-                handleNewArray (observerArray);
-            }
+        List<T> thisListSilent = thisList;
+        List<T> otherListSilent = otherList;
+    }
 
-        };
-        observedList.OnRemove += (removedData, removalIndices) => {
-            observerArray = observedList.ToArray ();
-            Observe (observedList, observerArray);
-            if (handleNewArray != null) {
-                handleNewArray (observerArray);
+    /**
+
+    public void Bind<TSourceData> (DynamicDataSource<TSourceData> newDynamicDataSource,
+                                    int sourceDatumIndex) where TSourceData : struct, IComposite<TDatum> {
+        if (data.Count > 0) {
+            data.Clear ();
+            unsubscribeFromSource ();
+        }
+
+        Action<TSourceData []> handleDataPublished = (TSourceData [] sourceData) => {
+            if (sourceDatumIndex >= sourceData.Length) {
+                return;
             }
+            HandleNewData (sourceData [sourceDatumIndex].GetCompositeData ());
+        };
+
+        newDynamicDataSource.Data += handleDataPublished;
+
+        unsubscribeFromSource = () => {
+            newDynamicDataSource.DataStream -= handleDataPublished;
+        };
+
+        pushToSource = () => {
+            TSourceData [] newData = newDynamicDataSource.Data.ToArray ();
+            newData [sourceDatumIndex].SetCompositeData (data);
+            newDynamicDataSource.Set (newData);
         };
     }
+
+**/
 }

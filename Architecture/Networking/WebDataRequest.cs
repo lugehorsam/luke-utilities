@@ -1,35 +1,45 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Networking;
-using System;
 
-public class WebDataRequest<TDatum> : DataRequest<TDatum> where TDatum : struct {
+public abstract class WebDataRequest<TDatum> : DataRequest<TDatum> where TDatum : struct {
 
-    public override bool keepWaiting {
-        get {
+    [SerializeField] protected NetworkConfig networkConfig;
 
-            if (request.isError) {
-                Diagnostics.Report ("Request error " + request.error);
-            }
-
-            if (request.isDone && (request.downloadHandler.text == null || request.downloadHandler.text == "")) {
-                throw new NullReferenceException ("Received null data from network " + request.url + " , " + request.GetResponseHeaders());
-            }
-
-            if (request.isDone) {
-
-                TDatum[] serializedData = JsonUtility.FromJson<JsonArray<TDatum>> (request.downloadHandler.text).Data;
-                data = serializedData;
-
-            }
-            return !request.isDone;
-        }
+    protected abstract string Url
+    {
+        get;
     }
+
+    protected abstract Dictionary<string, string> PostData { get; }
 
     UnityWebRequest request;
 
-    public WebDataRequest (string url, WWWForm posTDatum) {
-        request = UnityWebRequest.Post (url, posTDatum);
-        request.downloadHandler = new DownloadHandlerBuffer ();
-        request.Send ();
+    public WebDataRequest ()
+    {
+        this.request = UnityWebRequest.Post(Url, PostData);
+        this.request.downloadHandler = new DownloadHandlerBuffer ();
+        this.request.Send ();
+        WWWForm form = new WWWForm ();
+        if (PostData != null) {
+            foreach (KeyValuePair<string, string> postDatum in PostData) {
+                form.AddField (postDatum.Key, postDatum.Value);
+            }
+        }
+    }
+
+    string BuildEndpoint (string endPoint)
+    {
+        return string.Format ("{0}/{1}/{2}", networkConfig.UrlBase, Url, endPoint);
+    }
+
+    protected override bool RequestIsDone()
+    {
+        return request.isDone;
+    }
+
+    protected override string GetRequestContent()
+    {
+        return request.downloadHandler.text;
     }
 }

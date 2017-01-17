@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System;
+using System.Security;
 using NUnit.Framework.Constraints;
 
 public class BashScript
@@ -20,7 +21,7 @@ public class BashScript
 
     private readonly Process process;
 
-    public BashScript(string filePath, string[] parameters)
+    public BashScript(string filePath, string[] parameters, string workingDirectory)
     {
         ProcessStartInfo startInfo = new ProcessStartInfo()
         {
@@ -28,8 +29,8 @@ public class BashScript
             Arguments = filePath + " " + String.Join(" ", parameters),
             UseShellExecute = false,
             RedirectStandardOutput = true,
-            RedirectStandardError = true
-
+            RedirectStandardError = true,
+            WorkingDirectory = workingDirectory,
         };
         process = new Process()
         {

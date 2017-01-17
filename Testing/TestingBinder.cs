@@ -7,26 +7,27 @@ using UnityEngine.UI;
 [RequireComponent (typeof (CanvasRenderer))]
 [RequireComponent (typeof (GraphicRaycaster))]
 
-public class TestingManager : DataManager<DiagnosticsData, TestingButton> {
+public class TestingBinder : DataBinder<DiagnosticsData, TestingButton> {
 
     [SerializeField]
     RectTransform buttonHolder;
 
-    protected override void AddLocalData ()
+    protected override ObservableList<DiagnosticsData> GetOverrideData ()
     {
+        var data = new ObservableList<DiagnosticsData>();
         data.Add (new DiagnosticsData (TogglePanel, "Open Console", KeyCode.C));
-        data.Add (new DiagnosticsData (() => DataSource.EnableCache = false, "Disable Cache"));
         data.Add (new DiagnosticsData (() => PlayerPrefs.DeleteAll (), "Clear Cache"));
         LogType[] logTypes = Enum.GetValues (typeof(LogType)) as LogType[];
         foreach (LogType logType in logTypes) {
             LogType type = logType;
             data.Add (new DiagnosticsData (() => Diagnostics.CurrentLogType = type, "Toggle Log To " + logType));
         }
+        return data;
     }
 
     void Update ()
     {
-        foreach (DiagnosticsData datum in data) 
+        foreach (DiagnosticsData datum in Data)
         {
             if (datum.Key.HasValue && Input.GetKeyDown (datum.Key.Value)) 
             {

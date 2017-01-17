@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class Container<TDatum, TBehavior> : DataManager<TDatum, TBehavior>
+public class Container<TDatum, TBehavior> : DataBinder<TDatum, TBehavior>
     where TDatum : struct
     where TBehavior : DatumBehavior<TDatum> {
 
