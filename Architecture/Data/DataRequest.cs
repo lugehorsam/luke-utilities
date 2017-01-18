@@ -19,9 +19,11 @@ public abstract class DataRequest<TDatum> : CustomYieldInstruction where TDatum 
         {
             bool requestIsDone = RequestIsDone();
             Debug.Log("request is done " + requestIsDone);
-            if (requestIsDone) {
-
-                TDatum[] serializedData = JsonUtility.FromJson<JsonArray<TDatum>> (GetRequestContent()).Data;
+            if (requestIsDone)
+            {
+                string requestContent = GetRequestContent();
+                Debug.Log("request content " + requestContent);
+                TDatum[] serializedData = JsonUtility.FromJson<JsonArray<TDatum>> (requestContent).Data;
                 data = serializedData;
                 Debug.Log("Dat ais " + data.ToFormattedString());
             }

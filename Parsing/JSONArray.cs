@@ -1,8 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System;
-using System.Runtime.Serialization;
 
 [System.Serializable]
 public class JsonArray<T>

@@ -35,15 +35,10 @@ public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior
 
     public void Observe(ObservableList<TDatum> data)
     {
-        data.Observe(data);
+        this.data.Observe(data);
     }
 
     [SerializeField] private bool overrideData;
-
-    void HandleChangedDatum (TDatum changedDatum)
-    {
-        Behaviors.First ((behavior) => behavior.Datum.Equals (changedDatum)).Datum = changedDatum;
-    }
 
     protected abstract void HandleNewBehavior (TBehavior behavior);
     protected abstract void HandleRemovedBehavior (TBehavior behavior);
@@ -62,6 +57,8 @@ public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior
         {
             Observe(GetOverrideData());
         }
+        data.OnAdd += HandleNewDatum;
+        data.OnRemove += HandleRemovedDatum;
     }
 
     void InitBehaviorPool ()
@@ -71,6 +68,7 @@ public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior
 
     void HandleNewDatum (TDatum newDatum)
     {
+        Debug.Log("new datum");
         TBehavior behavior = behaviorPool.Release ();
         behavior.Datum = newDatum;
         AddHandlers (behavior);

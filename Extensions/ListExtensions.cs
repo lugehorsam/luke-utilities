@@ -4,8 +4,9 @@ using UnityEngine;
 
 public static class ListExtensions {
 
-    public static void Observe<T> (this List<T> observerList, ObservableList<T> observedList)
-    {
+    public static void Observe<TDatum, TList> (this TList observerList, ObservableList<TDatum> observedList)
+    where TList : List<TDatum> {
+
         observerList.AddRange(observedList);
 
         observedList.OnAdd += (newData) =>

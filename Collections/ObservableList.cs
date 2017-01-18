@@ -131,10 +131,10 @@ public class ObservableList<TDatum> : List<TDatum>
         return this.ToArray().ToString();
     }
 
-    public void Bind<T>(ObservableList<T> thisList, ObservableList<T> otherList)
+    public void Bind(ObservableList<TDatum> thisList, ObservableList<TDatum> otherList)
     {
-        List<T> thisListSilent = thisList;
-        List<T> otherListSilent = otherList;
+        List<TDatum> thisListSilent = thisList;
+        List<TDatum> otherListSilent = otherList;
     }
 
     /**
