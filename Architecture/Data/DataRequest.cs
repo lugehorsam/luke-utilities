@@ -15,14 +15,17 @@ public abstract class DataRequest<TDatum> : CustomYieldInstruction where TDatum 
     }
 
     public sealed override bool keepWaiting {
-        get {
-            if (RequestIsDone()) {
+        get
+        {
+            bool requestIsDone = RequestIsDone();
+            Debug.Log("request is done " + requestIsDone);
+            if (requestIsDone) {
 
                 TDatum[] serializedData = JsonUtility.FromJson<JsonArray<TDatum>> (GetRequestContent()).Data;
                 data = serializedData;
-
+                Debug.Log("Dat ais " + data.ToFormattedString());
             }
-            return !RequestIsDone();
+            return !requestIsDone;
         }
     }
 

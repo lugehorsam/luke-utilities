@@ -21,7 +21,10 @@ public abstract class ResourcesDataRequest<TDatum> : DataRequest<TDatum> where T
 
     protected override string GetRequestContent()
     {
-        return (request.asset as TextAsset).text;
+        Object asset = request.asset;
+        Debug.Log("asset is " + asset);
+        TextAsset textAsset = asset as TextAsset;
+        return textAsset.text;
     }
 
 }
