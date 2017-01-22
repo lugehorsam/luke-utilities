@@ -6,7 +6,7 @@ using System.ComponentModel;
 /// <summary>
 /// Observable list.
 /// </summary>
-public class ObservableList<TDatum> : List<TDatum>
+public class ObservableList<TDatum> : List<TDatum>, IObservableCollection<TDatum>
 {   
     public event Action<TDatum, int> OnRemove = delegate { };
     public event Action<TDatum> OnAdd = delegate {};
@@ -30,7 +30,7 @@ public class ObservableList<TDatum> : List<TDatum>
     }
     public new void AddRange(IEnumerable<TDatum> collection)
     {
-        if (collection.Count() <= 0) {
+        if (!collection.Any()) {
             return;
         }
         base.AddRange(collection);
@@ -71,7 +71,7 @@ public class ObservableList<TDatum> : List<TDatum>
     }
     public new void InsertRange(int index, IEnumerable<TDatum> collection)
     {
-        if (collection.Count() <= 0) {
+        if (!collection.Any()) {
             return;
         }
         base.InsertRange(index, collection);
@@ -82,7 +82,7 @@ public class ObservableList<TDatum> : List<TDatum>
     public new void RemoveAll(Predicate<TDatum> match)
     {
         List<TDatum> itemsToRemove = base.FindAll (match).ToList();
-        if (itemsToRemove.Count () <= 0) {
+        if (!itemsToRemove.Any()) {
             return;
         }
         base.RemoveAll(match);
@@ -131,6 +131,21 @@ public class ObservableList<TDatum> : List<TDatum>
         return this.ToArray().ToString();
     }
 
+    public void RegisterObserver (ICollection<TDatum> observer) {
+
+        OnAdd += observer.Add;
+
+        OnRemove += (removedDatum, removalIndices) =>
+        {
+            observer.Remove(removedDatum);
+        };
+
+        foreach (TDatum datum in this)
+        {
+            observer.Add(datum);
+        }
+    }
+
     public void Bind(ObservableList<TDatum> thisList, ObservableList<TDatum> otherList)
     {
         List<TDatum> thisListSilent = thisList;
@@ -139,7 +154,7 @@ public class ObservableList<TDatum> : List<TDatum>
 
     /**
 
-    public void Bind<TSourceData> (DynamicDataSource<TSourceData> newDynamicDataSource,
+    public void Bind<TSourceData> (DynamicDataListFetcher<TSourceData> newDynamicDataSource,
                                     int sourceDatumIndex) where TSourceData : struct, IComposite<TDatum> {
         if (data.Count > 0) {
             data.Clear ();

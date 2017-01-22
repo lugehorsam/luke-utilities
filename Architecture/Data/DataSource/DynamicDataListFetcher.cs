@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Collections;
 
-public class DynamicDataSource<TDatum, TDataRequest> : DataSource<TDatum, TDataRequest>
+public class DynamicDataFetcher<TDatum, TDataRequest> : DataFetcher<TDatum, TDataRequest>
     where TDatum : struct
     where TDataRequest : DataRequest<TDatum>, new() {
 

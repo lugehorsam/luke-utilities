@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -8,14 +6,11 @@ public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior
     where TDatum : struct
     where TBehavior : DatumBehavior<TDatum> {
 
-    public ReadOnlyCollection<TDatum> Data {
-        get
-        {
-            return new ReadOnlyCollection<TDatum> (data);
-        }
+    public ObservableList<TDatum> Data {
+        get { return data; }
     }
 
-    protected readonly ObservableList<TDatum> data = new ObservableList<TDatum>();
+    readonly ObservableList<TDatum> data = new ObservableList<TDatum>();
 
     public ReadOnlyCollection<TBehavior> Behaviors {
         get {
@@ -33,15 +28,15 @@ public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior
 
     protected ObjectPool<TBehavior> behaviorPool;
 
-    public void Observe(ObservableList<TDatum> data)
-    {
-        this.data.Observe(data);
-    }
-
     [SerializeField] private bool overrideData;
 
-    protected abstract void HandleNewBehavior (TBehavior behavior);
-    protected abstract void HandleRemovedBehavior (TBehavior behavior);
+    protected virtual void HandleNewBehavior(TBehavior behavior)
+    {
+    }
+
+    protected virtual void HandleRemovedBehavior(TBehavior behavior)
+    {
+    }
 
     protected virtual void AddHandlers (TBehavior behavior) { }
     protected virtual void RemoveHandlers (TBehavior behavior) { }
@@ -55,7 +50,7 @@ public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior
         InitBehaviorPool ();
         if (overrideData)
         {
-            Observe(GetOverrideData());
+            Subscribe(GetOverrideData());
         }
         data.OnAdd += HandleNewDatum;
         data.OnRemove += HandleRemovedDatum;
@@ -68,7 +63,6 @@ public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior
 
     void HandleNewDatum (TDatum newDatum)
     {
-        Debug.Log("new datum");
         TBehavior behavior = behaviorPool.Release ();
         behavior.Datum = newDatum;
         AddHandlers (behavior);

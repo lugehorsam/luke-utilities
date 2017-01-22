@@ -2,7 +2,8 @@
 using System;
 using System.Collections.Generic;
 
-public class EnumeratorQueue : IEnumerator
+public class EnumeratorQueue<T> : IEnumerator<T>
+    where T : IEnumerator
 {
     public bool Enumerating {
         get;
@@ -15,18 +16,28 @@ public class EnumeratorQueue : IEnumerator
         }
     }
 
-    public object Current {
+    object IEnumerator.Current
+    {
+        get { return null; }
+    }
+
+     T IEnumerator<T>.Current {
         get {
-            return null;
+            return default (T);
         }
     }
 
-    LinkedList<IEnumerator> nextEnumerators = new LinkedList<IEnumerator>();
-    Stack<IEnumerator> oldEnumerators = new Stack<IEnumerator>();
+    readonly LinkedList<T> nextEnumerators = new LinkedList<T>();
+    readonly Stack<T> oldEnumerators = new Stack<T>();
+
+    public void Dispose()
+    {
+        throw new NotImplementedException();
+    }
 
     public bool MoveNext ()
     {
-        LinkedListNode<IEnumerator> currentEnumerator = nextEnumerators.First;
+        LinkedListNode<T> currentEnumerator = nextEnumerators.First;
 
         if (currentEnumerator == null) {
             Enumerating = false;
@@ -48,14 +59,13 @@ public class EnumeratorQueue : IEnumerator
         throw new NotImplementedException ();
     }
 
-    public void Enqueue (IEnumerator enumerator)
+    public void Add (T enumerator)
     {
         nextEnumerators.AddLast (enumerator);
     }
 
-    void MoveEnumeratorToStack (IEnumerator enumerator)
+    void MoveEnumeratorToStack (T enumerator)
     {
-
         nextEnumerators.RemoveFirst ();
         oldEnumerators.Push (enumerator);
     }
@@ -66,4 +76,8 @@ public class EnumeratorQueue : IEnumerator
             MoveEnumeratorToStack (nextEnumerators.First.Value);
         }
     }
+}
+
+public class EnumeratorQueue : EnumeratorQueue<IEnumerator>
+{
 }

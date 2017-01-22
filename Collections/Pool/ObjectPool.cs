@@ -8,17 +8,17 @@ public class ObjectPool<T>  {
     public event Action<T> OnRelease = (obj) => { };
     public event Action<T> OnPool = (obj) => { };
 
-    Queue<T> pooledObjects = new Queue<T>();
+    readonly Queue<T> pooledObjects = new Queue<T>();
     public ReadOnlyCollection<T> ReleasedObjects {
         get {
             return new ReadOnlyCollection<T> (releasedObjects);
         }
     }
 
-    List<T> releasedObjects = new List<T>();
-    bool allowResize;
-    Func<T> objectFactory;
-    int initialSize;
+    readonly List<T> releasedObjects = new List<T>();
+    readonly bool allowResize;
+    readonly Func<T> objectFactory;
+    readonly int initialSize;
 
     public ObjectPool(Func<T> objectFactory, int initialSize, bool allowResize = true) {
         this.allowResize = allowResize;
