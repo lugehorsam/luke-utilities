@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IDatumSubscriber<TDatum> {
+public interface IDatumBehavior<TDatum> {
 
-
+    TDatum Datum { get; set; }
 
 }

@@ -1,15 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
 public abstract class DatumSource<TDatum, TRequest> : DataFetcher<TDatum, TRequest>
-    where TDatum : struct
     where TRequest : DataRequest<TDatum>, new() {
 
     protected abstract TDatum CurrentDatum { get; }
 
-    public void RegisterSubscriber(IDatumSubscriber<TDatum> subscriber)
+    protected Action<TDatum> onDatumChanged = (datum) => { };
+
+    public void RegisterSubscriber(IDatumBehavior<TDatum> behavior)
     {
-        
+        onDatumChanged += (newDatum) =>
+        {
+            behavior.Datum = CurrentDatum;
+        };
     }
 }

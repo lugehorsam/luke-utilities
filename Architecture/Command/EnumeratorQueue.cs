@@ -5,30 +5,30 @@ using System.Collections.Generic;
 public class EnumeratorQueue<T> : IEnumerator<T>
     where T : IEnumerator
 {
-    public bool Enumerating {
-        get;
-        private set;
-    }
-    
     public int Count {
         get {
             return nextEnumerators.Count;
         }
     }
 
-    object IEnumerator.Current
+    public T Current
     {
-        get { return null; }
+        get { return Current; }
     }
 
-     T IEnumerator<T>.Current {
-        get {
-            return default (T);
-        }
+    object IEnumerator.Current
+    {
+        get { return currentEnumerator; }
+    }
+
+    T IEnumerator<T>.Current {
+        get { return currentEnumerator; }
     }
 
     readonly LinkedList<T> nextEnumerators = new LinkedList<T>();
     readonly Stack<T> oldEnumerators = new Stack<T>();
+
+    private T currentEnumerator;
 
     public void Dispose()
     {
@@ -37,20 +37,17 @@ public class EnumeratorQueue<T> : IEnumerator<T>
 
     public bool MoveNext ()
     {
-        LinkedListNode<T> currentEnumerator = nextEnumerators.First;
+        currentEnumerator = nextEnumerators.First.Value;
 
         if (currentEnumerator == null) {
-            Enumerating = false;
             return false;
         }
 
-        if (!currentEnumerator.Value.MoveNext ()) {
-            MoveEnumeratorToStack (currentEnumerator.Value);
-            Enumerating = false;
+        if (!currentEnumerator.MoveNext ()) {
+            MoveEnumeratorToStack (currentEnumerator);
             return false;
         }
 
-        Enumerating = true;
         return true;
     }
 
@@ -81,3 +78,4 @@ public class EnumeratorQueue<T> : IEnumerator<T>
 public class EnumeratorQueue : EnumeratorQueue<IEnumerator>
 {
 }
+

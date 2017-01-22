@@ -47,7 +47,7 @@ public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProp
 
     public void EnqueueFiniteLerp (FiniteLerp<TProperty> lerp, bool stopOtherEnumerators = true)
     {
-        lerpQueue.Enqueue(ApplyFiniteLerp(lerp));
+        lerpQueue.Add(ApplyFiniteLerp(lerp));
 
         if (stopOtherEnumerators) 
         {
@@ -59,7 +59,7 @@ public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProp
 
     public void EnqueueInfiniteLerp(InfiniteLerp<TProperty> lerp, bool stopOtherEnumerators = true)
     {
-        lerpQueue.Enqueue(ApplyInfiniteLerp(lerp));
+        lerpQueue.Add(ApplyInfiniteLerp(lerp));
         if (stopOtherEnumerators)
         {
             StopOtherEnumerators();
@@ -79,7 +79,7 @@ public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProp
 
     void ActivateQueueIfNeeded ()
     {
-        if (!lerpQueue.Enumerating && lerpOnEnqueue) {
+        if (lerpQueue.Current != null && lerpOnEnqueue) {
             StartCoroutine (lerpQueue);
         }
     }

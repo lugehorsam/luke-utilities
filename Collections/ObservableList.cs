@@ -6,7 +6,7 @@ using System.ComponentModel;
 /// <summary>
 /// Observable list.
 /// </summary>
-public class ObservableList<TDatum> : List<TDatum>, IObservableCollection<TDatum>
+public class ObservableList<TDatum> : List<TDatum>
 {   
     public event Action<TDatum, int> OnRemove = delegate { };
     public event Action<TDatum> OnAdd = delegate {};
@@ -131,8 +131,8 @@ public class ObservableList<TDatum> : List<TDatum>, IObservableCollection<TDatum
         return this.ToArray().ToString();
     }
 
-    public void RegisterObserver (ICollection<TDatum> observer) {
-
+    public void RegisterObserver<TCollection> (TCollection observer) where TCollection : ICollection<TDatum>
+    {
         OnAdd += observer.Add;
 
         OnRemove += (removedDatum, removalIndices) =>

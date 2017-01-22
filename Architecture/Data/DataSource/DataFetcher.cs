@@ -2,18 +2,24 @@
 using UnityEngine;
 
 public class DataFetcher<TDatum, TDataRequest> : ScriptableObject
-    where TDatum : struct
     where TDataRequest : DataRequest<TDatum>, new()
 {
-    protected TDatum[] Data
+    protected ObservableList<TDatum> Data
     {
-        get { return dataRequest.Data; }
+        get { return data; }
     }
-    private TDataRequest dataRequest;
+
+    ObservableList<TDatum> data = new ObservableList<TDatum>();
 
     public IEnumerator FetchData()
     {
-         dataRequest = new TDataRequest();
-         yield return dataRequest;
+        TDataRequest dataRequest = new TDataRequest();
+        yield return dataRequest;
+        data.AddRange(dataRequest.Data);
+        OnAfterFetchedData();
+    }
+
+    protected virtual void OnAfterFetchedData()
+    {
     }
 }

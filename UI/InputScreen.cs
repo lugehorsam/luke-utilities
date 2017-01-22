@@ -13,6 +13,7 @@ public abstract class InputScreen<TDatum, TBehavior> : Container<TDatum, TBehavi
 
     public IEnumerator Show ()
     {
+        Diagnostics.Log("Data is " + Data.ToFormattedString());
         gameObject.SetActive (true);
         WaitForInput:
             while (SelectedInput == null) {

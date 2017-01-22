@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class DataRequest<TDatum> : CustomYieldInstruction where TDatum : struct {
+public abstract class DataRequest<TDatum> : CustomYieldInstruction {
 
     public TDatum[] Data {
         get {
@@ -18,17 +18,23 @@ public abstract class DataRequest<TDatum> : CustomYieldInstruction where TDatum 
         get
         {
             bool requestIsDone = RequestIsDone();
-            Debug.Log("request is done " + requestIsDone);
             if (requestIsDone)
             {
                 string requestContent = GetRequestContent();
-                Debug.Log("request content " + requestContent);
-                TDatum[] serializedData = JsonUtility.FromJson<JsonArray<TDatum>> (requestContent).Data;
+                TDatum[] serializedData = DeserializeJson(requestContent);
                 data = serializedData;
-                Debug.Log("Dat ais " + data.ToFormattedString());
             }
             return !requestIsDone;
         }
+    }
+    protected virtual TDatum[] ProcessData(TDatum[] data)
+    {
+        return data;
+    }
+
+    protected virtual TDatum[] DeserializeJson(string json)
+    {
+        return JsonUtility.FromJson<JsonArray<TDatum>> (json).Data;
     }
 
     protected abstract bool RequestIsDone();

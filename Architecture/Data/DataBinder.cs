@@ -10,7 +10,7 @@ public abstract class DataBinder<TDatum, TBehavior> : DataSubscriber<TDatum, TBe
     Action unsubscribeFromSource;
     Action pushToSource;
 
-
+/**
     public void Push ()
     {
         pushToSource ();
@@ -50,4 +50,6 @@ public abstract class DataBinder<TDatum, TBehavior> : DataSubscriber<TDatum, TBe
             Diagnostics.Report ("Data and behaviors have uneven counts " + data.ToFormattedString () + " , " + Behaviors.ToFormattedString ());
         }
     }
+
+**/
 }

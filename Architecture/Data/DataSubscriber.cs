@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior
+public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior, IDataSubscriber<TDatum>
     where TDatum : struct
     where TBehavior : DatumBehavior<TDatum> {
 
@@ -28,8 +29,6 @@ public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior
 
     protected ObjectPool<TBehavior> behaviorPool;
 
-    [SerializeField] private bool overrideData;
-
     protected virtual void HandleNewBehavior(TBehavior behavior)
     {
     }
@@ -48,10 +47,7 @@ public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior
     protected override void OnAwake()
     {
         InitBehaviorPool ();
-        if (overrideData)
-        {
-            Subscribe(GetOverrideData());
-        }
+
         data.OnAdd += HandleNewDatum;
         data.OnRemove += HandleRemovedDatum;
     }
@@ -65,6 +61,7 @@ public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior
     {
         TBehavior behavior = behaviorPool.Release ();
         behavior.Datum = newDatum;
+        Diagnostics.Log("releasing " + newDatum);
         AddHandlers (behavior);
         HandleNewBehavior (behavior);
     }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public abstract class ResourcesDataRequest<TDatum> : DataRequest<TDatum> where TDatum : struct {
+public abstract class ResourcesDataRequest<TDatum> : DataRequest<TDatum> {
 
     private readonly ResourceRequest request;
 

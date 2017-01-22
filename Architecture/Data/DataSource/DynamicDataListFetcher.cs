@@ -8,7 +8,7 @@ using System.Collections;
 public class DynamicDataFetcher<TDatum, TDataRequest> : DataFetcher<TDatum, TDataRequest>
     where TDatum : struct
     where TDataRequest : DataRequest<TDatum>, new() {
-
+/**
     [SerializeField]
     private string cacheKey;
 
@@ -35,4 +35,5 @@ public class DynamicDataFetcher<TDatum, TDataRequest> : DataFetcher<TDatum, TDat
         }
         return false;
     }
+        **/
 }
