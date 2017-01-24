@@ -8,7 +8,6 @@ using System.Collections;
 public class DynamicDataFetcher<TDatum, TDataRequest> : DataFetcher<TDatum, TDataRequest>
     where TDatum : struct
     where TDataRequest : DataRequest<TDatum>, new() {
-/**
     [SerializeField]
     private string cacheKey;
 
@@ -29,11 +28,10 @@ public class DynamicDataFetcher<TDatum, TDataRequest> : DataFetcher<TDatum, TDat
         }
 
         if (PlayerPrefs.HasKey (cacheKey)) {
-            data.AddRange(JsonUtility.FromJson<JsonArray<TDatum>> (PlayerPrefs.GetString (cacheKey)).Data);
+            Data.AddRange(JsonUtility.FromJson<JsonArray<TDatum>> (PlayerPrefs.GetString (cacheKey)).Data);
 
             return true;
         }
         return false;
     }
-        **/
 }

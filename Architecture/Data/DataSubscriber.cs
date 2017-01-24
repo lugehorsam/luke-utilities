@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior, IDataSubscriber<TDatum>
-    where TDatum : struct
     where TBehavior : DatumBehavior<TDatum> {
 
     public ObservableList<TDatum> Data {

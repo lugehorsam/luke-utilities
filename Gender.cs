@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IDatumBehavior<TDatum> {
-
-    TDatum Datum { get; set; }
-
+public enum Gender {
+    Male,
+    Female
 }

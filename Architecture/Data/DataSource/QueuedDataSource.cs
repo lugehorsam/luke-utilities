@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
 
 public class QueuedDataSource<TDatum, TRequest> : DatumSource<TDatum, TRequest>
-    where TDatum : IEnumerator<TDatum>
+    where TDatum : IEnumerator
     where TRequest : DataRequest<TDatum>, new() {
 
     readonly EnumeratorQueue<TDatum> dataQueue = new EnumeratorQueue<TDatum>();

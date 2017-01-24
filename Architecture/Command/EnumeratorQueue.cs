@@ -13,7 +13,7 @@ public class EnumeratorQueue<T> : IEnumerator<T>
 
     public T Current
     {
-        get { return Current; }
+        get { return currentEnumerator; }
     }
 
     object IEnumerator.Current

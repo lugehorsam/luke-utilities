@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class DataFetcher<TDatum, TDataRequest> : ScriptableObject
@@ -13,8 +14,13 @@ public class DataFetcher<TDatum, TDataRequest> : ScriptableObject
 
     public IEnumerator FetchData()
     {
+        yield return null;
         TDataRequest dataRequest = new TDataRequest();
         yield return dataRequest;
+
+        if (dataRequest.Data == null)
+            throw new NullReferenceException("Data request has no data.");
+
         data.AddRange(dataRequest.Data);
         OnAfterFetchedData();
     }

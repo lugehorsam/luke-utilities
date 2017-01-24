@@ -52,7 +52,7 @@ public class GameBehavior : MonoBehaviour {
     {
     }
 
-    void Destroy()
+    void OnDestroy()
     {
         RemoveEventHandlers();
     }

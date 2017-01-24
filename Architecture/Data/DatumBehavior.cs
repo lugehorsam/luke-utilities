@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections;
+using UnityEngine;
 
-public abstract class DatumBehavior<TDatum> : GameBehavior
-    where TDatum : struct {
+public abstract class DatumBehavior<TDatum> : GameBehavior {
 
     public event Action<TDatum, TDatum> OnDataChanged = (d1, d2) => { };
 
     public virtual TDatum Datum {
-        set {
+        set
+        {
+            Debug.Log("Datum set");
             TDatum oldData = datum;
             datum = value;
             HandleDataUpdate (oldData, datum);

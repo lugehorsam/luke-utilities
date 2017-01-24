@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 public abstract class DatumSource<TDatum, TRequest> : DataFetcher<TDatum, TRequest>
     where TRequest : DataRequest<TDatum>, new() {
@@ -7,11 +8,13 @@ public abstract class DatumSource<TDatum, TRequest> : DataFetcher<TDatum, TReque
 
     protected Action<TDatum> onDatumChanged = (datum) => { };
 
-    public void RegisterSubscriber(IDatumBehavior<TDatum> behavior)
+    public void RegisterSubscriber(DatumBehavior<TDatum> datumBehavior)
     {
+        datumBehavior.Datum = CurrentDatum;
+        return;
         onDatumChanged += (newDatum) =>
         {
-            behavior.Datum = CurrentDatum;
+            datumBehavior.Datum = CurrentDatum;
         };
     }
 }

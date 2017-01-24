@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
-public abstract class ResourcesDataRequest<TDatum> : DataRequest<TDatum> {
-
-    private readonly ResourceRequest request;
-
+public abstract class ResourcesDataRequest<TDatum> : DataRequest<TDatum>
+{
     protected abstract string PathFromResources
     {
         get;
     }
+
+    private readonly ResourceRequest request;
 
     public ResourcesDataRequest()
     {
@@ -25,5 +25,5 @@ public abstract class ResourcesDataRequest<TDatum> : DataRequest<TDatum> {
         TextAsset textAsset = asset as TextAsset;
         return textAsset.text;
     }
-
 }
+
