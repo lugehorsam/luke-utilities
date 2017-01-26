@@ -28,8 +28,12 @@ public class GorlaxGameManager : GameBehavior {
         characterSource.RegisterSubscriber(CharacterSelectionScreen);
         interactionSource.RegisterSubscriber(GameScreen);
 
-        yield return StartCoroutine(nameSource.FetchData());
-        yield return StartCoroutine(characterSource.FetchData());
+        yield return this.StartParallelCoroutines(
+            nameSource.FetchData(),
+            characterSource.FetchData()
+        );
+
         yield return StartCoroutine(CharacterSelectionScreen.Show());
+        yield return StartCoroutine(GameScreen.Show());
     }
 }
