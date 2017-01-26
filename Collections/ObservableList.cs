@@ -1,15 +1,11 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Linq;
-using System.ComponentModel;
 
-/// <summary>
-/// Observable list.
-/// </summary>
 public class ObservableList<TDatum> : List<TDatum>
-{   
+{
     public event Action<TDatum, int> OnRemove = delegate { };
-    public event Action<TDatum> OnAdd = delegate {};
+    public event Action<TDatum> OnAdd = delegate { };
 
     public new void Add(TDatum item)
     {
@@ -133,7 +129,11 @@ public class ObservableList<TDatum> : List<TDatum>
 
     public void RegisterObserver<TCollection> (TCollection observer) where TCollection : ICollection<TDatum>
     {
-        OnAdd += observer.Add;
+        OnAdd += (item) =>
+        {
+            Diagnostics.Log("on add called");
+            observer.Add(item);
+        };
 
         OnRemove += (removedDatum, removalIndices) =>
         {
@@ -183,3 +183,4 @@ public class ObservableList<TDatum> : List<TDatum>
 
 **/
 }
+

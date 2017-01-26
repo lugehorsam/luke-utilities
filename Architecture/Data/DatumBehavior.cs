@@ -9,7 +9,6 @@ public abstract class DatumBehavior<TDatum> : GameBehavior {
     public virtual TDatum Datum {
         set
         {
-            Debug.Log("Datum set");
             TDatum oldData = datum;
             datum = value;
             HandleDataUpdate (oldData, datum);

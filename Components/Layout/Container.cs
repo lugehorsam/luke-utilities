@@ -23,6 +23,7 @@ public class Container<TDatum, TBehavior> : DataBinder<TDatum, TBehavior>
 
     protected sealed override void HandleNewBehavior (TBehavior behavior)
     {
+        Diagnostics.Log("Container " + this.gameObject + " got new behavior " + behavior);
         HandleNewBehaviorPreLayout(behavior);
         DoLayout ();
     }

@@ -22,6 +22,12 @@ public class Prefab {
             instance.transform.SetParent(instantiationHolder, worldPositionStays: false);
         }
         instance.transform.localPosition = localPosition;
+
+        GameBehavior gameBehavior = instance.GetComponent<GameBehavior>();
+        if (gameBehavior != null && !gameBehavior.Initialized)
+        {
+            gameBehavior.Init();
+        }
         return instance;
     }
 

@@ -11,13 +11,31 @@ public class GameBehavior : MonoBehaviour {
         }
     }
 
+    public bool Initialized
+    {
+        get
+        {
+            return initialized;
+        }
+    }
+    private bool initialized = false;
+
      void Awake()
     {
+        if (!initialized)
+        {
+            Init();
+        }
+    }
+
+    public void Init()
+    {
+        initialized = true;
         InitComponents();
         InitObjects();
         AddEventHandlers();
         transform.position.Set(0, 0, InitialZ);
-        OnAwake();
+        OnInitialized();
     }
 
     void Start()
@@ -44,7 +62,7 @@ public class GameBehavior : MonoBehaviour {
 
     }
 
-    protected virtual void OnAwake()
+    protected virtual void OnInitialized()
     {
     }
 

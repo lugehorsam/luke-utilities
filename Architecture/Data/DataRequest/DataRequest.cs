@@ -25,7 +25,6 @@ public abstract class DataRequest<TTDatum> : CustomYieldInstruction {
 
     protected virtual TTDatum[] DeserializeJson(string json)
     {
-        Debug.Log("Deserializing json called");
         return JsonUtility.FromJson<JsonArray<TTDatum>> (json).Data;
     }
 

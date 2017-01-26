@@ -43,10 +43,10 @@ public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior, IDataSub
         return null;
     }
 
-    protected override void OnAwake()
+    protected override void OnInitialized()
     {
         InitBehaviorPool ();
-
+        Debug.Log("adding event handler");
         data.OnAdd += HandleNewDatum;
         data.OnRemove += HandleRemovedDatum;
     }

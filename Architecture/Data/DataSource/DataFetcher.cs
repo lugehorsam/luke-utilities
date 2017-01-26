@@ -22,6 +22,7 @@ public class DataFetcher<TDatum, TDataRequest> : ScriptableObject
             throw new NullReferenceException("Data request has no data.");
 
         data.AddRange(dataRequest.Data);
+        Diagnostics.Log("added data " + data.ToFormattedString());
         OnAfterFetchedData();
     }
 

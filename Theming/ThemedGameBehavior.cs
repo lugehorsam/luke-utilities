@@ -9,7 +9,7 @@ public abstract class ThemedGameBehavior<TThemeManager, TTheme>
     [SerializeField]
     TThemeManager themeManager;
 
-    protected sealed override void OnAwake()
+    protected sealed override void OnInitialized()
     {
         themeManager.RegisterThemeable (this);
         OnAwakePostTheme();
