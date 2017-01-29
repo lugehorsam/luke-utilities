@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior, IDataSubscriber<TDatum>
+public abstract class BehaviorManager<TDatum, TBehavior> : MonoBehaviour, IDataSubscriber<TDatum>
     where TBehavior : DatumBehavior<TDatum> {
 
     public ObservableList<TDatum> Data {
@@ -43,7 +43,7 @@ public abstract class DataSubscriber<TDatum, TBehavior> : GameBehavior, IDataSub
         return null;
     }
 
-    protected override void OnInitialized()
+    void Awake()
     {
         InitBehaviorPool ();
         Debug.Log("adding event handler");

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public abstract class PropertyBindingThemer<TThemeManager, TTheme, TBinding, TProperty, TComponent> 
-    : GameBehavior, IThemeable<TTheme>
+    : MonoBehaviour, IThemeable<TTheme>
     where TThemeManager : ThemeManager<TTheme>
     where TTheme : Theme
     where TBinding : PropertyBinding<TProperty, TComponent>

@@ -1,10 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
-using System.Reflection;
-using System.Linq;
-using System;
-
 
 public class TestingButton : DatumBehavior<DiagnosticsData>, ILayoutMember {
 
@@ -13,7 +8,7 @@ public class TestingButton : DatumBehavior<DiagnosticsData>, ILayoutMember {
     [SerializeField]
     Text text;
 
-    protected override void InitComponents ()
+    protected void Awake ()
     {
         button = GetComponent<Button> ();
     }

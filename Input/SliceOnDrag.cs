@@ -1,52 +1,53 @@
 using UnityEngine;
 using System;
-using System.Collections.Generic;
 
-[RequireComponent(typeof(TouchDispatcher))]
-public class SliceOnDrag : GameBehavior, ISliceable {
+namespace Slicing
+{
 
-    public Action<SliceDatum> OnSlice = (slice) => { };
-    TouchDispatcher touchDispatcher;
+    [RequireComponent(typeof(TouchDispatcher))]
+    public class SliceOnDrag : MonoBehaviour, ISliceable {
 
-    public Collider Collider
-    {
-        get { return collider; }
-    }
+        public Action<SliceDatum> OnSlice = (slice) => { };
+        TouchDispatcher touchDispatcher;
 
-    public Mesh Mesh
-    {
-        get { return meshFilter.mesh; }
-    }
-    new Collider collider;
-    MeshFilter meshFilter;
-
-    [SerializeField]
-    bool debugMode;
-
-    protected override void InitComponents()
-    {
-        meshFilter = GetComponent<MeshFilter>();
-        touchDispatcher = GetComponent<TouchDispatcher>();
-        collider = GetComponent<Collider>();
-    }
-
-    protected sealed override void AddEventHandlers()
-    {
-        touchDispatcher.OnDragLeave += OnDragLeave;
-    }
-
-    protected sealed override void RemoveEventHandlers()
-    {
-        touchDispatcher.OnDragLeave -= OnDragLeave;
-    }
-
-    void OnDragLeave(TouchDispatcher dispatcher, Gesture currentDrag)
-    {
-        SliceDatum[] sliceData = SliceDatum.FromGesture(currentDrag, this);
-
-        foreach (SliceDatum slice in sliceData)
+        public Collider Collider
         {
-            OnSlice(slice);
+            get { return collider; }
+        }
+
+        public Mesh Mesh
+        {
+            get { return meshFilter.mesh; }
+        }
+        new Collider collider;
+        MeshFilter meshFilter;
+
+        [SerializeField]
+        bool debugMode;
+
+         void Awake()
+        {
+            meshFilter = GetComponent<MeshFilter>();
+            touchDispatcher = GetComponent<TouchDispatcher>();
+            collider = GetComponent<Collider>();
+            touchDispatcher.OnDragLeave += OnDragLeave;
+        }
+
+        void OnDestroy()
+        {
+            touchDispatcher.OnDragLeave -= OnDragLeave;
+        }
+
+        void OnDragLeave(TouchDispatcher dispatcher, Gesture currentDrag)
+        {
+            SliceDatum[] sliceData = SliceDatum.FromGesture(currentDrag, this);
+
+            foreach (SliceDatum slice in sliceData)
+            {
+                OnSlice(slice);
+            }
         }
     }
+
+
 }

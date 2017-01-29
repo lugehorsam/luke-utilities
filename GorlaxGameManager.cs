@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Datum;
 
-public class GorlaxGameManager : GameBehavior {
+public class GorlaxGameManager : MonoBehaviour {
 
     private CharacterSelectionScreen CharacterSelectionScreen
     {
@@ -19,19 +20,18 @@ public class GorlaxGameManager : GameBehavior {
     [SerializeField] private LazyPrefab characterSelectionPrefab;
     [SerializeField] private LazyPrefab gameScreenPrefab;
 
-    [SerializeField] private CharacterSource characterSource;
-    [SerializeField] private NameSource nameSource;
-    [SerializeField] private InteractionSource interactionSource;
-
-    protected override IEnumerator OnStartCoroutine()
+    IEnumerator Start()
     {
-        characterSource.RegisterSubscriber(CharacterSelectionScreen);
-        interactionSource.RegisterSubscriber(GameScreen);
+        var interactionRequest = new InteractionRequest();
+        var nameRequest = new NameRequest();
+        var characterRequest = new CharacterRequest();
 
+        StartCoroutine(interactionRequest);
         yield return this.StartParallelCoroutines(
-            nameSource.FetchData(),
-            characterSource.FetchData()
+            nameRequest,
+            characterRequest
         );
+
 
         yield return StartCoroutine(CharacterSelectionScreen.Show());
         yield return StartCoroutine(GameScreen.Show());

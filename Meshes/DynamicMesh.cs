@@ -10,7 +10,7 @@ public class DynamicMesh : DatumBehavior<MeshDatum> {
     MeshRenderer meshRenderer;
     MeshCollider meshCollider;
 
-    protected override void InitComponents()
+    void Awake()
     {
         meshFilter = GetComponent<MeshFilter> ();
         meshRenderer = GetComponent<MeshRenderer> ();

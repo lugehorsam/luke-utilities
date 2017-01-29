@@ -23,11 +23,6 @@ public class Prefab {
         }
         instance.transform.localPosition = localPosition;
 
-        GameBehavior gameBehavior = instance.GetComponent<GameBehavior>();
-        if (gameBehavior != null && !gameBehavior.Initialized)
-        {
-            gameBehavior.Init();
-        }
         return instance;
     }
 

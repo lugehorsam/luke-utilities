@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public abstract class ThemedGameBehavior<TThemeManager, TTheme>
-    : GameBehavior, IThemeable<TTheme>
+    : MonoBehaviour, IThemeable<TTheme>
     where TThemeManager: ThemeManager<TTheme>
     where TTheme : Theme
 {
@@ -9,7 +9,7 @@ public abstract class ThemedGameBehavior<TThemeManager, TTheme>
     [SerializeField]
     TThemeManager themeManager;
 
-    protected sealed override void OnInitialized()
+    void Awake()
     {
         themeManager.RegisterThemeable (this);
         OnAwakePostTheme();

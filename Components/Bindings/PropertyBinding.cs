@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
 
 [Serializable]
-public abstract class PropertyBinding<TProperty, TComponent> : GameBehavior
+public abstract class PropertyBinding<TProperty, TComponent> : MonoBehaviour
     where TComponent : Component {
 
     public TComponent Component {

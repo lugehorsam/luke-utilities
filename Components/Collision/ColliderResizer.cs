@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ColliderResizer : GameBehavior {
+public class ColliderResizer : MonoBehaviour {
     private BoxCollider2D boxCollider;
     private MeshRenderer meshRenderer;
 
@@ -10,7 +10,7 @@ public class ColliderResizer : GameBehavior {
     [SerializeField]
     private float yPadding;
 
-    protected override void InitComponents()
+    void Awake()
     {
         boxCollider = GetComponent<BoxCollider2D>();
         meshRenderer = GetComponent<MeshRenderer>();

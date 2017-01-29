@@ -2,7 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 
-public class TouchDispatcher : GameBehavior
+public class TouchDispatcher : MonoBehaviour
 {
     new Collider collider;
 

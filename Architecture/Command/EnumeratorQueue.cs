@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class EnumeratorQueue<T> : IEnumerator<T>
     where T : IEnumerator
 {
+    public event Action<T, T> OnNextEnumerator = (oldEnumerator, newEnumerator) => { };
+
     public int Count {
         get {
             return nextEnumerators.Count;
@@ -37,6 +39,9 @@ public class EnumeratorQueue<T> : IEnumerator<T>
 
     public bool MoveNext ()
     {
+        if (nextEnumerators.First == null)
+            return false;
+
         currentEnumerator = nextEnumerators.First.Value;
 
         if (currentEnumerator == null) {
@@ -59,6 +64,14 @@ public class EnumeratorQueue<T> : IEnumerator<T>
     public void Add (T enumerator)
     {
         nextEnumerators.AddLast (enumerator);
+    }
+
+    public void AddRange(IEnumerable<T> enumerators)
+    {
+        foreach (T enumerator in enumerators)
+        {
+            Add(enumerator);
+        }
     }
 
     void MoveEnumeratorToStack (T enumerator)

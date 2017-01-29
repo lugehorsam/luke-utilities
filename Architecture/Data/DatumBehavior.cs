@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-public abstract class DatumBehavior<TDatum> : GameBehavior {
+public abstract class DatumBehavior<TDatum> : MonoBehaviour {
 
     public event Action<TDatum, TDatum> OnDataChanged = (d1, d2) => { };
 
@@ -20,11 +20,6 @@ public abstract class DatumBehavior<TDatum> : GameBehavior {
     }
 
     TDatum datum;
-
-    protected virtual IEnumerator Start ()
-    {
-        yield return null;
-    }
 
     protected virtual void HandleDataUpdate (TDatum oldData, TDatum newData) {}
 }

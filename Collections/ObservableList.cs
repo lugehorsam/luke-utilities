@@ -168,14 +168,14 @@ public class ObservableList<TDatum> : List<TDatum>
             HandleNewData (sourceData [sourceDatumIndex].GetCompositeData ());
         };
 
-        newDynamicDataSource.Data += handleDataPublished;
+        newDynamicDataSource.Datum += handleDataPublished;
 
         unsubscribeFromSource = () => {
             newDynamicDataSource.DataStream -= handleDataPublished;
         };
 
         pushToSource = () => {
-            TSourceData [] newData = newDynamicDataSource.Data.ToArray ();
+            TSourceData [] newData = newDynamicDataSource.Datum.ToArray ();
             newData [sourceDatumIndex].SetCompositeData (data);
             newDynamicDataSource.Set (newData);
         };

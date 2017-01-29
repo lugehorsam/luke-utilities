@@ -1,14 +1,12 @@
-﻿using UnityEngine;
-using System.Collections;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using UnityEngine;
 
 public class LineBinding : PropertyBinding<Vector3, LineRenderer> {
 
     [SerializeField]
     Vector3[] linePositions;
 
-    protected override void InitComponents()
+    void Awake()
     {
         Component.SetVertexCount(linePositions.Length);
     }

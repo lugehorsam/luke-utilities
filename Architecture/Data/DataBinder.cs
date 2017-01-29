@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-public abstract class DataBinder<TDatum, TBehavior> : DataSubscriber<TDatum, TBehavior>
+public abstract class DataBinder<TDatum, TBehavior> : BehaviorManager<TDatum, TBehavior>
     where TDatum : struct
     where TBehavior : DatumBehavior<TDatum> {
 
@@ -21,7 +21,7 @@ public abstract class DataBinder<TDatum, TBehavior> : DataSubscriber<TDatum, TBe
                                TBehavior behavior)
     {
         if (receivingBinder == this) {
-            Diagnostics.Report ("Data manager " + this + "Trying to transfer data to itself");
+            Diagnostics.Report ("Datum manager " + this + "Trying to transfer data to itself");
         }
 
         List<TDatum> silenTDatum = data;
@@ -29,8 +29,8 @@ public abstract class DataBinder<TDatum, TBehavior> : DataSubscriber<TDatum, TBe
 
         RemoveHandlers (behavior);
         receivingBinder.AddHandlers (behavior);
-        silenTDatum.Remove (behavior.Datum);
-        receivingSilenTDatum.Insert (insertionIndex, behavior.Datum);
+        silenTDatum.Remove (behavior.DatumPublisher);
+        receivingSilenTDatum.Insert (insertionIndex, behavior.DatumPublisher);
         behaviorPool.TransferTo (receivingBinder.behaviorPool, behavior, insertionIndex);
         HandleRemovedBehavior (behavior);
         receivingBinder.HandleNewBehavior (behavior);
@@ -41,13 +41,13 @@ public abstract class DataBinder<TDatum, TBehavior> : DataSubscriber<TDatum, TBe
 
     public override string ToString ()
     {
-        return string.Format ("[DataBinder: Name={0} Data={1}]", gameObject.name, Data.ToFormattedString());
+        return string.Format ("[DataBinder: Name={0} Datum={1}]", gameObject.name, Datum.ToFormattedString());
     }
 
     void TryReportBadConfig ()
     {
         if (data.Count != Behaviors.Count) {
-            Diagnostics.Report ("Data and behaviors have uneven counts " + data.ToFormattedString () + " , " + Behaviors.ToFormattedString ());
+            Diagnostics.Report ("Datum and behaviors have uneven counts " + data.ToFormattedString () + " , " + Behaviors.ToFormattedString ());
         }
     }
 

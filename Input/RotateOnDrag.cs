@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Linq;
 
 [RequireComponent(typeof(TouchDispatcher))]
-public class RotateOnDrag : GameBehavior
+public class RotateOnDrag : MonoBehaviour
 {
     Direction faceDirection;
 
@@ -18,20 +18,16 @@ public class RotateOnDrag : GameBehavior
     [SerializeField]
     float speed;
 
-    protected override void InitComponents()
+    void Awake()
     {
         touchDispatcher = GetComponent<TouchDispatcher>();
         rigidbody = GetComponent<Rigidbody>();
         collider = GetComponent<Collider>();
-    }
-
-    protected sealed override void AddEventHandlers()
-    {
         touchDispatcher.OnDrag += OnDrag;
         touchDispatcher.OnRelease += OnDragDeselect;
     }
 
-    protected sealed override void RemoveEventHandlers()
+    void OnDestroy()
     {
         touchDispatcher.OnDrag -= OnDrag;
         touchDispatcher.OnRelease -= OnDragDeselect;
