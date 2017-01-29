@@ -3,11 +3,15 @@ using UnityEngine;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-public abstract class BehaviorManager<TDatum, TBehavior> : MonoBehaviour, IDataSubscriber<TDatum>
+public abstract class BehaviorManager<TDatum, TBehavior> : MonoBehaviour
     where TBehavior : DatumBehavior<TDatum> {
 
-    public ObservableList<TDatum> Data {
-        get { return data; }
+    protected ReadOnlyCollection<TDatum> Data
+    {
+        get
+        {
+            return new ReadOnlyCollection<TDatum>(data);
+        }
     }
 
     readonly ObservableList<TDatum> data = new ObservableList<TDatum>();
@@ -27,6 +31,11 @@ public abstract class BehaviorManager<TDatum, TBehavior> : MonoBehaviour, IDataS
     int initialGameObjects = 10;
 
     protected ObjectPool<TBehavior> behaviorPool;
+
+    public void Observe(ObservableList<TDatum> otherData)
+    {
+        otherData.RegisterObserver(data);
+    }
 
     protected virtual void HandleNewBehavior(TBehavior behavior)
     {

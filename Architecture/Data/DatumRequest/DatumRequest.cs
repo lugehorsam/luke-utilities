@@ -5,12 +5,12 @@ namespace Datum
     public abstract class DatumRequest<TDatum> : CustomYieldInstruction
     {
 
-        public TDatum Datum
+        public ObservableList<TDatum> Data
         {
-            get { return datum; }
+            get { return _data; }
         }
 
-        private TDatum datum;
+        private ObservableList<TDatum> _data;
 
         public sealed override bool keepWaiting
         {
@@ -20,16 +20,15 @@ namespace Datum
                 if (requestIsDone)
                 {
                     string requestContent = GetRequestContent();
-                    datum = DeserializeJson(requestContent);
+                    _data = DeserializeJson(requestContent);
                 }
-                Debug.Log(this.GetType().ToString() + "Request is done " + requestIsDone);
                 return !requestIsDone;
             }
         }
 
-        protected virtual TDatum DeserializeJson(string json)
+        protected virtual ObservableList<TDatum> DeserializeJson(string json)
         {
-            return JsonUtility.FromJson<TDatum>(json);
+            return new ObservableList<TDatum>(JsonUtility.FromJson<JsonArray<TDatum>>(json).Data);
         }
 
         protected abstract bool RequestIsDone();

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Datum;
 
 public class GorlaxGameManager : MonoBehaviour {
 
@@ -26,12 +25,13 @@ public class GorlaxGameManager : MonoBehaviour {
         var nameRequest = new NameRequest();
         var characterRequest = new CharacterRequest();
 
-        StartCoroutine(interactionRequest);
         yield return this.StartParallelCoroutines(
+            interactionRequest,
             nameRequest,
             characterRequest
         );
 
+        CharacterSelectionScreen.Observe(characterRequest.Data);
 
         yield return StartCoroutine(CharacterSelectionScreen.Show());
         yield return StartCoroutine(GameScreen.Show());
