@@ -20,7 +20,7 @@ public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProp
 
     public event Action<LerpBinding<TProperty, TComponent>> OnLerp = (binding) => { };
 
-    readonly EnumeratorQueue lerpQueue = new EnumeratorQueue(); 
+    readonly EnumeratorQueue<IEnumerator> lerpQueue = new EnumeratorQueue<IEnumerator>();
 
     public abstract Func<TProperty, TProperty, TProperty> GetRandomizeDelegate ();
     public abstract TProperty AddProperty (TProperty property1, TProperty property2);

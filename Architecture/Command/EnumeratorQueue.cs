@@ -86,9 +86,17 @@ public class EnumeratorQueue<T> : IEnumerator<T>
             MoveEnumeratorToStack (nextEnumerators.First.Value);
         }
     }
-}
 
-public class EnumeratorQueue : EnumeratorQueue<IEnumerator>
-{
-}
+    public EnumeratorQueue(IEnumerable<T> collection)
+    {
+        foreach (T item in collection)
+        {
+            nextEnumerators.AddLast(item);
+        }
+    }
 
+    public EnumeratorQueue()
+    {
+
+    }
+}
