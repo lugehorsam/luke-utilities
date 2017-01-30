@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Theming;
 
 public class GorlaxThemeManager : ThemeManager<GorlaxTheme> {
 

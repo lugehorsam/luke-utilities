@@ -1,7 +1,7 @@
-﻿using UnityEngine.UI;
+﻿using Theming;
 using UnityEngine;
 
-public class GorlaxTheme : Theme
+public class GorlaxTheme : ScriptableObject
 {
     public Color PrimaryButtonNormal
     {
@@ -16,4 +16,9 @@ public class GorlaxTheme : Theme
     }
     [SerializeField] private Color _primaryButtonDown;
 
+    public Font Font
+    {
+        get { return font; }
+    }
+    [SerializeField] Font font;
 }

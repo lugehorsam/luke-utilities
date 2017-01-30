@@ -34,7 +34,7 @@ public class GorlaxGameManager : MonoBehaviour {
 
         CharacterSelectionScreen.Observe(characterRequest.Data);
         GameScreen.Datum = interactionRequest.Data.First();
-        yield return StartCoroutine(CharacterSelectionScreen.Show());
+        //yield return StartCoroutine(CharacterSelectionScreen.Show());
         yield return StartCoroutine(GameScreen.Show());
     }
 }

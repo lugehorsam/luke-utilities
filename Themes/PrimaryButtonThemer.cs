@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Theming;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PrimaryButtonThemer : ThemedGameBehavior<GorlaxThemeManager, GorlaxTheme>
+public class PrimaryButtonThemer : ThemedBehavior<GorlaxThemeManager, GorlaxTheme>
 {
     [SerializeField] private Button button;
 
