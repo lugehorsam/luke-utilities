@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PrimaryButtonThemer : ThemedBehavior<GorlaxThemeManager, GorlaxTheme>
+public class PrimaryButtonThemer : ThemedBehavior<GorlaxTheme>
 {
     [SerializeField] private Button button;
 

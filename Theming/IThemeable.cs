@@ -1,4 +1,6 @@
-﻿public interface IThemeable<T>
+﻿using UnityEngine;
+
+public interface IThemeable<TTheme>
 {
-    void HandleNewTheme (T theme);
+    void HandleNewTheme (TTheme theme);
 }

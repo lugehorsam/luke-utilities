@@ -2,20 +2,19 @@
 
 namespace Theming
 {
-    public abstract class ThemedBehavior<TThemeManager, TTheme>
+    public abstract class ThemedBehavior<TTheme>
         : MonoBehaviour, IThemeable<TTheme>
-        where TThemeManager: ThemeManager<TTheme>
         where TTheme : ScriptableObject
     {
-
-        [SerializeField]
-        TThemeManager themeManager;
-
         void Awake()
         {
-            themeManager.RegisterThemeable (this);
+            OnAwakePreTheme();
+            ThemeManager<TTheme>.RegisterThemeable (this);
             OnAwakePostTheme();
         }
+
+        protected virtual void OnAwakePreTheme()
+        {}
 
         protected virtual void OnAwakePostTheme()
         {
@@ -25,7 +24,7 @@ namespace Theming
 
         void OnDestroy ()
         {
-            themeManager.DeregisterThemeable (this);
+            ThemeManager<TTheme>.DeregisterThemeable (this);
         }
     }
 }

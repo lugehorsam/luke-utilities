@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
+using Datum;
 using System;
 
 public abstract class DataBinder<TDatum, TBehavior> : BehaviorManager<TDatum, TBehavior>

@@ -44,4 +44,10 @@ public static class GameObjectExtensions
         }
         return componentsOfType.ToArray();
     }
+
+    public static T GetOrAddComponent<T>(this GameObject thisGameObject) where T : Component
+    {
+        T component = thisGameObject.GetComponent<T>();
+        return component ?? thisGameObject.gameObject.AddComponent<T>();
+    }
 }

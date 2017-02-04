@@ -1,40 +1,23 @@
-﻿using UnityEngine;
+﻿using System.Linq;
 using System.Collections;
-using System.Linq;
+using UnityEngine;
+using Utilities;
 
-public class GorlaxGameManager : MonoBehaviour {
-
-    private CharacterSelectionScreen CharacterSelectionScreen
+public class GorlaxGameManager : MonoBehaviour
+{
+    private GameScreen GameScreen
     {
-        get
-        {
-            return characterSelectionPrefab.GetInstance<CharacterSelectionScreen>();
-        }
+        get { return gameScreen.GetInstance<GameScreen>(); }
     }
 
-    public GameScreen GameScreen
+    [SerializeField]
+    private LazyPrefab gameScreen;
+
+    private IEnumerator Start()
     {
-        get { return gameScreenPrefab.GetInstance<GameScreen>(); }
-    }
-
-    [SerializeField] private LazyPrefab characterSelectionPrefab;
-    [SerializeField] private LazyPrefab gameScreenPrefab;
-
-    IEnumerator Start()
-    {
-        var interactionRequest = new InteractionRequest();
-        var nameRequest = new NameRequest();
-        var characterRequest = new CharacterRequest();
-
-        yield return this.StartParallelCoroutines(
-            interactionRequest,
-            nameRequest,
-            characterRequest
-        );
-
-        CharacterSelectionScreen.Observe(characterRequest.Data);
-        GameScreen.Datum = interactionRequest.Data.First();
-        //yield return StartCoroutine(CharacterSelectionScreen.Show());
-        yield return StartCoroutine(GameScreen.Show());
+        var interactions = new InteractionRequest();
+        yield return StartCoroutine(interactions);
+        GameScreen.Datum = interactions.Data.First();
+        StartCoroutine(GameScreen.Show());
     }
 }

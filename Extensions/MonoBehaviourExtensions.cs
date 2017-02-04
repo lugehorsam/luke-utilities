@@ -25,6 +25,4 @@ public static class MonoBehaviourExtensions {
         while (activeCoroutines.Count > 0)
             yield return activeCoroutines.Dequeue();
     }
-
 }
-

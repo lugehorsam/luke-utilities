@@ -3,30 +3,36 @@ using System.Collections.Generic;
 
 namespace Theming
 {
-
-    public abstract class ThemeManager<TTheme> : ScriptableObject
-        where TTheme : ScriptableObject
+    public static class ThemeManager<TTheme> where TTheme : ScriptableObject
     {
-        TTheme CurrentTheme {
+        private const string THEMES_DIRECTORY = "Themes";
+
+        static TTheme CurrentTheme {
             get {
                 return themes [currentThemeIndex];
             }
         }
 
-        [SerializeField]
-        TTheme[] themes;
+        private static readonly TTheme[] themes;
 
-        int currentThemeIndex;
+        static int currentThemeIndex;
 
-        HashSet<IThemeable<TTheme>> themeables = new HashSet<IThemeable<TTheme>>();
+        static readonly HashSet<IThemeable<TTheme>> themeables = new HashSet<IThemeable<TTheme>>();
 
-        public void SetThemeIndex (int index)
+        static ThemeManager()
+        {
+            Debug.Log("Ttheme is " + typeof(TTheme).ToString());
+            themes = Resources.LoadAll<TTheme>(THEMES_DIRECTORY);
+            Debug.Log("Themes after load is " + themes.Length);
+        }
+
+        public static void SetThemeIndex (int index)
         {
             currentThemeIndex = index;
             ApplyCurrentTheme ();
         }
 
-        public void RegisterThemeable(IThemeable<TTheme> themeable)
+        public static void RegisterThemeable(IThemeable<TTheme> themeable)
         {
             if (!themeables.Add (themeable)) {
                 Diagnostics.Report ("trying to add a duplicate theamble");
@@ -35,20 +41,18 @@ namespace Theming
             }
         }
 
-        public void DeregisterThemeable(IThemeable<TTheme> themeable)
+        public static void DeregisterThemeable(IThemeable<TTheme> themeable)
         {
             if (!themeables.Remove (themeable)) {
                 Diagnostics.Report ("trying to remove a nonexistant theamble");
             }
         }
 
-        void ApplyCurrentTheme ()
+        static void ApplyCurrentTheme ()
         {
             foreach (IThemeable<TTheme> themeable in themeables) {
                 themeable.HandleNewTheme (CurrentTheme);
             }
         }
     }
-
-
 }
