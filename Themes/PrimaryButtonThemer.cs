@@ -2,11 +2,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PrimaryButtonThemer : ThemedBehavior<GorlaxTheme>
+public class PrimaryButtonThemer : MonoBehaviour, IThemeable<GorlaxTheme>
 {
     [SerializeField] private Button button;
 
-    public override void HandleNewTheme(GorlaxTheme theme)
+    public void HandleNewTheme(GorlaxTheme theme)
     {
         ColorBlock newBlock = new ColorBlock();
         newBlock.normalColor = theme.PrimaryButtonNormal;

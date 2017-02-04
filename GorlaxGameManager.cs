@@ -7,7 +7,7 @@ public class GorlaxGameManager : MonoBehaviour
 {
     private GameScreen GameScreen
     {
-        get { return gameScreen.GetInstance<GameScreen>(); }
+        get { return gameScreen.Instantiate<GameScreen>(); }
     }
 
     [SerializeField]

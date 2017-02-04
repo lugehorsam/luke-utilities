@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -24,9 +25,21 @@ public static class GameObjectExtensions
     {
         List<T> interfaces = new List<T> ();
         Component [] components = thisObject.GetComponents<Component> ();
-        for (int i = 0; i < components.Length; i++) {
-            if (typeof (T).IsAssignableFrom (components [i].GetType ())) {
-                interfaces.Add (components [i] as T);
+        for (int i = 0; i < components.Length; i++)
+        {
+            List<Type> potentialImplementingTypes = new List<Type>();
+            Type componentType = components[i].GetType();
+            potentialImplementingTypes.Add(componentType);
+            IEnumerable<Type> parentTypes = componentType.GetParentTypes();
+            potentialImplementingTypes.AddRange(parentTypes);
+
+            foreach (var type in potentialImplementingTypes)
+            {
+                if (typeof (T).IsAssignableFrom (type))
+                {
+                    interfaces.Add (components [i] as T);
+                    break;
+                }
             }
         }
         return interfaces.ToArray();

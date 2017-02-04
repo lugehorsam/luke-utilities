@@ -15,7 +15,19 @@ namespace Utilities
         [SerializeField]
         Vector3 localPosition;
 
-        public GameObject Instantiate ()
+        public Prefab(Transform instantiationHolder, Vector3 localPosition)
+        {
+            this.instantiationHolder = instantiationHolder;
+            this.localPosition = localPosition;
+        }
+
+        public Prefab(Transform instantiationHolder)
+        {
+            this.instantiationHolder = instantiationHolder;
+            localPosition = Vector3.zero;
+        }
+
+        GameObject CreateGameObject()
         {
             GameObject instance = prefab == null ? new GameObject() : GameObject.Instantiate (prefab, Vector2.zero, Quaternion.Euler (Vector3.zero)) as GameObject;
             if (instantiationHolder != null)
@@ -23,13 +35,29 @@ namespace Utilities
                 instance.transform.SetParent(instantiationHolder, worldPositionStays: false);
             }
             instance.transform.localPosition = localPosition;
-
             return instance;
         }
 
-        public T Instantiate<T> (Transform holder = null) where T : Component
+        public virtual GameObject Instantiate ()
         {
-            return Instantiate ().GetOrAddComponent<T>();
+            var instance = CreateGameObject();
+            InitGameObject(instance);
+            return instance;
+        }
+
+        public virtual T Instantiate<T> (Transform holder = null) where T : Component
+        {
+            var instance = CreateGameObject();
+            T component = instance.GetOrAddComponent<T>();
+            InitGameObject(instance);
+            return component;
+        }
+
+        void InitGameObject(GameObject gameObject)
+        {
+            var instantiateds = gameObject.GetComponentsWithInterface<IInstantiated>();
+            foreach (var instantiated in instantiateds)
+                instantiated.HandleOnInstantiated();
         }
 
         public bool IsPrefabOf (GameObject gameObject)
@@ -42,5 +70,4 @@ namespace Utilities
             return prefab.GetComponent<T>() == gameObject.GetComponent<T>();
         }
     }
-
 }

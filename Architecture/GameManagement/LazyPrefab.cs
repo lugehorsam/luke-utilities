@@ -4,17 +4,23 @@ using System;
 namespace Utilities
 {
     [Serializable]
-    public class LazyPrefab
+    public class LazyPrefab : Prefab
     {
-        [SerializeField]
-        private Prefab prefab;
-
         private GameObject instance;
 
-        public T GetInstance<T>() where T : Component
+        public LazyPrefab(Transform holder, Vector3 pos) : base(holder, pos) {}
+        public LazyPrefab(Transform holder) : base(holder) {}
+
+        public override T Instantiate<T>(Transform holder = null)
         {
-            instance = instance ?? prefab.Instantiate();
-            return instance.GetComponent<T>();
+            instance = instance ?? base.Instantiate<T>().gameObject;
+            return instance.GetOrAddComponent<T>();
+        }
+
+        public override GameObject Instantiate()
+        {
+            instance = instance ?? base.Instantiate();
+            return instance;
         }
     }
 }
