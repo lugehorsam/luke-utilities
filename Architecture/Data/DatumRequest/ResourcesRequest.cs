@@ -2,15 +2,13 @@
 
 namespace Datum
 {
-    public abstract class ResourcesRequest<TDatum> : DatumRequest<TDatum>
+    public class ResourcesRequest<TDatum> : DatumRequest<TDatum>
     {
-        protected abstract string PathFromResources { get; }
-
         private readonly ResourceRequest request;
 
-        public ResourcesRequest()
+        public ResourcesRequest(string pathFromResources)
         {
-            request = Resources.LoadAsync<TextAsset>(PathFromResources);
+            request = Resources.LoadAsync<TextAsset>(pathFromResources);
         }
 
         protected override bool RequestIsDone()

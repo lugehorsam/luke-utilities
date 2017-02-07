@@ -3,16 +3,18 @@
 [System.Serializable]
 public class JsonArray<T>
 {
-    public T [] Data {
+    public T [] Array {
         get {
-            return data;
+            return array;
         }
     }
     [SerializeField]
-    T[] data;
+    T[] array;
 
-    public JsonArray (T [] data)
+    public JsonArray (T [] array)
     {
-        this.data = data;
+        this.array = array;
     }
+
+    public JsonArray(){}
 }

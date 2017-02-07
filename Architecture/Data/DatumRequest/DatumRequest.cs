@@ -1,16 +1,17 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Datum
 {
     public abstract class DatumRequest<TDatum> : CustomYieldInstruction
     {
 
-        public ObservableList<TDatum> Data
+        public TDatum Datum
         {
-            get { return _data; }
+            get { return _datum; }
         }
 
-        private ObservableList<TDatum> _data;
+        private TDatum _datum;
 
         public sealed override bool keepWaiting
         {
@@ -20,15 +21,15 @@ namespace Datum
                 if (requestIsDone)
                 {
                     string requestContent = GetRequestContent();
-                    _data = DeserializeJson(requestContent);
+                    _datum = DeserializeJson(requestContent);
                 }
                 return !requestIsDone;
             }
         }
 
-        protected virtual ObservableList<TDatum> DeserializeJson(string json)
+        protected virtual TDatum DeserializeJson(string json)
         {
-            return new ObservableList<TDatum>(JsonUtility.FromJson<JsonArray<TDatum>>(json).Data);
+            return JsonUtility.FromJson<TDatum>(json);
         }
 
         protected abstract bool RequestIsDone();

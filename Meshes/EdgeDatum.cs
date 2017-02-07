@@ -109,7 +109,7 @@ public struct EdgeDatum
     }
 
     /// <summary>
-    /// See https://www.topcoder.com/community/data-science/data-science-tutorials/geometry-concepts-line-intersection-and-its-applications
+    /// See https://www.topcoder.com/community/array-science/array-science-tutorials/geometry-concepts-line-intersection-and-its-applications
     /// Returns false if edges are connected at the point of intersection.
     /// </summary>
     /// <param name="otherEdge"></param>

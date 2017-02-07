@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class GameEdge : CollectedBehavior<GameEdge, List<GameEdge>> {
+/**
+public abstract class GameEdge : CollectedClass<GameEdge> {
 
     public GameNode node1 {
         get;
@@ -19,3 +20,5 @@ public abstract class GameEdge : CollectedBehavior<GameEdge, List<GameEdge>> {
 
     public abstract void DrawConnection(GameNode startNode, GameNode endNode);
 }
+
+**/

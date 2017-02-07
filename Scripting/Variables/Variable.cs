@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace Scripting
 {
@@ -23,9 +24,26 @@ namespace Scripting
             return varName.Length > 0 && varName[0] == VARIABLE_IDENTIFIER;
         }
 
+        public static T GetValue<T>(string variable) where T : ScriptObject<T>
+        {
+            return ScriptObject<T>.Collection.FirstOrDefault(
+                (scriptObject) => scriptObject.Id == GetValue(variable)
+            ) as T;
+        }
+
         public static string GetValue(string variable)
         {
             return variables[variable];
+        }
+
+        public static void SetValue(string variable, string value)
+        {
+            if (variable[0] != VARIABLE_IDENTIFIER)
+            {
+                throw new Exception();
+            }
+
+            variables[variable] = value;
         }
     }
 }

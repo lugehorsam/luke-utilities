@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine;
 using Utilities;
+using Datum;
+using Scripting;
 
 public class GorlaxGameManager : MonoBehaviour
 {
@@ -16,8 +18,18 @@ public class GorlaxGameManager : MonoBehaviour
     private IEnumerator Start()
     {
         var interactions = new InteractionRequest();
+        var tiles = new ResourcesRequest<ContentList<TileDatum>>(ResourcesConfig.TILES);
+        var animals = new ResourcesRequest<ContentList<Animal>>(ResourcesConfig.ANIMALS);
+
+        yield return this.StartParallelCoroutines
+        (
+            tiles,
+            animals
+        );
+
         yield return StartCoroutine(interactions);
-        GameScreen.Datum = interactions.Data.First();
+
+        GameScreen.Datum = interactions.Datum.Array.First();
         StartCoroutine(GameScreen.Show());
     }
 }

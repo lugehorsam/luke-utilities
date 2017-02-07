@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class GameNode : CollectedBehavior<GameNode, List<GameNode>> {
+/**
+public abstract class GameNode : CollectedClass<GameNode> {
 
     [SerializeField]
     GameEdge edgePrefab;
@@ -25,3 +26,5 @@ public abstract class GameNode : CollectedBehavior<GameNode, List<GameNode>> {
         
     protected abstract void OnConnectTo (GameEdge edge);
 }
+
+**/

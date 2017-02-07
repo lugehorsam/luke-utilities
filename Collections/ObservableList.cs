@@ -156,8 +156,8 @@ public class ObservableList<TDatum> : List<TDatum>
 
     public void Bind<TSourceData> (DynamicDataListFetcher<TSourceData> newDynamicDataSource,
                                     int sourceDatumIndex) where TSourceData : struct, IComposite<TDatum> {
-        if (data.Count > 0) {
-            data.Clear ();
+        if (array.Count > 0) {
+            array.Clear ();
             unsubscribeFromSource ();
         }
 
@@ -168,15 +168,15 @@ public class ObservableList<TDatum> : List<TDatum>
             HandleNewData (sourceData [sourceDatumIndex].GetCompositeData ());
         };
 
-        newDynamicDataSource.Data += handleDataPublished;
+        newDynamicDataSource.Datum += handleDataPublished;
 
         unsubscribeFromSource = () => {
             newDynamicDataSource.DataStream -= handleDataPublished;
         };
 
         pushToSource = () => {
-            TSourceData [] newData = newDynamicDataSource.Data.ToArray ();
-            newData [sourceDatumIndex].SetCompositeData (data);
+            TSourceData [] newData = newDynamicDataSource.Datum.ToArray ();
+            newData [sourceDatumIndex].SetCompositeData (array);
             newDynamicDataSource.Set (newData);
         };
     }
