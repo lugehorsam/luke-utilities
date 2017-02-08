@@ -18,13 +18,14 @@ public class GorlaxGameManager : MonoBehaviour
     private IEnumerator Start()
     {
         var interactions = new InteractionRequest();
-        var tiles = new ResourcesRequest<ContentList<TileDatum>>(ResourcesConfig.TILES);
-        var animals = new ResourcesRequest<ContentList<Animal>>(ResourcesConfig.ANIMALS);
+
+        var tilesRequest = ScriptManager.FetchContent<TileDatum>(ResourcesConfig.TILES);
+        var animalsRequest = ScriptManager.FetchContent<Animal>(ResourcesConfig.ANIMALS);
 
         yield return this.StartParallelCoroutines
         (
-            tiles,
-            animals
+            tilesRequest,
+            animalsRequest
         );
 
         yield return StartCoroutine(interactions);

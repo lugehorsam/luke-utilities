@@ -2,7 +2,7 @@
 
 namespace Scripting
 {
-    public class ScriptObject<T> : CollectedClass<ScriptObject<T>> {
+    public class ScriptObject : CollectedClass<ScriptObject> {
 
         public string Id
         {

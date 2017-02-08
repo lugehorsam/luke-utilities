@@ -24,9 +24,9 @@ namespace Scripting
             return varName.Length > 0 && varName[0] == VARIABLE_IDENTIFIER;
         }
 
-        public static T GetValue<T>(string variable) where T : ScriptObject<T>
+        public static T GetValue<T>(string variable) where T : ScriptObject
         {
-            return ScriptObject<T>.Collection.FirstOrDefault(
+            return ScriptObject.Collection.FirstOrDefault(
                 (scriptObject) => scriptObject.Id == GetValue(variable)
             ) as T;
         }
