@@ -57,6 +57,7 @@ namespace Scripting
             if (TryResolveValue(value, out value))
             {
                 variables.Add(this);
+                TryResolveVariables(this);
             }
             else
             {
