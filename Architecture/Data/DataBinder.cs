@@ -41,7 +41,7 @@ public abstract class DataBinder<TDatum, TBehavior> : BehaviorManager<TDatum, TB
 
     public override string ToString ()
     {
-        return string.Format ("[DataBinder: Name={0} Datum={1}]", gameObject.name, Datum.ToFormattedString());
+        return string.Format ("[DataBinder: Identifier={0} Datum={1}]", gameObject.name, Datum.ToFormattedString());
     }
 
     void TryReportBadConfig ()

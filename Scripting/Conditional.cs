@@ -48,9 +48,10 @@ namespace Scripting
 
         bool TryResolveVariable(string variable, out string value)
         {
-            if (Variable.IsVariable(variable))
+            value = "";
+            if (Variable.IsValidIdentifier(variable))
             {
-                value = Variable.GetValue(variable);
+                //value = Variable.GetValue(variable);
                 return true;
             }
 

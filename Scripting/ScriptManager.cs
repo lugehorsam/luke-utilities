@@ -1,23 +1,39 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Datum;
+using System;
 
 namespace Scripting
 {
     public static class ScriptManager
     {
-        private static readonly Dictionary<string, ScriptObject[]> contentLists = new Dictionary<string, ScriptObject[]>();
+        private static readonly Dictionary<string, ScriptObject[]> contentLists =
+            new Dictionary<string, ScriptObject[]>();
 
-        public static IEnumerator FetchContent<TDatum>(string path, DatumRequestType requestType = DatumRequestType.Local)
+        public static IEnumerator FetchContent<TDatum>(string path,
+            DatumRequestType requestType = DatumRequestType.Local)
             where TDatum : ScriptObject
         {
-            switch (requestType)
+            var request = requestType.ToRequest<ContentList<TDatum>>(path);
+            yield return request;
+            ContentList<TDatum> content = request.Datum;
+            contentLists[request.Datum.Id] = content.Array;
+            RegisterGlobals(content.Globals);
+        }
+
+        static void RegisterGlobals(Variable[] globals)
+        {
+            foreach (var global in globals)
             {
-                case DatumRequestType.Local:
-                    var request = new ResourcesRequest<ContentList<TDatum>>(path);
-                    yield return request;
-                    contentLists[request.Datum.Id] = request.Datum.Array;
-                    break;
+                if (Variable.IsValidIdentifier(global.Identifier))
+                {
+                    Variable.AddVariable(global);
+                }
+                else
+                {
+                    throw new FormatException(string.Format("Variable identifier {0} is malformed", global.Identifier));
+                }
             }
         }
     }
