@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+/**
 
 [RequireComponent (typeof(RectTransform))]
 [RequireComponent (typeof (Canvas))]
@@ -50,3 +51,4 @@ public class TestingBinder : DataBinder<DiagnosticsData, TestingButton> {
         buttonHolder.gameObject.SetActive (!buttonHolder.gameObject.activeSelf);
     }
 }
+**/

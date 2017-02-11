@@ -36,12 +36,12 @@ namespace Datum
             return string.Format ("{0}/{1}/{2}", networkConfig.UrlBase, Url, endPoint);
         }
 
-        protected override bool RequestIsDone()
+        public override bool RequestIsDone()
         {
             return request.isDone;
         }
 
-        protected override string GetRequestContent()
+        public override string GetRawContent()
         {
             return request.downloadHandler.text;
         }

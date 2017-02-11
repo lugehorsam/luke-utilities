@@ -8,21 +8,16 @@ namespace Scripting
 {
     public static class ScriptManager
     {
+
+        public static Dictionary<string, ScriptObject[]> ContentLists
+        {
+            get { return contentLists; }
+        }
+
         private static readonly Dictionary<string, ScriptObject[]> contentLists =
             new Dictionary<string, ScriptObject[]>();
 
-        public static IEnumerator FetchContent<TDatum>(string path,
-            DatumRequestType requestType = DatumRequestType.Local)
-            where TDatum : ScriptObject
-        {
-            var request = requestType.ToRequest<ContentList<TDatum>>(path);
-            yield return request;
-            ContentList<TDatum> content = request.Datum;
-            contentLists[request.Datum.Id] = content.Array;
-            RegisterGlobals(content.Globals);
-        }
-
-        static void RegisterGlobals(Variable[] globals)
+        public static void AddGlobals(Variable[] globals)
         {
             foreach (var global in globals)
             {

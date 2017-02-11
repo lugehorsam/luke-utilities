@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Datum;
 using System;
+/**
 
 public abstract class DataBinder<TDatum, TBehavior> : BehaviorManager<TDatum, TBehavior>
     where TDatum : struct
@@ -10,7 +11,6 @@ public abstract class DataBinder<TDatum, TBehavior> : BehaviorManager<TDatum, TB
     Action unsubscribeFromSource;
     Action pushToSource;
 
-/**
     public void Push ()
     {
         pushToSource ();
@@ -49,7 +49,7 @@ public abstract class DataBinder<TDatum, TBehavior> : BehaviorManager<TDatum, TB
         if (array.Count != Behaviors.Count) {
             Diagnostics.Report ("Datum and behaviors have uneven counts " + array.ToFormattedString () + " , " + Behaviors.ToFormattedString ());
         }
-    }
-
-**/
+    }gor
 }
+**/
+

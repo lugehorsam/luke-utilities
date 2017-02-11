@@ -6,14 +6,10 @@ namespace Utilities
     [Serializable]
     public class Prefab {
 
-        [SerializeField]
-        GameObject prefab;
-
-        [SerializeField]
-        Transform instantiationHolder;
-
-        [SerializeField]
-        Vector3 localPosition;
+        [SerializeField] GameObject prefab;
+        [SerializeField] private bool dynamicGameObject;
+        [SerializeField] Transform instantiationHolder;
+        [SerializeField] Vector3 localPosition;
 
         public Prefab(Transform instantiationHolder, Vector3 localPosition)
         {
@@ -29,7 +25,7 @@ namespace Utilities
 
         GameObject CreateGameObject()
         {
-            GameObject instance = prefab == null ? new GameObject() : GameObject.Instantiate (prefab, Vector2.zero, Quaternion.Euler (Vector3.zero)) as GameObject;
+            GameObject instance = dynamicGameObject ? new GameObject() : GameObject.Instantiate (prefab, Vector2.zero, Quaternion.Euler (Vector3.zero)) as GameObject;
             if (instantiationHolder != null)
             {
                 instance.transform.SetParent(instantiationHolder, worldPositionStays: false);

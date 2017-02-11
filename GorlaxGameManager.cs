@@ -7,30 +7,28 @@ using Scripting;
 
 public class GorlaxGameManager : MonoBehaviour
 {
-    private GameScreen GameScreen
+    private NodeBehavior NodeBehavior
     {
-        get { return gameScreen.Instantiate<GameScreen>(); }
+        get { return nodeBehavior.Instantiate<NodeBehavior>(); }
     }
 
     [SerializeField]
-    private LazyPrefab gameScreen;
+    private LazyPrefab nodeBehavior;
 
     private IEnumerator Start()
     {
-        var interactions = new InteractionRequest();
-
-        var tilesRequest = ScriptManager.FetchContent<TileDatum>(ResourcesConfig.TILES);
-        var animalsRequest = ScriptManager.FetchContent<Animal>(ResourcesConfig.ANIMALS);
+        var nodesRequest = new ScriptRequest<NodeDatum>(ResourcesConfig.NODES, DatumRequestType.Local);
+        var tilesRequest = new ScriptRequest<TileDatum>(ResourcesConfig.TILES, DatumRequestType.Local);
+        var animalsRequest = new ScriptRequest<Animal>(ResourcesConfig.ANIMALS, DatumRequestType.Local);
 
         yield return this.StartParallelCoroutines
         (
             tilesRequest,
-            animalsRequest
+            animalsRequest,
+            nodesRequest
         );
 
-        yield return StartCoroutine(interactions);
-
-        GameScreen.Datum = interactions.Datum.Array.First();
-        StartCoroutine(GameScreen.Show());
+        NodeBehavior.Datum = nodesRequest.Datum.Array.First();
+        StartCoroutine(NodeBehavior.Show());
     }
 }

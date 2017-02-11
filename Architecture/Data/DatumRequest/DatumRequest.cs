@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Datum
@@ -20,8 +21,9 @@ namespace Datum
                 bool requestIsDone = RequestIsDone();
                 if (requestIsDone)
                 {
-                    string requestContent = GetRequestContent();
+                    string requestContent = GetRawContent();
                     _datum = DeserializeJson(requestContent);
+                    HandleAfterDeserialize(requestContent);
                 }
                 return !requestIsDone;
             }
@@ -32,7 +34,12 @@ namespace Datum
             return JsonUtility.FromJson<TDatum>(json);
         }
 
-        protected abstract bool RequestIsDone();
-        protected abstract string GetRequestContent();
+        protected virtual void HandleAfterDeserialize(string rawContent)
+        {
+
+        }
+
+        public abstract bool RequestIsDone();
+        public abstract string GetRawContent();
     }
 }

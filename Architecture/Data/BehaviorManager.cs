@@ -1,19 +1,15 @@
 ﻿using Utilities;
-using UnityEngine;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Datum
 {
-    public abstract class BehaviorManager<TDatum, TBehavior> : MonoBehaviour
+    public class BehaviorManager<TDatum, TBehavior>
         where TBehavior : DatumBehavior<TDatum> {
 
-        protected ReadOnlyCollection<TDatum> Data
+        public ObservableList<TDatum> Data
         {
-            get
-            {
-                return new ReadOnlyCollection<TDatum>(data);
-            }
+            get { return data; }
         }
 
         readonly ObservableList<TDatum> data = new ObservableList<TDatum>();
@@ -26,57 +22,39 @@ namespace Datum
             }
         }
 
-        [SerializeField]
-        protected Prefab dataBehaviorPrefab;
-
-        [SerializeField]
-        int initialGameObjects = 10;
-
         protected ObjectPool<TBehavior> behaviorPool;
+
+        public BehaviorManager(Prefab prefab, int initialGameObjects, bool allowResize)
+        {
+            behaviorPool = new GameObjectPool<TBehavior> (prefab, initialGameObjects, allowResize);
+            data.OnAdd += HandleAddDatum;
+            data.OnRemove += HandleRemoveDatum;
+        }
 
         public void Observe(ObservableList<TDatum> otherData)
         {
             otherData.RegisterObserver(data);
         }
 
-        protected virtual void HandleNewBehavior(TBehavior behavior)
-        {
-        }
+        protected virtual void HandleNewBehavior(TBehavior behavior) {}
+        protected virtual void HandleRemovedBehavior(TBehavior behavior) {}
+        protected virtual void AddHandlers (TBehavior behavior) {}
+        protected virtual void RemoveHandlers (TBehavior behavior) {}
 
-        protected virtual void HandleRemovedBehavior(TBehavior behavior)
-        {
-        }
-
-        protected virtual void AddHandlers (TBehavior behavior) { }
-        protected virtual void RemoveHandlers (TBehavior behavior) { }
         protected virtual ObservableList<TDatum> GetOverrideData ()
         {
             return null;
         }
 
-        void Awake()
-        {
-            InitBehaviorPool ();
-            Debug.Log("adding event handler");
-            data.OnAdd += HandleNewDatum;
-            data.OnRemove += HandleRemovedDatum;
-        }
-
-        void InitBehaviorPool ()
-        {
-            behaviorPool = new GameObjectPool<TBehavior> (dataBehaviorPrefab, initialGameObjects);
-        }
-
-        void HandleNewDatum (TDatum newDatum)
+        void HandleAddDatum (TDatum newDatum)
         {
             TBehavior behavior = behaviorPool.Release ();
             behavior.Datum = newDatum;
-            Diagnostics.Log("releasing " + newDatum);
             AddHandlers (behavior);
             HandleNewBehavior (behavior);
         }
 
-        void HandleRemovedDatum (TDatum oldDatum, int oldDatumIndex)
+        void HandleRemoveDatum (TDatum oldDatum, int oldDatumIndex)
         {
             TBehavior behaviorToPool = Behaviors.First ((behavior) => behavior.Datum.Equals (oldDatum));
             RemoveHandlers (behaviorToPool);

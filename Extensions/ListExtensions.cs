@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 public static class ListExtensions {
 
-
+    public static T GetLast<T>(this List<T> thisList)
+    {
+        return thisList[thisList.Count - 1];
+    }
 }

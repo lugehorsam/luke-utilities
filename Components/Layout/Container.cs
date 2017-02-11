@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+/**
 
 public class Container<TDatum, TBehavior> : DataBinder<TDatum, TBehavior>
     where TDatum : struct
@@ -43,3 +44,4 @@ public class Container<TDatum, TBehavior> : DataBinder<TDatum, TBehavior>
         return default(Vector2);
     }
 }
+**/

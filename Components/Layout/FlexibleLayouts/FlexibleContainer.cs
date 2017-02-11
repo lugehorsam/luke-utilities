@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
+/**
 [Serializable]
 public abstract class FlexibleContainer<TTargeTDatum, TBehavior> : Container<TTargeTDatum, TBehavior>
     where TTargeTDatum : struct
@@ -87,3 +88,4 @@ public abstract class FlexibleContainer<TTargeTDatum, TBehavior> : Container<TTa
         }
     }
 }
+**/

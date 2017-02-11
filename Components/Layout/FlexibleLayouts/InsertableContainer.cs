@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
+/**
 public abstract class InsertableContainer<TDatum, TBehavior> : FlexibleContainer<TDatum, TBehavior>
     where TDatum : struct
     where TBehavior : DatumBehavior<TDatum>,
@@ -76,3 +77,4 @@ public abstract class InsertableContainer<TDatum, TBehavior> : FlexibleContainer
         OnBehaviorDeselected (selectable.GetComponent<TBehavior> ());
     }
 }
+**/

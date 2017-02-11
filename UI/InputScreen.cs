@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Diagnostics;
+/**
 
 public abstract class InputScreen<TDatum, TBehavior> : Container<TDatum, TBehavior>
     where TDatum : struct
@@ -67,3 +68,4 @@ public abstract class InputScreen<TDatum, TBehavior> : Container<TDatum, TBehavi
         yield return null;
     }
 }
+**/

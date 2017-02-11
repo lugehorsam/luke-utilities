@@ -11,12 +11,12 @@ namespace Datum
             request = Resources.LoadAsync<TextAsset>(pathFromResources);
         }
 
-        protected override bool RequestIsDone()
+        public override bool RequestIsDone()
         {
             return request.isDone;
         }
 
-        protected override string GetRequestContent()
+        public override string GetRawContent()
         {
             Object asset = request.asset;
             TextAsset textAsset = asset as TextAsset;

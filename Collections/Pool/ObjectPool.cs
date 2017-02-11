@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using UnityEngine;
 
 public class ObjectPool<T>  {
 
@@ -16,9 +17,10 @@ public class ObjectPool<T>  {
     }
 
     readonly List<T> releasedObjects = new List<T>();
-    readonly bool allowResize;
-    readonly Func<T> objectFactory;
-    readonly int initialSize;
+
+    bool allowResize;
+    Func<T> objectFactory;
+    int initialSize;
 
     public ObjectPool(Func<T> objectFactory, int initialSize, bool allowResize = true) {
         this.allowResize = allowResize;
@@ -55,6 +57,13 @@ public class ObjectPool<T>  {
         pooledObjects.Enqueue(objectToPool);
         HandleOnPool(objectToPool);
         OnPool(objectToPool);
+    }
+
+    public void Pool(int numToPool = 1) {
+        for (int i = 0; i < numToPool; i++)
+        {
+            Pool(releasedObjects.GetLast());
+        }
     }
 
     protected virtual void HandleOnPool(T objectToPool)
