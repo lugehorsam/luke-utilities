@@ -17,9 +17,9 @@ public class GorlaxGameManager : MonoBehaviour
 
     private IEnumerator Start()
     {
-        var nodesRequest = new ScriptRequest<NodeDatum>(ResourcesConfig.NODES, DatumRequestType.Local);
-        var tilesRequest = new ScriptRequest<TileDatum>(ResourcesConfig.TILES, DatumRequestType.Local);
-        var animalsRequest = new ScriptRequest<Animal>(ResourcesConfig.ANIMALS, DatumRequestType.Local);
+        var nodesRequest = new ScriptRequest<NodeDatum>(DatumRequestType.Local);
+        var tilesRequest = new ScriptRequest<TileDatum>(DatumRequestType.Local);
+        var animalsRequest = new ScriptRequest<AnimalDatum>(DatumRequestType.Local);
 
         yield return this.StartParallelCoroutines
         (

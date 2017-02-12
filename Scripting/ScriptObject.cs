@@ -11,12 +11,12 @@ namespace Scripting
 
         [SerializeField] private string id;
 
-        public Conditional ShouldAppear
+        public Condition ShouldAppear
         {
             get { return shouldAppear; }
         }
 
-        [SerializeField] private Conditional shouldAppear;
+        [SerializeField] private Condition shouldAppear;
 
         public string DisplayName
         {

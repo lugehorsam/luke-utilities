@@ -63,4 +63,22 @@ public static class ReflectionUtils {
             currentBaseType= currentBaseType.BaseType;
         }
     }
+
+    public static FieldInfo[] GetNonDefaultFields<T>(T @object)
+    {
+        T defaultObj = default(T);
+
+        FieldInfo[] allFields = typeof(T).GetFields();
+        var relevantFields = new List<FieldInfo>();
+
+        foreach (var field in allFields)
+        {
+            if (field.GetValue(@object) != field.GetValue(defaultObj))
+            {
+                relevantFields.Add(field);
+            }
+        }
+
+        return relevantFields.ToArray();
+    }
 }

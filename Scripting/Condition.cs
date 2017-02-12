@@ -5,7 +5,7 @@ namespace Scripting
 {
 
     [Serializable]
-    public class Conditional
+    public class Condition
     {
         [SerializeField] private string left;
         [SerializeField] private string right;

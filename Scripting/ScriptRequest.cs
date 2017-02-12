@@ -1,16 +1,22 @@
-﻿using System.Collections;
-using Datum;
+﻿using Datum;
+using UnityEngine;
 
 namespace Scripting
 {
-
     public class ScriptRequest<TDatum> : DatumRequest<ContentList<TDatum>> where TDatum : ScriptObject
     {
+        private const string CONTENT_CONFIG_PATH = "ContentConfigs/";
+
         private readonly DatumRequest<ContentList<TDatum>> request;
 
-        public ScriptRequest(string path, DatumRequestType requestType)
+        private readonly LazyReference<ScriptContentConfig> contentConfig;
+
+        public ScriptRequest(DatumRequestType requestType)
         {
-            request = requestType.ToRequest<ContentList<TDatum>>(path);
+            contentConfig = new LazyReference<ScriptContentConfig>(() =>
+                Resources.Load<ScriptContentConfig<TDatum>>(CONTENT_CONFIG_PATH));
+
+            request = requestType.ToRequest<ContentList<TDatum>>(contentConfig.Value.ResourcesPath);
         }
 
         public override bool RequestIsDone()
@@ -21,11 +27,17 @@ namespace Scripting
         protected override void HandleAfterDeserialize(string rawContent)
         {
             ContentList<TDatum> content = request.Datum;
-            if (content != null)
+
+            foreach (var global in content.Globals)
             {
-                ScriptManager.ContentLists[request.Datum.Id] = content.Array;
-                if (content.Globals != null)
-                    ScriptManager.AddGlobals(content.Globals);
+                if (Variable.IsValidIdentifier(global.Identifier))
+                {
+                    Variable.AddVariable(global);
+                }
+                else
+                {
+                    throw new MalformedVariableException(global.Identifier);
+                }
             }
         }
 
