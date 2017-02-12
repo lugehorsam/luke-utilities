@@ -39,6 +39,12 @@ public static class Diagnostics {
         }
     }
 
+    public static void Log (string log, params string[] parameters)
+    {
+        Debug.Log(string.Format(log, parameters));
+    }
+
+
     public static void LogWarning (string log)
     {
         Debug.LogWarning (log);

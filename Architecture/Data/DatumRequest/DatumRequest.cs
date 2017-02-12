@@ -22,6 +22,7 @@ namespace Datum
                 if (requestIsDone)
                 {
                     string requestContent = GetRawContent();
+                    Diagnostics.Log("Request {0} got raw content {1}", ToString(), requestContent);
                     _datum = DeserializeJson(requestContent);
                     HandleAfterDeserialize(requestContent);
                 }
