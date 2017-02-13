@@ -8,12 +8,6 @@ namespace Scripting
     public class TextQuery
     {
         [SerializeField] private string contentId;
-
-        public string QueryJSON
-        {
-            get { return query; }
-        }
-
         [SerializeField] private string query;
 
         public string Resolve()

@@ -47,10 +47,10 @@ namespace Scripting
     {
         public static List<ScriptContentConfig> ContentConfigs
         {
-            get { return ContentConfigs; }
+            get { return contentConfigs; }
         }
 
-        private readonly List<ScriptContentConfig> contentConfigs = new List<ScriptContentConfig>();
+        private static readonly List<ScriptContentConfig> contentConfigs = new List<ScriptContentConfig>();
 
         public abstract string Id { get; }
         public abstract string ResourcesPath { get; }
