@@ -21,9 +21,7 @@ namespace Scripting
             ScriptContentConfig associatedConfig =
                 ScriptContentConfig.ContentConfigs.First((config) => config.Id == contentId);
 
-            associatedConfig.HandleQuery(query);
-            return
-
+            return associatedConfig.GetDisplayFromQuery(query);
         }
     }
 }

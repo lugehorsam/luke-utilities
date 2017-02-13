@@ -10,17 +10,23 @@ namespace Scripting
 
         private List<TScriptObject> content = new List<TScriptObject>();
 
-        public TScriptObject HandleQuery(TextQuery query)
+
+        public override string GetDisplayFromQuery(string queryJson)
         {
-            TScriptObject[] queryCandidates = GetQueryCandidates(query);
+            return GetObjectFromQuery(queryJson).Display;
+        }
+
+        TScriptObject GetObjectFromQuery(string queryJson)
+        {
+            TScriptObject[] queryCandidates = GetQueryCandidates(queryJson);
             return queryCandidates.First();
         }
 
-        TScriptObject[] GetQueryCandidates(TextQuery query)
+        TScriptObject[] GetQueryCandidates(string queryJson)
         {
             var foundObjects = new List<TScriptObject>();
 
-            var contentObj = JsonUtility.FromJson<TScriptObject>(query.QueryJSON);
+            var contentObj = JsonUtility.FromJson<TScriptObject>(queryJson);
             FieldInfo[] relevantFields = ReflectionUtils.GetNonDefaultFields(contentObj);
 
             foreach (TScriptObject obj in content)
@@ -48,6 +54,7 @@ namespace Scripting
 
         public abstract string Id { get; }
         public abstract string ResourcesPath { get; }
+        public abstract string GetDisplayFromQuery(string queryJson);
     }
 }
 

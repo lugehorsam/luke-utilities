@@ -18,7 +18,7 @@ namespace Scripting
 
         [SerializeField] private Condition shouldAppear;
 
-        public string DisplayName
+        public string Display
         {
             get { return display ?? id.ToUpper(); }
         }
