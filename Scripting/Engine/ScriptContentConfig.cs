@@ -31,7 +31,7 @@ namespace Scripting
         }
     }
 
-    public abstract class ScriptContentConfig : ScriptableObject
+    public abstract class ScriptContentConfig
     {
         public static List<ScriptContentConfig> ContentConfigs
         {

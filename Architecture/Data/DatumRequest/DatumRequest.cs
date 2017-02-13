@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.Serialization;
+﻿using UnityEngine;
 
 namespace Datum
 {
@@ -24,6 +22,7 @@ namespace Datum
                     string requestContent = GetRawContent();
                     Diagnostics.Log("Request {0} got raw content {1}", ToString(), requestContent);
                     _datum = DeserializeJson(requestContent);
+                    Diagnostics.Log("{0} Data deserialzied to {1}", ToString(), _datum);
                     HandleAfterDeserialize(requestContent);
                 }
                 return !requestIsDone;

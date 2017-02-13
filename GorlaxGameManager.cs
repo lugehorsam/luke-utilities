@@ -17,13 +17,20 @@ public class GorlaxGameManager : MonoBehaviour
 
     private IEnumerator Start()
     {
-        var nodesRequest = new ScriptRequest<NodeDatum>(DatumRequestType.Local);
-        var tilesRequest = new ScriptRequest<TileDatum>(DatumRequestType.Local);
-        var animalsRequest = new ScriptRequest<AnimalDatum>(DatumRequestType.Local);
+        var nodesRequest = new ScriptRequest<NodeDatum>
+        (
+            new NodesConfig(),
+            DatumRequestType.Local
+        );
+
+        var animalsRequest = new ScriptRequest<AnimalDatum>
+        (
+            new AnimalsConfig(),
+            DatumRequestType.Local
+        );
 
         yield return this.StartParallelCoroutines
         (
-            tilesRequest,
             animalsRequest,
             nodesRequest
         );

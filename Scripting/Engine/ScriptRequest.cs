@@ -1,33 +1,26 @@
-﻿using Datum;
-using UnityEngine;
+﻿using System.Diagnostics;
+using Datum;
 
 namespace Scripting
 {
     public class ScriptRequest<TDatum> : DatumRequest<ContentList<TDatum>> where TDatum : ScriptObject
     {
-        private const string CONTENT_CONFIG_PATH = "ContentConfigs/";
-
         private readonly DatumRequest<ContentList<TDatum>> request;
 
-        private readonly LazyReference<ScriptContentConfig> contentConfig;
-
-        public ScriptRequest(DatumRequestType requestType)
+        public ScriptRequest(ScriptContentConfig<TDatum> config, DatumRequestType requestType)
         {
-            contentConfig = new LazyReference<ScriptContentConfig>(() =>
-                Resources.Load<ScriptContentConfig<TDatum>>(CONTENT_CONFIG_PATH));
-
-            request = requestType.ToRequest<ContentList<TDatum>>(contentConfig.Value.ResourcesPath);
+            request = requestType.ToRequest<ContentList<TDatum>>(config.ResourcesPath);
         }
 
         public override bool RequestIsDone()
         {
-            return request.RequestIsDone();
+            return !request.keepWaiting;
         }
 
         protected override void HandleAfterDeserialize(string rawContent)
         {
             ContentList<TDatum> content = request.Datum;
-
+            Diagnostics.Log("content is " + content);
             foreach (var global in content.Globals)
             {
                 if (Variable.IsValidIdentifier(global.Identifier))

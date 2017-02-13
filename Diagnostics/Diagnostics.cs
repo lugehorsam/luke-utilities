@@ -39,7 +39,7 @@ public static class Diagnostics {
         }
     }
 
-    public static void Log (string log, params string[] parameters)
+    public static void Log (string log, params object[] parameters)
     {
         Debug.Log(string.Format(log, parameters));
     }
