@@ -1,25 +1,34 @@
 ﻿using System;
-using Scripting;
 using UnityEngine;
+using System.Collections.Generic;
 
-[Serializable]
-public class TextDatum : ScriptObject, ISerializationCallbackReceiver
+namespace Scripting
 {
-    public string Text
+    [Serializable]
+    public class TextDatum : ScriptObject, ISerializationCallbackReceiver
     {
-        get { return args == null ? text : string.Format(text, args); }
-    }
+        public string Text
+        {
+            get { return string.Format(text, resolvedQueries); }
+        }
 
-    [SerializeField] private string text;
-    [SerializeField] private TextQuery[] args;
+        [SerializeField] private string text;
+        [SerializeField] private TextQuery[] args;
 
-    public void OnAfterDeserialize()
-    {
+        private string[] resolvedQueries;
 
-    }
+        public void OnAfterDeserialize()
+        {
+            resolvedQueries = new string[args.Length];
+            for (int i = 0; i < args.Length; i++)
+            {
+                resolvedQueries[i] = args[i].Resolve();
+            }
+        }
 
-    public void OnBeforeSerialize()
-    {
+        public void OnBeforeSerialize()
+        {
 
+        }
     }
 }

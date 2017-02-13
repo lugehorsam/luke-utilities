@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Scripting
 {
@@ -9,11 +10,17 @@ namespace Scripting
 
         private List<TScriptObject> content = new List<TScriptObject>();
 
-        public TScriptObject[] HandleQuery(TextQuery query)
+        public TScriptObject HandleQuery(TextQuery query)
+        {
+            TScriptObject[] queryCandidates = GetQueryCandidates(query);
+            return queryCandidates.First();
+        }
+
+        TScriptObject[] GetQueryCandidates(TextQuery query)
         {
             var foundObjects = new List<TScriptObject>();
 
-            var contentObj = JsonUtility.FromJson<TScriptObject>(query.Query);
+            var contentObj = JsonUtility.FromJson<TScriptObject>(query.QueryJSON);
             FieldInfo[] relevantFields = ReflectionUtils.GetNonDefaultFields(contentObj);
 
             foreach (TScriptObject obj in content)
@@ -26,7 +33,6 @@ namespace Scripting
                     }
                 }
             }
-
             return foundObjects.ToArray();
         }
     }

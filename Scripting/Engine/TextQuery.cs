@@ -1,28 +1,29 @@
 ﻿using UnityEngine;
 using System;
+using System.Linq;
 
 namespace Scripting
 {
     [Serializable]
     public class TextQuery
     {
-        public string ContentId
-        {
-            get { return contentId; }
-        }
-
         [SerializeField] private string contentId;
 
-        public string Query
+        public string QueryJSON
         {
             get { return query; }
         }
 
         [SerializeField] private string query;
 
-        public override string ToString()
+        public string Resolve()
         {
-            return "";
+            ScriptContentConfig associatedConfig =
+                ScriptContentConfig.ContentConfigs.First((config) => config.Id == contentId);
+
+            associatedConfig.HandleQuery(query);
+            return
+
         }
     }
 }
