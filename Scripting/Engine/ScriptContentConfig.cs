@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Scripting
@@ -19,6 +21,10 @@ namespace Scripting
         TScriptObject GetObjectFromQuery(string queryJson)
         {
             TScriptObject[] queryCandidates = GetQueryCandidates(queryJson);
+            if (queryCandidates.Length == 0)
+            {
+                throw new Exception(string.Format("No valid candidates found for query json {0}", queryJson));
+            }
             return queryCandidates.First();
         }
 
@@ -45,16 +51,22 @@ namespace Scripting
 
     public abstract class ScriptContentConfig
     {
-        public static List<ScriptContentConfig> ContentConfigs
+        public static ReadOnlyCollection<ScriptContentConfig> ContentConfigs
         {
-            get { return contentConfigs; }
+            get { return new ReadOnlyCollection<ScriptContentConfig>(contentConfigs); }
         }
 
-        private static readonly List<ScriptContentConfig> contentConfigs = new List<ScriptContentConfig>();
+        static readonly List<ScriptContentConfig> contentConfigs = new List<ScriptContentConfig>();
 
         public abstract string Id { get; }
         public abstract string ResourcesPath { get; }
         public abstract string GetDisplayFromQuery(string queryJson);
+
+        public ScriptContentConfig()
+        {
+            Debug.Log("adding content config");
+            contentConfigs.Add(this);
+        }
     }
 }
 
