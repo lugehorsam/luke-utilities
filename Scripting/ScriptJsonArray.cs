@@ -1,23 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace Scripting
 {
     [Serializable]
-    public class ContentList<TDatum> : JsonArray<TDatum>
-    {
+    public class ScriptJsonArray<TDatum> : JsonArray<TDatum>
+    {        
         public string Id
         {
             get { return id; }
         }
-        [SerializeField]
-        private string id;
+        
+        [SerializeField] private string id;
 
         public Variable[] Globals
         {
             get { return globals; }
         }
 
-        [SerializeField] private Variable[] globals = { };
+        [SerializeField] private Variable[] globals;
+
     }
 }

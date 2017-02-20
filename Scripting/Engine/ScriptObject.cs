@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Scripting
 {
-    public class ScriptObject : CollectedClass<ScriptObject> {
-
+    public abstract class ScriptObject
+    {                
         public string Id
         {
             get { return id; }
@@ -24,5 +25,10 @@ namespace Scripting
         }
 
         [SerializeField] private string display;
+
+        public abstract string ResourcesPath
+        {
+            get;
+        }
     }
 }

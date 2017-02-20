@@ -45,10 +45,16 @@ public static class Diagnostics {
     }
 
 
+    public static void LogWarning (string log, params string[] inserts)
+    {
+        Debug.LogWarning (string.Format(log, inserts));
+    }
+    
     public static void LogWarning (string log)
     {
         Debug.LogWarning (log);
     }
+    
     public static void DrawGesture(Gesture gesture)
     {
         for (int frameIndex = 0; frameIndex < gesture.GestureFrames.Count - 1; frameIndex++)

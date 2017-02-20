@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Scripting
 {
     [Serializable]
-    public class TextDatum : ScriptObject, ISerializationCallbackReceiver
+    public abstract class TextDatum : ScriptObject, ISerializationCallbackReceiver
     {
         public string Text
         {
@@ -12,7 +12,7 @@ namespace Scripting
         }
 
         [SerializeField] private string text;
-        [SerializeField] private TextQuery[] args;
+        [SerializeField] private ScriptObjectQuery[] args = {};
 
         private string[] resolvedQueries;
 
@@ -21,7 +21,7 @@ namespace Scripting
             resolvedQueries = new string[args.Length];
             for (int i = 0; i < args.Length; i++)
             {
-                resolvedQueries[i] = args[i].Resolve();
+                resolvedQueries[i] = args[i].ResolvedString;
             }
         }
 

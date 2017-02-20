@@ -14,7 +14,8 @@
                 case DatumRequestType.Local:
                     return new ResourcesRequest<TDatum>(path);
             }
-
+            
+            Diagnostics.LogWarning("Unrecognized request type of {0}", path);
             return null;
         }
     }
