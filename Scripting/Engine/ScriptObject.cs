@@ -4,7 +4,14 @@ using UnityEngine;
 namespace Scripting
 {
     public abstract class ScriptObject
-    {                
+    {
+
+        protected ScriptRuntime ScriptRuntime
+        {
+            get;
+            private set;
+        }
+
         public string Id
         {
             get { return id; }
@@ -29,6 +36,11 @@ namespace Scripting
         public abstract string ResourcesPath
         {
             get;
+        }
+
+        public void RegisterRuntime(ScriptRuntime runtime)
+        {
+            ScriptRuntime = runtime;
         }
     }
 }

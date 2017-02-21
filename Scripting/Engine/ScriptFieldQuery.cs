@@ -27,10 +27,5 @@ namespace Scripting
         
         [SerializeField]
         private string value;
-
-        public void Resolve(string contentId)
-        {
-            
-        }
     }   
 }

@@ -19,11 +19,11 @@ namespace Scripting
         private string resolvedString;
 
         [SerializeField]
-        private ScriptFieldQuery query;
+        private ScriptFieldQuery fieldQuery;
 
         public void OnAfterDeserialize()
         {
-            query.Resolve(contentId);
+            fieldQuery.Resolve(contentId);
         }
     }
 }

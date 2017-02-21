@@ -4,14 +4,6 @@ using System.Linq;
 
 public class ScriptRuntime {
     
-    public Dictionary<string, List<ScriptObject>> ScriptObjects
-    {
-        get
-        {
-            return scriptObjects;
-        }
-    }
-    
     private readonly Dictionary<string, List<ScriptObject>> scriptObjects = new Dictionary<string, List<ScriptObject>>(); 
         
     private readonly HashSet<Variable> variables = new HashSet<Variable>();
@@ -36,6 +28,17 @@ public class ScriptRuntime {
         {
             unresolvedVariables.Add(variable);
         }
+    }
+
+    public void AddScriptObject(string contentId, ScriptObject scriptObject)
+    {
+        if (!scriptObjects.ContainsKey(contentId))
+        {
+            scriptObjects[contentId] = new List<ScriptObject>();
+        }     
+        
+        scriptObject.RegisterRuntime(this);
+        scriptObjects[contentId].Add(scriptObject);
     }
 
     Variable GetVariableWithIdentifier(string identifier)

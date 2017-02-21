@@ -27,9 +27,7 @@ namespace Scripting
 
         public void OnBeforeSerialize()
         {
-
+            
         }
-
-
     }
 }

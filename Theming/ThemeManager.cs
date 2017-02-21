@@ -21,9 +21,7 @@ namespace Theming
 
         static ThemeManager()
         {
-            Debug.Log("Ttheme is " + typeof(TTheme).ToString());
             themes = Resources.LoadAll<TTheme>(THEMES_DIRECTORY);
-            Debug.Log("Themes after load is " + themes.Length);
         }
 
         public static void SetThemeIndex (int index)
