@@ -12,7 +12,7 @@ namespace Scripting
         }
 
         [SerializeField] private string text;
-        [SerializeField] private ScriptObjectQuery[] args = {};
+        [SerializeField] private MatchQuery[] args = {};
 
         private string[] resolvedQueries;
 

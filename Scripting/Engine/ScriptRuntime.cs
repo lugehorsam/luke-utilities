@@ -3,9 +3,16 @@ using Scripting;
 using System.Linq;
 
 public class ScriptRuntime {
-    
-    private readonly Dictionary<string, List<ScriptObject>> scriptObjects = new Dictionary<string, List<ScriptObject>>(); 
-        
+   
+    public Dictionary<string, List<ScriptObject>> ScriptObjects
+    {
+        get
+        {
+            return scriptObjects;
+        }
+    }
+
+    private readonly Dictionary<string, List<ScriptObject>> scriptObjects = new Dictionary<string, List<ScriptObject>>();    
     private readonly HashSet<Variable> variables = new HashSet<Variable>();
     private readonly HashSet<Variable> unresolvedVariables = new HashSet<Variable>();
  
@@ -62,7 +69,7 @@ public class ScriptRuntime {
         }
     }
 
-    bool TryResolveValue(string rawValue, out string resolvedValue)
+    public bool TryResolveValue(string rawValue, out string resolvedValue)
     {
         if (Variable.IsValidIdentifier(rawValue))
         {
