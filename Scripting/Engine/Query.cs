@@ -7,12 +7,14 @@ namespace Scripting
     [Serializable]
     public class Query
     {
+        [SerializeField] private string table;
         [SerializeField] private string property;
         [SerializeField] private string value;
 
-        public string GetResolvedString(ScriptRuntime runtime, string tableId)
+        public bool TryGetResolvedString(ScriptRuntime runtime, out string resolvedString)
         {
-            var objectsToSearch = runtime.ScriptObjects[tableId];
+            resolvedString = null;
+            var objectsToSearch = runtime.ScriptObjects[table];
 
             foreach (ScriptObject scriptObject in objectsToSearch)
             {
@@ -24,12 +26,14 @@ namespace Scripting
                         var val = field.GetValue(scriptObject) as ScriptObject;
                         if (val.Id == value)
                         {
-                            return val.Display;
+                            resolvedString = val.Display;
+                            return true;
                         }
                     }
                 }
             }
-            return "";
+
+            return false;
         }
     }
 }

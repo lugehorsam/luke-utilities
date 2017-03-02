@@ -5,16 +5,16 @@ using Datum;
 
 namespace Scripting
 {
-    public class ScriptRequest<TDatum> : DatumRequest<ScriptJsonArray<TDatum>>
+    public class ScriptRequest<TDatum> : DatumRequest<ScriptTable<TDatum>>
         where TDatum : ScriptObject, new()
     {
-        private readonly DatumRequest<ScriptJsonArray<TDatum>> request;
+        private readonly DatumRequest<ScriptTable<TDatum>> request;
         private readonly ScriptRuntime scriptRuntime;
 
         public ScriptRequest(DatumRequestType requestType, ScriptRuntime scriptRuntime)
         {
             string resourcesPath = new TDatum().ResourcesPath;
-            request = requestType.ToRequest<ScriptJsonArray<TDatum>>(resourcesPath);
+            request = requestType.ToRequest<ScriptTable<TDatum>>(resourcesPath);
             this.scriptRuntime = scriptRuntime;
         }
 
@@ -25,7 +25,7 @@ namespace Scripting
 
         protected override void HandleAfterDeserialize(string rawContent)
         {
-            ScriptJsonArray<TDatum> content = request.Datum;
+            ScriptTable<TDatum> content = request.Datum;
 
             if (content == null)
             {
@@ -36,7 +36,7 @@ namespace Scripting
             AddScriptObjects(content); 
         }
 
-        void AddGlobals(ScriptJsonArray<TDatum> content)
+        void AddGlobals(ScriptTable<TDatum> content)
         {
             if (content.Globals == null)
             {
@@ -57,7 +57,7 @@ namespace Scripting
 
         }
 
-        void AddScriptObjects(ScriptJsonArray<TDatum> content)
+        void AddScriptObjects(ScriptTable<TDatum> content)
         {
             if (!scriptRuntime.ScriptObjects.ContainsKey(content.Id))
                 scriptRuntime.ScriptObjects[content.Id] = new List<ScriptObject>();

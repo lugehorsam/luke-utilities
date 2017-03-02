@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Scripting
 {
     [Serializable]
-    public class ScriptJsonArray<TDatum> : JsonArray<TDatum>
+    public class ScriptTable<TDatum> : JsonArray<TDatum>
     {        
         public string Id
         {

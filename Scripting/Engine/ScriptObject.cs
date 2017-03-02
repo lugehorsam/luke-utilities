@@ -41,6 +41,9 @@ namespace Scripting
         public void RegisterRuntime(ScriptRuntime runtime)
         {
             ScriptRuntime = runtime;
+            OnAfterRegisterRuntime();
         }
+
+        protected virtual void OnAfterRegisterRuntime() { }
     }
 }

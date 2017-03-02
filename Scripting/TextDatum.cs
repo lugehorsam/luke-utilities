@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Scripting
 {
     [Serializable]
-    public abstract class TextDatum : ScriptObject, ISerializationCallbackReceiver
+    public abstract class TextDatum : ScriptObject
     {
         public string Text
         {
@@ -16,18 +16,22 @@ namespace Scripting
 
         private string[] resolvedQueries;
 
-        public void OnAfterDeserialize()
+        protected override void OnAfterRegisterRuntime()
         {
-            resolvedQueries = new string[args.Length];
             for (int i = 0; i < args.Length; i++)
             {
-                resolvedQueries[i] = args[i].ResolvedString;
+                string newVal;
+                if (ScriptRuntime.TryResolveValue(args[i], out newVal))
+                {
+                    args[i] = newVal;
+                }
+                else
+                {
+                    throw new Exception(
+                        string.Format("Couldn't resolve arg {0} in text {1} ", args[i], text)
+                    );
+                }
             }
-        }
-
-        public void OnBeforeSerialize()
-        {
-            
         }
     }
 }
