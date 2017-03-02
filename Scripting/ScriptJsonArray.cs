@@ -20,7 +20,6 @@ namespace Scripting
             get { return globals; }
         }
 
-        [SerializeField] private Variable[] globals;
-
+        [SerializeField] private Variable[] globals;               
     }
 }

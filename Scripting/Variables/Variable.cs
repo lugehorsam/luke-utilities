@@ -32,10 +32,12 @@ namespace Scripting
         [SerializeField]
         private string value;
 
+        [SerializeField]
+        private Query query;
+
         public static bool IsValidIdentifier(string varName)
         {
             return varName.Length > 0 && varName[0] == VARIABLE_IDENTIFIER;
-        }
-       
+        }               
     }
 }

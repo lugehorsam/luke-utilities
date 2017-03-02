@@ -85,6 +85,12 @@ public class ScriptRuntime {
             return true;
         }
 
+        var query = UnityEngine.JsonUtility.FromJson<Query>(rawValue);
+
+        if (query.TryGetResolvedString(this, out resolvedValue))
+            return true;
+           
+
         resolvedValue = rawValue;
         return true;
     }

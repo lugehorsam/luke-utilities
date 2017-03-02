@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Scripting
 {
@@ -20,12 +21,14 @@ namespace Scripting
             
             foreach (ScriptObject scriptObject in runtime.ScriptObjects[tableId])
             {
-                var namedField = ReflectionUtils.GetNonDefaultFields(scriptObject)
+                FieldInfo fieldWithPropertyName = ReflectionUtils.GetNonDefaultFields(scriptObject)
                     .FirstOrDefault((field) => field.Name == property);
-                
-                namedField.
-                
-                if (namedField.GetValue(scriptObject) == )
+
+
+                if (fieldWithPropertyName.GetValue(scriptObject) == value)
+                {
+                    return scriptObject;
+                }
             }
         }
     }

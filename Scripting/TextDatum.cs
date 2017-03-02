@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace Scripting
@@ -12,7 +12,7 @@ namespace Scripting
         }
 
         [SerializeField] private string text;
-        [SerializeField] private MatchQuery[] args = {};
+        [SerializeField] private string[] args;
 
         private string[] resolvedQueries;
 
