@@ -32,7 +32,6 @@ namespace Scripting
                     }
                 }
             }
-
             return false;
         }
     }

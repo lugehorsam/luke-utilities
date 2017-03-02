@@ -35,9 +35,9 @@ namespace Scripting
         [SerializeField]
         private Query query;
 
-        public static bool IsValidIdentifier(string varName)
+        public static bool IsValidIdentifier(string identifier)
         {
-            return varName.Length > 0 && varName[0] == VARIABLE_IDENTIFIER;
-        }               
+            return !String.IsNullOrEmpty(identifier) && identifier[0] == VARIABLE_IDENTIFIER;
+        }
     }
 }

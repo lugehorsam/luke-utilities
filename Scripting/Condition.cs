@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace Scripting
@@ -13,8 +13,8 @@ namespace Scripting
 
         public bool Evaluate()
         {
-            TryResolveVariable(left, out left);
-            TryResolveVariable(right, out right);
+            //TryResolveVariable(left, out left);
+            //TryResolveVariable(right, out right);
 
             int leftAsInt;
             int rightAsInt;
@@ -44,19 +44,6 @@ namespace Scripting
             leftAsInt = 0;
             rightAsInt = 0;
             return int.TryParse(left, out leftAsInt) && int.TryParse(right, out rightAsInt);
-        }
-
-        bool TryResolveVariable(string variable, out string value)
-        {
-            value = "";
-            if (Variable.IsValidIdentifier(variable))
-            {
-                //value = Variable.GetValue(variable);
-                return true;
-            }
-
-            value = variable;
-            return false;
-        }
+        }              
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Scripting
 {
     [Serializable]
-    public class ScriptTable<TDatum> : JsonArray<TDatum>
+    public class ScriptTable<TDatum> : JsonArray<TDatum>, ISerializationCallbackReceiver
     {        
         public string Id
         {
@@ -20,6 +20,13 @@ namespace Scripting
             get { return globals; }
         }
 
-        [SerializeField] private Variable[] globals;               
+        [SerializeField] private Variable[] globals;
+
+        public void OnBeforeSerialize() { }
+
+        public void OnAfterDeserialize()
+        {
+
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Scripting;
 using System.Linq;
 
@@ -20,12 +20,12 @@ public class ScriptRuntime {
     {
         if (!Variable.IsValidIdentifier(variable.Identifier))
         {
-            throw new MalformedVariableException(variable.Identifier);
+            throw new InvalidIdentifierException(variable.Identifier);
         }
 
         string newVal;
 
-        if (TryResolveValue(variable.Value, out newVal))
+        if (Evaluate(variable.Value, out newVal))
         {
             variable.Value = newVal;
             variables.Add(variable);
@@ -52,7 +52,7 @@ public class ScriptRuntime {
     {
         if (!Variable.IsValidIdentifier(identifier))
         {
-            throw new MalformedVariableException(identifier);
+            throw new InvalidIdentifierException(identifier);
         }
 
         return variables.FirstOrDefault((variable) => variable.Identifier == identifier);
@@ -69,21 +69,19 @@ public class ScriptRuntime {
         }
     }
 
-    public bool TryResolveValue(string rawValue, out string resolvedValue)
+    public bool Evaluate(string rawValue, out string resolvedValue) 
     {
-        if (Variable.IsValidIdentifier(rawValue))
+        var identifiedVar = GetVariableWithIdentifier(rawValue);
+
+        if (identifiedVar == null)
         {
-            var identifiedVar = GetVariableWithIdentifier(rawValue);
-
-            if (identifiedVar == null)
-            {
-                resolvedValue = rawValue;
-                return false;
-            }
-
-            resolvedValue = identifiedVar.Value;
-            return true;
+            resolvedValue = rawValue;
+            return false;
         }
+
+        resolvedValue = identifiedVar.Value;
+        return true;
+        
 
         var query = UnityEngine.JsonUtility.FromJson<Query>(rawValue);
 

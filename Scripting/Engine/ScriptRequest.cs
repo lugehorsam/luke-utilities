@@ -42,19 +42,18 @@ namespace Scripting
             {
                 return;
             }
-            
-            foreach (var global in content.Globals)
-            {
-                if (Variable.IsValidIdentifier(global.Identifier))
+
+            for (int i = 0; i < content.Globals.Length; i++) {
+                Variable global = content.Globals[i];
+                try
                 {
                     scriptRuntime.AddVariable(global);
                 }
-                else
+                catch (InvalidIdentifierException e)
                 {
-                    throw new MalformedVariableException(global.Identifier);
+                    throw new InvalidIdentifierException(e.Identifier, content.Id, i);
                 }
             }
-
         }
 
         void AddScriptObjects(ScriptTable<TDatum> content)

@@ -8,7 +8,7 @@ namespace Scripting
     {
         public string Text
         {
-            get { return string.Format(text, resolvedQueries); }
+            get { return args == null ? text : string.Format(text, resolvedQueries); }
         }
 
         [SerializeField] private string text;
@@ -18,10 +18,13 @@ namespace Scripting
 
         protected override void OnAfterRegisterRuntime()
         {
+            if (args == null)
+                return;
+            
             for (int i = 0; i < args.Length; i++)
             {
                 string newVal;
-                if (ScriptRuntime.TryResolveValue(args[i], out newVal))
+                if (ScriptRuntime.Evaluate(args[i], out newVal))
                 {
                     args[i] = newVal;
                 }
