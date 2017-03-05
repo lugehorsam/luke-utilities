@@ -27,6 +27,14 @@ public static class Diagnostics {
         Debug.LogWarning (message);
     }
 
+    public static void Report(string message, params string[] formatters)
+    {
+        if (formatters == null)
+            Debug.LogWarning(message);
+        else
+            Debug.LogWarning(string.Format(message, formatters));
+    }
+
     public static void Report (Exception e)
     {
         Debug.LogWarning (e.Message);

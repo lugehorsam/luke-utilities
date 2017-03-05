@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Collections;
 using Scripting;
 using System.Linq;
+using Datum;
 
 public class ScriptRuntime {
    
@@ -25,17 +27,36 @@ public class ScriptRuntime {
 
         string newVal;
 
-        if (Evaluate(variable.Value, out newVal))
+        if (Variable.IsValidIdentifier(variable.Value))
         {
-            variable.Value = newVal;
-            variables.Add(variable);
-            TryResolveVariables(variable);
+
+            Variable referencedVariable = GetVariableWithIdentifier(variable.Value);
+            if (referencedVariable == null)
+            {
+                unresolvedVariables.Add(variable);
+            }
+            else
+            {
+                variable.Value = referencedVariable.Value;
+                variables.Add(variable);
+                TryResolveVariables(variable);
+            }
         }
         else
         {
-            unresolvedVariables.Add(variable);
+
+            string resolvedValue;
+            if (variable.Query.TryGetResolvedString(this, out resolvedValue))
+            {
+                
+            }
         }
+
+
     }
+
+
+
 
     public void AddScriptObject(string contentId, ScriptObject scriptObject)
     {
@@ -50,6 +71,7 @@ public class ScriptRuntime {
 
     Variable GetVariableWithIdentifier(string identifier)
     {
+        Diagnostics.Log("Trying to get variable with identifier: {0}", identifier);
         if (!Variable.IsValidIdentifier(identifier))
         {
             throw new InvalidIdentifierException(identifier);
@@ -67,30 +89,5 @@ public class ScriptRuntime {
                 variable.Value = newVariable.Value;
             }
         }
-    }
-
-    public bool Evaluate(string rawValue, out string resolvedValue) 
-    {
-        var identifiedVar = GetVariableWithIdentifier(rawValue);
-
-        if (identifiedVar == null)
-        {
-            resolvedValue = rawValue;
-            return false;
-        }
-
-        resolvedValue = identifiedVar.Value;
-        return true;
-        
-
-        var query = UnityEngine.JsonUtility.FromJson<Query>(rawValue);
-
-        if (query.TryGetResolvedString(this, out resolvedValue))
-        {
-            return true;
-        }
-
-        resolvedValue = rawValue;
-        return true;
     }
 }

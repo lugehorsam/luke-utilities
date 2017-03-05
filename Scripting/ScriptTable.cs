@@ -22,11 +22,14 @@ namespace Scripting
 
         [SerializeField] private Variable[] globals;
 
-        public void OnBeforeSerialize() { }
-
-        public void OnAfterDeserialize()
+        public void OnBeforeSerialize() 
         {
+            
+        }
 
+        public void OnAfterDeserialize() 
+        {
+            Diagnostics.Log("After deserialize globals are " + globals.ToFormattedString());
         }
     }
 }

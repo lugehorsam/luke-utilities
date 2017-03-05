@@ -22,7 +22,7 @@ namespace Datum
                     Diagnostics.Log("Request {0} got raw content {1}", ToString(), requestContent);
                     _datum = DeserializeJson(requestContent);
                     Diagnostics.Log("{0} Data deserialzied to {1}", ToString(), _datum);
-                    HandleAfterDeserialize(requestContent);
+                    HandleAfterDeserialize();
                 }
                 return !requestIsDone;
             }
@@ -33,7 +33,7 @@ namespace Datum
             return JsonUtility.FromJson<TDatum>(json);
         }
 
-        protected virtual void HandleAfterDeserialize(string rawContent)
+        protected virtual void HandleAfterDeserialize()
         {
 
         }
