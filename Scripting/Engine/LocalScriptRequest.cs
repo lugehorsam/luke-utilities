@@ -26,27 +26,19 @@ namespace Scripting
                 return;
             }
 
-            for (int i = 0; i < content.Globals.Length; i++) {
+            for (int i = 0; i < content.Globals.Length; i++) 
+            {
                 Variable global = content.Globals[i];
-                try
-                {
-                    scriptRuntime.AddVariable(global);
-                }
-                catch (InvalidIdentifierException e)
-                {
-                    throw new InvalidIdentifierException(e.Identifier, content.Id);
-                }
+                scriptRuntime.AddVariable(global);
             }
         }
 
         void AddScriptObjects(ScriptTable<TDatum> content)
-        {
-            if (!scriptRuntime.ScriptObjects.ContainsKey(content.Id))
-                scriptRuntime.ScriptObjects[content.Id] = new List<ScriptObject>();
-            
+        {   
+            Diagnostics.Log("Adding script objects for table: {0}", content.Id);
             foreach (var item in content.Array)
             {
-                scriptRuntime.ScriptObjects[content.Id].Add(item);
+                scriptRuntime.AddScriptObject(content.Id, item);
             }
         }
     }

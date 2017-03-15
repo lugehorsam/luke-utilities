@@ -4,9 +4,9 @@ using Scripting;
 using System.Linq;
 using Datum;
 
-public class ScriptRuntime {
-   
-    public Dictionary<string, List<ScriptObject>> ScriptObjects
+public class ScriptRuntime 
+{
+    Dictionary<string, List<ScriptObject>> ScriptObjects
     {
         get
         {
@@ -16,7 +16,29 @@ public class ScriptRuntime {
 
     private readonly Dictionary<string, List<ScriptObject>> scriptObjects = new Dictionary<string, List<ScriptObject>>();    
     private readonly HashSet<Variable> variables = new HashSet<Variable>();
-    private readonly HashSet<Variable> unresolvedVariables = new HashSet<Variable>();
+
+    public ScriptObject GetScriptObject(IRuntimeResolvable resolvable)
+    {
+        return resolvable.GetResolvedValue(this);
+    }
+
+    public ScriptObject[] GetScriptObjects(string tableId)
+    {
+        return scriptObjects[tableId].ToArray();
+    }
+
+    public ScriptObject GetScriptObject(string id)
+    {
+        foreach (var list in scriptObjects.Values)
+        {
+            ScriptObject scriptObject = list.FirstOrDefault((obj) => obj.Id == id);
+
+            if (scriptObject != null)
+                return scriptObject;
+        }
+
+        return null;
+    }
  
     public void AddVariable(Variable variable)
     {
@@ -25,51 +47,22 @@ public class ScriptRuntime {
             throw new InvalidIdentifierException(variable.Identifier);
         }
 
-        string newVal;
-
-        if (Variable.IsValidIdentifier(variable.Value))
-        {
-
-            Variable referencedVariable = GetVariableWithIdentifier(variable.Value);
-            if (referencedVariable == null)
-            {
-                unresolvedVariables.Add(variable);
-            }
-            else
-            {
-                variable.Value = referencedVariable.Value;
-                variables.Add(variable);
-                TryResolveVariables(variable);
-            }
-        }
-        else
-        {
-
-            string resolvedValue;
-            if (variable.Query.TryGetResolvedString(this, out resolvedValue))
-            {
-                
-            }
-        }
-
-
+        variables.Add(variable);
     }
-
-
-
 
     public void AddScriptObject(string contentId, ScriptObject scriptObject)
     {
         if (!scriptObjects.ContainsKey(contentId))
         {
             scriptObjects[contentId] = new List<ScriptObject>();
-        }     
+        }
         
+        Diagnostics.Log("Adding script object {0}", scriptObject.Id);
         scriptObject.RegisterRuntime(this);
         scriptObjects[contentId].Add(scriptObject);
     }
 
-    Variable GetVariableWithIdentifier(string identifier)
+    public Variable GetVariableWithIdentifier(string identifier)
     {
         Diagnostics.Log("Trying to get variable with identifier: {0}", identifier);
         if (!Variable.IsValidIdentifier(identifier))
@@ -78,16 +71,5 @@ public class ScriptRuntime {
         }
 
         return variables.FirstOrDefault((variable) => variable.Identifier == identifier);
-    }
-    
-    void TryResolveVariables(Variable newVariable)
-    {
-        foreach (var variable in unresolvedVariables)
-        {
-            if (variable.Value == newVariable.Identifier)
-            {
-                variable.Value = newVariable.Value;
-            }
-        }
     }
 }

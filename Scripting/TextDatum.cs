@@ -8,7 +8,7 @@ namespace Scripting
     {
         public string Text
         {
-            get { return args == null ? text : string.Format(text, resolvedQueries); }
+            get { return resolvedQueries == null ? text : string.Format(text, resolvedQueries); }
         }
 
         [SerializeField] private string text;
@@ -20,20 +20,13 @@ namespace Scripting
         {
             if (args == null)
                 return;
+
+            resolvedQueries = new string[args.Length];
             
             for (int i = 0; i < args.Length; i++)
             {
-                string newVal;
-                if (ScriptRuntime.Evaluate(args[i], out newVal))
-                {
-                    args[i] = newVal;
-                }
-                else
-                {
-                    throw new Exception(
-                        string.Format("Couldn't resolve arg {0} in text {1} ", args[i], text)
-                    );
-                }
+                ScriptObject scriptObj = ScriptRuntime.GetScriptObject(args[i]);
+//                resolvedQueries[i] = scriptObj.Display;
             }
         }
     }

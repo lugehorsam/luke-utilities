@@ -1,6 +1,7 @@
 ﻿using System;
 
 public class LazyReference<T> where T : class {
+    
     public T Value {
         get {
             value = value ?? getValue ();
@@ -10,12 +11,10 @@ public class LazyReference<T> where T : class {
 
     T value;
 
-    readonly Func<T> getValue;
+    Func<T> getValue;
 
-    public LazyReference (Func<T> getValue)
+    public LazyReference(Func<T> getValue)
     {
         this.getValue = getValue;
     }
-  
-	
 }

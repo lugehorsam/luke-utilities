@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Scripting
 {
     [Serializable]
-    public class Variable : ISerializationCallbackReceiver
+    public class Variable : IRuntimeResolvable
     {
         const char VARIABLE_IDENTIFIER = '$';
 
@@ -17,28 +17,8 @@ namespace Scripting
         [SerializeField]
         private string identifier;
 
-        public string Value
-        {
-            get
-            {
-                return value;
-            }
-            set
-            {
-                this.value = value;
-            }
-        }
-
         [SerializeField]
         private string value;
-
-        public Query Query
-        {
-            get
-            {
-                return query;
-            }
-        }
 
         [SerializeField]
         private Query query;
@@ -48,19 +28,28 @@ namespace Scripting
             return !String.IsNullOrEmpty(identifier) && identifier[0] == VARIABLE_IDENTIFIER;
         }
 
-        public void OnBeforeSerialize()
+        public ScriptObject GetResolvedValue(ScriptRuntime runtime)
         {
+            foreach (IRuntimeResolvable resolvable in GetRuntimeResolvables())
+            {
+                if (resolvable != null)
+                {
+                    return resolvable.GetResolvedValue(runtime);
+                }
+            }
+
+            if (IsValidIdentifier(value))
+            {
+                Variable referencedVariable = runtime.GetVariableWithIdentifier(value);
+                return referencedVariable.GetResolvedValue(runtime);
+            }
+
+            return runtime.GetScriptObject(value);
         }
 
-        public void OnAfterDeserialize()
+        IRuntimeResolvable[] GetRuntimeResolvables()
         {
-            if (query == null && value == null)
-                Diagnostics.Report("Variable {0} serialized with no raw value or query", this.ToString());
-        }
-
-        public override string ToString()
-        {
-            return string.Format("[Variable: Identifier={0}, Value={1}, Query ={2}]", Identifier, Value, query);
+            return new[]{query};
         }
     }
 }

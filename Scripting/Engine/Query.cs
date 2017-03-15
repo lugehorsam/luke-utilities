@@ -5,16 +5,21 @@ using System.Reflection;
 namespace Scripting
 {   
     [Serializable]
-    public class Query
+    public class Query : IRuntimeResolvable
     {
+        public bool HasResolved
+        {
+            get;
+            private set;
+        }
+
         [SerializeField] private string table;
         [SerializeField] private string property;
         [SerializeField] private string value;
 
-        public bool TryGetResolvedString(ScriptRuntime runtime, out string resolvedString)
+        public ScriptObject GetResolvedValue(ScriptRuntime runtime)
         {
-            resolvedString = null;
-            var objectsToSearch = runtime.ScriptObjects[table];
+            var objectsToSearch = runtime.GetScriptObjects(table);
 
             foreach (ScriptObject scriptObject in objectsToSearch)
             {
@@ -26,13 +31,13 @@ namespace Scripting
                         var val = field.GetValue(scriptObject) as ScriptObject;
                         if (val.Id == value)
                         {
-                            resolvedString = val.Display;
-                            return true;
+                            return val;
                         }
                     }
                 }
             }
-            return false;
+
+            return null;
         }
     }
 }
