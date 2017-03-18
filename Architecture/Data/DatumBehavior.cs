@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-public abstract class DatumBehavior<TDatum> : MonoBehaviour {
+public abstract class DatumBehavior<TDatum> {
 
     public event Action<TDatum, TDatum> OnDataChanged = (d1, d2) => { };
 

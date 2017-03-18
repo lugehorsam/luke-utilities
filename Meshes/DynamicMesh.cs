@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿/**
+using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(MeshRenderer))]
@@ -31,3 +32,5 @@ public class DynamicMesh : DatumBehavior<MeshDatum> {
 
     }
 }
+
+**/

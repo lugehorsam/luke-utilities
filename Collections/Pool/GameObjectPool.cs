@@ -2,14 +2,14 @@
 
 namespace Utilities
 {
-    public class GameObjectPool<T> : ObjectPool<T> where T : Component {
+    public class GameObjectPool<T> : ObjectPool<T> where T : IGameObject, new() {
 
         public GameObjectPool(Prefab prefab,
             int initialSize,
             bool allowResize = true) : base(() =>
             {
-                T instance = prefab.Instantiate<T>();
-                instance.gameObject.SetActive(false);
+                T instance = new T();
+                instance.GameObject.SetActive(false);
                 return instance;
             },
             initialSize,
@@ -20,7 +20,7 @@ namespace Utilities
 
         protected sealed override void HandleOnRelease(T objectToRelease)
         {
-            objectToRelease.gameObject.SetActive(true);
+            objectToRelease.GameObject.SetActive(true);
             HandleAfterEnabled(objectToRelease);
         }
 
@@ -34,7 +34,7 @@ namespace Utilities
 
         protected override void HandleOnPool(T objectToPool)
         {
-            objectToPool.gameObject.SetActive(false);
+            objectToPool.GameObject.SetActive(false);
             HandleAfterDisabled(objectToPool);
         }
     }

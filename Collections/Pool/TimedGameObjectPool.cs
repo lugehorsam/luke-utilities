@@ -2,7 +2,7 @@
 
 namespace Utilities
 {
-    public class TimedGameObjectPool<T> : GameObjectPool<T> where T : Component, ITimedBehavior {
+    public class TimedGameObjectPool<T> : GameObjectPool<T> where T : IGameObject, ITimedBehavior, new() {
 
         public TimedGameObjectPool(Prefab prefab,
             int initialSize,

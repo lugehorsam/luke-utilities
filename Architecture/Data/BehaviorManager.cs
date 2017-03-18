@@ -5,7 +5,7 @@ using System.Linq;
 namespace Datum
 {
     public class BehaviorManager<TDatum, TBehavior>
-        where TBehavior : DatumBehavior<TDatum> {
+        where TBehavior : DatumBehavior<TDatum>, IGameObject, new() {
 
         public ObservableList<TDatum> Data
         {
