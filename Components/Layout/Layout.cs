@@ -1,19 +1,22 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
-using System.Linq;
-/**
+using Datum;
+using System;
 
-public class Container<TDatum, TBehavior> : DataBinder<TDatum, TBehavior>
+public class Layout<TDatum, TBehavior> : BehaviorManager<TDatum, TBehavior>
     where TDatum : struct
     where TBehavior : DatumBehavior<TDatum> {
 
     [SerializeField] private int siblingOffset;
 
+    public Layout(Func<TBehavior> factory) : base(factory)
+    {
+    }
+
     public void DoLayout (int startIndex = 0)
     {
         for (int i = startIndex; i < Behaviors.Count; i++) {
             TBehavior behavior = Behaviors [i];
-            behavior.transform.SetSiblingIndex (i + siblingOffset);
+            behavior.GameObject.transform.SetSiblingIndex (i + siblingOffset);
             ILayoutMember layoutMember = behavior as ILayoutMember;
             if (layoutMember != null)
             {
@@ -24,7 +27,6 @@ public class Container<TDatum, TBehavior> : DataBinder<TDatum, TBehavior>
 
     protected sealed override void HandleNewBehavior (TBehavior behavior)
     {
-        Diagnostics.Log("Container " + this.gameObject + " got new behavior " + behavior);
         HandleNewBehaviorPreLayout(behavior);
         DoLayout ();
     }
@@ -44,4 +46,3 @@ public class Container<TDatum, TBehavior> : DataBinder<TDatum, TBehavior>
         return default(Vector2);
     }
 }
-**/

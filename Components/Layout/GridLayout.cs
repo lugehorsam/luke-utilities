@@ -1,11 +1,11 @@
-﻿/**using UnityEngine;
-using System.Collections;
+﻿using UnityEngine;
+using System;
 
 
 /// <summary>
 /// Arbitrary grid layout. Bototm left is row 0, col 0
 /// </summary>
-public abstract class GridContainer<TDatum, TBehavior> : Container<TDatum, TBehavior>
+public abstract class GridLayout<TDatum, TBehavior> : Layout<TDatum, TBehavior>
     where TDatum : struct
     where TBehavior : DatumBehavior<TDatum>, ILayoutMember {
 
@@ -21,6 +21,10 @@ public abstract class GridContainer<TDatum, TBehavior> : Container<TDatum, TBeha
     [SerializeField]
     float colSpacing;
 
+    public GridLayout(Func<TBehavior> factory) : base(factory)
+    {
+    }
+
     protected override Vector2 GetIdealLocalPosition(TBehavior behavior)
     {
         int behaviorIndex = Behaviors.IndexOf(behavior);
@@ -29,4 +33,3 @@ public abstract class GridContainer<TDatum, TBehavior> : Container<TDatum, TBeha
         return new Vector2(row * rowSpacing, col * colSpacing);
     }
 }
-**/

@@ -1,11 +1,11 @@
-﻿using Utilities;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Datum
 {
     public class BehaviorManager<TDatum, TBehavior>
-        where TBehavior : DatumBehavior<TDatum>, IGameObject, new() {
+        where TBehavior : DatumBehavior<TDatum> {
 
         public ObservableList<TDatum> Data
         {
@@ -24,9 +24,9 @@ namespace Datum
 
         protected ObjectPool<TBehavior> behaviorPool;
 
-        public BehaviorManager(Prefab prefab, int initialGameObjects, bool allowResize)
+        public BehaviorManager(Func<TBehavior> factory)
         {
-            behaviorPool = new GameObjectPool<TBehavior> (prefab, initialGameObjects, allowResize);
+            behaviorPool = new ObjectPool<TBehavior>(factory, 10);
             data.OnAdd += HandleAddDatum;
             data.OnRemove += HandleRemoveDatum;
         }

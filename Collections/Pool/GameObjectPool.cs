@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
-
+/**
 namespace Utilities
 {
-    public class GameObjectPool<T> : ObjectPool<T> where T : IGameObject, new() {
+    public class GameObjectPool<T> : ObjectPool<T> where T : IGameObject {
 
-        public GameObjectPool(Prefab prefab,
+        public GameObjectPool(Func<T> factory,
             int initialSize,
             bool allowResize = true) : base(() =>
             {
@@ -39,3 +39,4 @@ namespace Utilities
         }
     }
 }
+**/

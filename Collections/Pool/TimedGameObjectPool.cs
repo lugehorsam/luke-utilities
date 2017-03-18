@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+/**
 namespace Utilities
 {
     public class TimedGameObjectPool<T> : GameObjectPool<T> where T : IGameObject, ITimedBehavior, new() {
@@ -28,3 +29,4 @@ namespace Utilities
         }
     }
 }
+**/
