@@ -11,7 +11,7 @@ public class GridLayoutDatum : ISerializationCallbackReceiver
     private int rows;
 
     [SerializeField]
-    private int cols;
+    private int columns;
 
     public void OnBeforeSerialize()
     {
@@ -28,12 +28,12 @@ public class GridLayoutDatum : ISerializationCallbackReceiver
        
     public int ToIndex(int row, int col) 
     {
-        return row * cols + col;
+        return row * columns + col;
     }
 
     bool RowsAndColumnsAreDefined()
     {
-        return rows != 0 && cols != 0;
+        return rows != 0 && columns != 0;
     }    
     
     int[] ToRowCol(int index) {
@@ -49,6 +49,6 @@ public class GridLayoutDatum : ISerializationCallbackReceiver
     }
 
     int ColOfIndex(int index) {
-        return index % cols;
+        return index % columns;
     }
 }
