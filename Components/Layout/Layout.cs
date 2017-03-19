@@ -3,7 +3,7 @@ using Datum;
 using System;
 
 public class Layout<TDatum, TBehavior> : BehaviorManager<TDatum, TBehavior>
-    where TDatum : struct
+    where TDatum : GridMemberDatum
     where TBehavior : DatumBehavior<TDatum> {
 
     [SerializeField] private int siblingOffset;

@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System;
-
+using Datum;
 
 /// <summary>
 /// Arbitrary grid layout. Bototm left is row 0, col 0
 /// </summary>
 public abstract class GridLayout<TDatum, TBehavior> : Layout<TDatum, TBehavior>
-    where TDatum : struct
+    where TDatum : GridMemberDatum
     where TBehavior : DatumBehavior<TDatum>, ILayoutMember {
 
     [SerializeField]

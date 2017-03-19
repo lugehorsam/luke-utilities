@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine.UI;
 using UnityEngine;
+using Datum;
 
 public class ButtomDatumBehavior<TDatum> : DatumBehavior<TDatum>, IButton
     where TDatum : struct {

@@ -5,7 +5,7 @@ using UnityEngine;
 public static class CSON
 {
     private const string BASH_SCRIPT_PATH = "/Editor/CSON.sh";
-    private const string CSON_PATH = "/Content/";
+    private const string CSON_PATH = "/CSON/";
     private const string JSON_PATH = "/Resources/JSON/";
     private static bool TRANSPILE_ON_PLAY = false;
 
