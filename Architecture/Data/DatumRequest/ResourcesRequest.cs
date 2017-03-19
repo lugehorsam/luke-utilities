@@ -1,14 +1,18 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Datum
 {
     public class ResourcesRequest<TDatum> : DatumRequest<TDatum>
     {
         private readonly ResourceRequest request;
+        private readonly string pathFromResources;
 
         public ResourcesRequest(string pathFromResources)
         {
             request = Resources.LoadAsync<TextAsset>(pathFromResources);
+            this.pathFromResources = pathFromResources;
         }
 
         public override bool RequestIsDone()
@@ -20,7 +24,15 @@ namespace Datum
         {
             Object asset = request.asset;
             TextAsset textAsset = asset as TextAsset;
-            return textAsset.text;
+            try
+            {
+                return textAsset.text;
+            }
+            catch (NullReferenceException e)
+            {
+               Diagnostics.Report("Could not found text asset at path " + pathFromResources);
+               return "";
+            }
         }
     }
 }

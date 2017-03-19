@@ -1,10 +1,11 @@
-﻿using UnityEditor;
+﻿using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 [InitializeOnLoad]
 public static class CSON
 {
-    private const string BASH_SCRIPT_PATH = "/Editor/CSON.sh";
+    private const string BASH_SCRIPT_NAME = "CSON.sh";
     private const string CSON_PATH = "/CSON/";
     private const string JSON_PATH = "/Resources/JSON/";
     private static bool TRANSPILE_ON_PLAY = false;
@@ -25,7 +26,7 @@ public static class CSON
     {
         BashScript script = new BashScript
         (
-            Application.dataPath + BASH_SCRIPT_PATH,
+            IOExtensions.GetFullPathToUnityFile(BASH_SCRIPT_NAME),
             new [] {
                 Application.dataPath + CSON_PATH,
                 Application.dataPath + JSON_PATH
