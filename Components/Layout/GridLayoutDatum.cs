@@ -2,15 +2,15 @@
 using UnityEngine;
 
 [Serializable]
-public class GridLayoutDatum : ISerializationCallbackReceiver {
+public class GridLayoutDatum<T> : ISerializationCallbackReceiver where T : GridMemberDatum {
     
-    public ILayoutMember[] GridMemberData
+    public T[] GridMemberData
     {
         get { return gridMemberData; }
     }
     
     [SerializeField]
-    private ILayoutMember[] gridMemberData;
+    private T[] gridMemberData;
 
     [SerializeField]
     private int rows;
@@ -23,11 +23,16 @@ public class GridLayoutDatum : ISerializationCallbackReceiver {
         
     }
     
-    public void OnAfterDeserialize()
+    public virtual void OnAfterDeserialize()
     {
         if (!RowsAndColumnsAreDefined())
         {
             throw new Exception("Rows and columns are not defined!");
+        }
+
+        if (gridMemberData == null)
+        {
+            Diagnostics.LogWarning("Grid member data is null");
         }
     }
        
@@ -45,7 +50,7 @@ public class GridLayoutDatum : ISerializationCallbackReceiver {
         return new int[2]{ RowOfIndex(index), ColOfIndex(index)};
     }
 
-    int[] RowColOf(GridMemberDatum startElement) {
+    int[] RowColOf(global::GridMemberDatum startElement) {
         return ToRowCol (Array.IndexOf (gridMemberData, startElement));
     }
 
@@ -56,4 +61,8 @@ public class GridLayoutDatum : ISerializationCallbackReceiver {
     int ColOfIndex(int index) {
         return index % columns;
     }
+}
+
+public class GridLayoutDatum : GridLayoutDatum<GridMemberDatum>
+{
 }
