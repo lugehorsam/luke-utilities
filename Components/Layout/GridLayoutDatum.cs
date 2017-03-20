@@ -1,16 +1,19 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 [Serializable]
-public class GridLayoutDatum<T> : ISerializationCallbackReceiver where T : GridMemberDatum {
+public class GridLayoutDatum<T> : ISerializationCallbackReceiver where T : GridMemberDatum<T>, new() {
     
     public T[] GridMemberData
     {
         get { return gridMemberData; }
     }
+
+    private T[] gridMemberData;
     
     [SerializeField]
-    private T[] gridMemberData;
+    private T[] elements;
 
     public int Rows
     {
@@ -40,9 +43,27 @@ public class GridLayoutDatum<T> : ISerializationCallbackReceiver where T : GridM
             throw new Exception("Rows and columns are not defined!");
         }
 
-        if (gridMemberData == null)
+        if (elements == null)
         {
-            Diagnostics.LogWarning("Grid member data is null");
+            Diagnostics.LogWarning("Elements is null");
+        }
+        
+        SetMemberDataFromSerializedElements();
+    }
+
+    void SetMemberDataFromSerializedElements()
+    {
+        int maxIndex = ToIndex(rows, columns);
+        gridMemberData = new T[maxIndex + 1];
+        for (int i = 0; i <= maxIndex; i++)
+        {
+            bool serializedContainsIndex = gridMemberData.Any(member => member.Index == i);
+            if (!serializedContainsIndex)
+            {
+                gridMemberData[i] = new T();
+                gridMemberData[i].Grid = this;
+                gridMemberData[i].Index = i;
+            }
         }
     }
        
@@ -60,15 +81,15 @@ public class GridLayoutDatum<T> : ISerializationCallbackReceiver where T : GridM
         return new int[2]{ RowOfIndex(index), ColOfIndex(index)};
     }
 
-    int[] RowColOf(global::GridMemberDatum startElement) {
+    int[] RowColOf(GridMemberDatum<T> startElement) {
         return ToRowCol (Array.IndexOf (gridMemberData, startElement));
     }
 
-    int RowOfIndex(int index) {
+    public int RowOfIndex(int index) {
         return (int) Mathf.Floor (index / rows);
     }
 
-    int ColOfIndex(int index) {
+    public int ColOfIndex(int index) {
         return index % columns;
     }
 }

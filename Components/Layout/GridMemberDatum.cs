@@ -2,22 +2,27 @@
 using UnityEngine;
 
 [Serializable]
-public class GridMemberDatum : IComparable<GridMemberDatum>
+public class GridMemberDatum<T> : IComparable<GridMemberDatum<T>> where T : GridMemberDatum<T>, new()
 {
-    public GridLayoutDatum<GridMemberDatum> Grid { get; set; }
+    public GridLayoutDatum<T> Grid { get; set; }
 
     public int Index
     {
         get { return Grid.ToIndex(row, column); }
+        set
+        {
+            row = Grid.RowOfIndex(value);
+            column = Grid.ColOfIndex(value);
+        }
     }
-
+    
     [SerializeField]
     private int row;
 
     [SerializeField]
     private int column;
 
-    public int CompareTo(GridMemberDatum otherDatum)
+    public int CompareTo(GridMemberDatum<T> otherDatum)
     {
         return Index.CompareTo(otherDatum.Index);
     }

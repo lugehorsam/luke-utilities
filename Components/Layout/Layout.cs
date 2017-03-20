@@ -14,6 +14,7 @@ public abstract class Layout
     public Layout()
     {
         gameObject = new GameObject();
+        gameObject.name = "Layout";
         layoutMembers.OnAdd += HandleLayoutMemberAdd;
         layoutMembers.OnRemove += (member, index) => DoLayout();
     }

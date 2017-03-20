@@ -3,7 +3,7 @@
 /// <summary>
 /// Arbitrary grid layout. Bototm left is row 0, col 0
 /// </summary>
-public class GridLayout<T> : Layout where T : GridMemberDatum {
+public class GridLayout<T> : Layout where T : GridMemberDatum<T>, new() {
 
     private int columns;
     private int rows;
