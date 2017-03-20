@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
-using System;
-using Datum;
 
 /// <summary>
 /// Arbitrary grid layout. Bototm left is row 0, col 0
 /// </summary>
-public class GridLayout : Layout {
+public class GridLayout<T> : Layout where T : GridMemberDatum {
 
     private int columns;
     private int rows;
+
+    public GridLayout(GridLayoutDatum<T> layoutDatum)
+    {
+        columns = layoutDatum.Columns;
+        rows = layoutDatum.Rows;
+    }
 
     protected override Vector2 GetIdealLocalPosition(ILayoutMember behavior)
     {

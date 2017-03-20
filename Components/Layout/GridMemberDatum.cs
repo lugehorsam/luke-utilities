@@ -4,7 +4,7 @@ using UnityEngine;
 [Serializable]
 public class GridMemberDatum : IComparable<GridMemberDatum>
 {
-    public GridLayoutDatum Grid { get; set; }
+    public GridLayoutDatum<GridMemberDatum> Grid { get; set; }
 
     public int Index
     {

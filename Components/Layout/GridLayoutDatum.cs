@@ -12,8 +12,18 @@ public class GridLayoutDatum<T> : ISerializationCallbackReceiver where T : GridM
     [SerializeField]
     private T[] gridMemberData;
 
+    public int Rows
+    {
+        get { return rows; }
+    }
+    
     [SerializeField]
     private int rows;
+
+    public int Columns
+    {
+        get { return columns; }
+    }
 
     [SerializeField]
     private int columns;
@@ -61,8 +71,4 @@ public class GridLayoutDatum<T> : ISerializationCallbackReceiver where T : GridM
     int ColOfIndex(int index) {
         return index % columns;
     }
-}
-
-public class GridLayoutDatum : GridLayoutDatum<GridMemberDatum>
-{
 }
