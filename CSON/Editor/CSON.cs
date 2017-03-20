@@ -1,47 +1,52 @@
-﻿using System.IO;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-[InitializeOnLoad]
-public static class CSON
+namespace Utilities
 {
-    private const string BASH_SCRIPT_NAME = "CSON.sh";
-    private const string CSON_PATH = "/CSON/";
-    private const string JSON_PATH = "/Resources/JSON/";
-    private static bool TRANSPILE_ON_PLAY = false;
-
-    static CSON()
+    [InitializeOnLoad]
+    public static class CSON
     {
-        EditorApplication.playmodeStateChanged += HandlePlaymodeStateChanged;
-    }
+        private const string BASH_SCRIPT_NAME = "CSON.sh";
+        private const string CSON_PATH = "/CSON/";
+        private const string JSON_PATH = "/Resources/JSON/";
+        private static bool TRANSPILE_ON_PLAY = false;
 
-    static void HandlePlaymodeStateChanged()
-    {
-        if (TRANSPILE_ON_PLAY)
-            CSONToJSON();
-    }
-
-    [MenuItem("Assets/CSON To JSON")]
-    public static void CSONToJSON()
-    {
-        BashScript script = new BashScript
-        (
-            IOExtensions.GetFullPathToUnityFile(BASH_SCRIPT_NAME),
-            new [] {
-                Application.dataPath + CSON_PATH,
-                Application.dataPath + JSON_PATH
-            },
-            Application.dataPath
-        );
-
-        try
+        static CSON()
         {
-            script.Run();
+            EditorApplication.playmodeStateChanged += HandlePlaymodeStateChanged;
         }
-        catch (BashScriptException e)
+
+        static void HandlePlaymodeStateChanged()
         {
-            Debug.LogError(e.Message);
+            if (TRANSPILE_ON_PLAY)
+                CSONToJSON();
         }
-        Debug.Log(script.StdOut);
+
+        [MenuItem("Assets/CSON To JSON")]
+        public static void CSONToJSON()
+        {
+            BashScript script = new BashScript
+            (
+                IOExtensions.GetFullPathToUnityFile(BASH_SCRIPT_NAME),
+                new [] {
+                    Application.dataPath + CSON_PATH,
+                    Application.dataPath + JSON_PATH
+                },
+                Application.dataPath
+            );
+
+            try
+            {
+                script.Run();
+            }
+            catch (BashScriptException e)
+            {
+                Debug.LogError(e.Message);
+            }
+            Debug.Log(script.StdOut);
+        }
     }
+
+    
+
 }

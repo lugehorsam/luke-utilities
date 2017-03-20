@@ -2,10 +2,15 @@
 using UnityEngine;
 
 [Serializable]
-public class GridLayoutDatum : ISerializationCallbackReceiver
-{
+public class GridLayoutDatum : ISerializationCallbackReceiver {
+    
+    public ILayoutMember[] GridMemberData
+    {
+        get { return gridMemberData; }
+    }
+    
     [SerializeField]
-    private GridMemberDatum[] gridMemberData;
+    private ILayoutMember[] gridMemberData;
 
     [SerializeField]
     private int rows;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Datum
 {
-    public class DatumBehavior<TDatum> {
+    public class DatumBehavior<TDatum> : IGameObject {
 
         public event Action<TDatum, TDatum> OnDataChanged = (d1, d2) => { };
 
@@ -12,7 +12,7 @@ namespace Datum
             {
                 TDatum oldData = datum;
                 datum = value;
-                HandleDataUpdate (oldData, datum);
+                HandleAfterDatumUpdate (oldData, datum);
                 OnDataChanged (oldData, datum);
             }
             get {
@@ -33,6 +33,6 @@ namespace Datum
             GameObject = new GameObject();
         }
     
-        protected virtual void HandleDataUpdate (TDatum oldData, TDatum newData) {}
+        protected virtual void HandleAfterDatumUpdate (TDatum oldData, TDatum newData) {}
     }
 }

@@ -4,8 +4,9 @@ using System.Linq;
 
 namespace Datum
 {
-    public class BehaviorManager<TDatum, TBehavior>
-        where TBehavior : DatumBehavior<TDatum> {
+    public class DatumBehaviorManager<TDatum, TBehavior>
+        where TBehavior : DatumBehavior<TDatum>
+    {
 
         public ObservableList<TDatum> Data
         {
@@ -14,19 +15,25 @@ namespace Datum
 
         readonly ObservableList<TDatum> data = new ObservableList<TDatum>();
 
-        public ReadOnlyCollection<TBehavior> Behaviors {
-            get {
+        public ReadOnlyCollection<TBehavior> Behaviors
+        {
+            get
+            {
                 return new ReadOnlyCollection<TBehavior>(behaviorPool.ReleasedObjects
-                    .OrderBy((behavior) => data.IndexOf(behavior.Datum))
+                    .OrderBy(behavior => data.IndexOf(behavior.Datum))
                     .ToList());
             }
         }
 
         protected ObjectPool<TBehavior> behaviorPool;
 
-        public BehaviorManager(Func<TBehavior> factory)
+        public event Action<TBehavior> OnBehaviorAdded = (behavior) => { };
+        public event Action<TBehavior> OnBehaviorRemoved = (behavior) => { };
+
+
+        public DatumBehaviorManager(Func<TBehavior> factory)
         {
-            behaviorPool = new ObjectPool<TBehavior>(factory, 10);
+            behaviorPool = new GameObjectPool<TBehavior>(factory, 10);
             data.OnAdd += HandleAddDatum;
             data.OnRemove += HandleRemoveDatum;
         }
@@ -52,6 +59,7 @@ namespace Datum
             behavior.Datum = newDatum;
             AddHandlers (behavior);
             HandleNewBehavior (behavior);
+            OnBehaviorAdded(behavior);
         }
 
         void HandleRemoveDatum (TDatum oldDatum, int oldDatumIndex)
@@ -60,6 +68,8 @@ namespace Datum
             RemoveHandlers (behaviorToPool);
             behaviorPool.Pool (behaviorToPool);
             HandleRemovedBehavior (behaviorToPool);
+            OnBehaviorRemoved(behaviorToPool);
+
         }
     }
 }

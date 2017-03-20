@@ -1,14 +1,14 @@
-﻿using UnityEngine;
-/**
-namespace Utilities
-{
-    public class GameObjectPool<T> : ObjectPool<T> where T : IGameObject {
+﻿using System;
 
+namespace Datum {
+    
+    public class GameObjectPool<T> : ObjectPool<T> where T : IGameObject
+    {
         public GameObjectPool(Func<T> factory,
             int initialSize,
             bool allowResize = true) : base(() =>
             {
-                T instance = new T();
+                T instance = factory();
                 instance.GameObject.SetActive(false);
                 return instance;
             },
@@ -39,4 +39,3 @@ namespace Utilities
         }
     }
 }
-**/

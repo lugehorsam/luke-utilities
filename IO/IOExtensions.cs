@@ -1,48 +1,50 @@
-﻿using System.IO;
+﻿using UnityEngine;
+using System.IO;
 using System.Collections.Generic;
-using System;
-using UnityEngine;
 
-public static class IOExtensions 
+namespace Utilities
 {
-    public static string[] GetAllFilesRecursive(string path)
+    public static class IOExtensions 
     {
-        List<string> paths = new List<string>();
-        DirSearch(paths, path);
-        return paths.ToArray();
-    }
+        public static string[] GetAllFilesRecursive(string path)
+        {
+            List<string> paths = new List<string>();
+            DirSearch(paths, path);
+            return paths.ToArray();
+        }
     
-    static void DirSearch(List<string> listFilesFound, string sDir) 
-    {
-        try
+        static void DirSearch(List<string> listFilesFound, string sDir) 
         {
-            foreach (string d in Directory.GetDirectories(sDir)) 
+            try
             {
-                foreach (string f in Directory.GetFiles(d)) 
+                foreach (string d in Directory.GetDirectories(sDir)) 
                 {
-                    listFilesFound.Add(f);
+                    foreach (string f in Directory.GetFiles(d)) 
+                    {
+                        listFilesFound.Add(f);
+                    }
+                    DirSearch(listFilesFound, d);
                 }
-                DirSearch(listFilesFound, d);
             }
-        }
-        catch (System.Exception excpt) 
-        {
-            Console.WriteLine(excpt.Message);
-        }
-    }
-
-    public static string GetFullPathToUnityFile(string fileName)
-    {
-        string [] paths = GetAllFilesRecursive(Application.dataPath);
-
-        foreach (var path in paths)
-        {
-            if (Path.GetFileName(path) == fileName)
+            catch (System.Exception excpt) 
             {
-                return path;
+                Diagnostics.Report(excpt.Message);
             }
         }
 
-        throw new Exception("Couldn't find Unity file: " + fileName);
+        public static string GetFullPathToUnityFile(string fileName)
+        {
+            string [] paths = GetAllFilesRecursive(Application.dataPath);
+
+            foreach (var path in paths)
+            {
+                if (Path.GetFileName(path) == fileName)
+                {
+                    return path;
+                }
+            }
+
+            throw new System.Exception("Couldn't find Unity file: " + fileName);
+        }
     }
 }

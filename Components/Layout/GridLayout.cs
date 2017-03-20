@@ -5,31 +5,16 @@ using Datum;
 /// <summary>
 /// Arbitrary grid layout. Bototm left is row 0, col 0
 /// </summary>
-public abstract class GridLayout<TDatum, TBehavior> : Layout<TDatum, TBehavior>
-    where TDatum : GridMemberDatum
-    where TBehavior : DatumBehavior<TDatum>, ILayoutMember {
+public class GridLayout : Layout {
 
-    [SerializeField]
-    int rows;
+    private int columns;
+    private int rows;
 
-    [SerializeField]
-    int cols;
-
-    [SerializeField]
-    float rowSpacing;
-
-    [SerializeField]
-    float colSpacing;
-
-    public GridLayout(Func<TBehavior> factory) : base(factory)
+    protected override Vector2 GetIdealLocalPosition(ILayoutMember behavior)
     {
-    }
-
-    protected override Vector2 GetIdealLocalPosition(TBehavior behavior)
-    {
-        int behaviorIndex = Behaviors.IndexOf(behavior);
-        int row = behaviorIndex % cols;
-        int col = behaviorIndex / cols;
-        return new Vector2(row * rowSpacing, col * colSpacing);
+        int behaviorIndex = LayoutMembers.IndexOf(behavior);
+        int row = behaviorIndex % columns;
+        int col = behaviorIndex / columns;
+        return new Vector2(row * 1, col * 1);
     }
 }
