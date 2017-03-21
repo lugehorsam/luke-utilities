@@ -44,6 +44,7 @@ namespace Utilities
                 Debug.LogError(e.Message);
             }
             Debug.Log(script.StdOut);
+            AssetDatabase.Refresh();
         }
     }
 

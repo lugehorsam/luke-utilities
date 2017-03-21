@@ -47,6 +47,6 @@ public class BashScript
         if (!String.IsNullOrEmpty(stdError))
         {
             throw new BashScriptException(this);
-        }
+        }        
     }
 }

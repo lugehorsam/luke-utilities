@@ -21,7 +21,11 @@ public abstract class Layout
 
     public void AddLayoutMember(ILayoutMember layoutMember)
     {
-        layoutMember.GameObject.transform.SetParent(gameObject.transform);
+        if (layoutMember != null)
+        {
+            layoutMember.GameObject.transform.SetParent(gameObject.transform);
+        }
+        layoutMembers.Add(layoutMember);
         DoLayout();
     }
 
@@ -39,6 +43,8 @@ public abstract class Layout
         for (int i = 0; i < layoutMembers.Count; i++) 
         {
             ILayoutMember behavior = layoutMembers [i];
+            if (behavior == null)
+                continue;
             behavior.GameObject.transform.SetSiblingIndex (i);
             behavior.OnLocalLayout(GetIdealLocalPosition(behavior));          
         }
