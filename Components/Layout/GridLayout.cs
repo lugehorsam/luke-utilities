@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// Arbitrary grid layout. Bototm left is row 0, col 0
+/// Arbitrary grid layout. Bottom left is row 0, col 0
 /// </summary>
-public class GridLayout<T> : Layout where T : GridMemberDatum<T>, new() {
+public class GridLayout : Layout {
 
-    private int columns;
-    private int rows;
+    private readonly int columns;
+    private readonly int rows;
 
-    public GridLayout(GridLayoutDatum<T> layoutDatum)
+    public GridLayout(int rows, int columns)
     {
-        columns = layoutDatum.Columns;
-        rows = layoutDatum.Rows;
+        this.rows = rows;
+        this.columns = columns;
     }
 
     protected override Vector2 GetIdealLocalPosition(ILayoutMember behavior)

@@ -1,10 +1,11 @@
 ﻿using System;
 using UnityEngine;
+using Utilities;
 
 [Serializable]
-public class GridMemberDatum<T> : IComparable<GridMemberDatum<T>> where T : GridMemberDatum<T>, new()
+public class GridMember<T> : IGridMember<T>, IComparable<GridMember<T>> where T : GridMember<T>, new()
 {
-    public GridLayoutDatum<T> Grid { get; set; }
+    public Grid<T> Grid { get; set; }
 
     public int Index
     {
@@ -22,8 +23,8 @@ public class GridMemberDatum<T> : IComparable<GridMemberDatum<T>> where T : Grid
     [SerializeField]
     private int column;
 
-    public int CompareTo(GridMemberDatum<T> otherDatum)
+    public int CompareTo(GridMember<T> other)
     {
-        return Index.CompareTo(otherDatum.Index);
+        return Index.CompareTo(other.Index);
     }
 }

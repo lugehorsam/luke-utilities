@@ -1,34 +1,42 @@
-﻿using Datum;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 public abstract class Layout
 {
-    public ObservableList<ILayoutMember> LayoutMembers
-    {
-        get { return layoutMembers; }
-    }
-    
-    private readonly ObservableList<ILayoutMember> layoutMembers = new ObservableList<ILayoutMember>();
     private readonly GameObject gameObject;
+
+    public ReadOnlyCollection<ILayoutMember> LayoutMembers
+    {
+        get { return new ReadOnlyCollection<ILayoutMember>(layoutMembers); }
+    }
+
+    private readonly List<ILayoutMember> layoutMembers = new List<ILayoutMember>();
     
     public Layout()
     {
         gameObject = new GameObject();
         gameObject.name = "Layout";
-        layoutMembers.OnAdd += HandleLayoutMemberAdd;
-        layoutMembers.OnRemove += (member, index) => DoLayout();
     }
 
-    void HandleLayoutMemberAdd(ILayoutMember layoutMember)
+    public void AddLayoutMember(ILayoutMember layoutMember)
     {
         layoutMember.GameObject.transform.SetParent(gameObject.transform);
         DoLayout();
     }
-    
-    
-    public void DoLayout (int startIndex = 0)
+
+    public void AddLayoutMembers(IList<ILayoutMember> layoutMembers)
     {
-        for (int i = startIndex; i < layoutMembers.Count; i++) 
+        foreach (var member in layoutMembers)
+        {
+            layoutMembers.Add(member);
+        }
+        DoLayout();
+    }
+    
+    public void DoLayout ()
+    {
+        for (int i = 0; i < layoutMembers.Count; i++) 
         {
             ILayoutMember behavior = layoutMembers [i];
             behavior.GameObject.transform.SetSiblingIndex (i);
