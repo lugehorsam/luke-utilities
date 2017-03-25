@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,18 +40,29 @@ namespace Utilities
 
             foreach (var path in paths)
             {
-                if (Path.GetFileName(path) == fileName)
+                string file = Path.GetFileName(path);
+                if (file == fileName)
                 {
                     return path;
                 }
             }
 
-            throw new System.Exception("Couldn't find Unity file: " + fileName);
+            throw new Exception("Couldn't find filename in Unity: " + fileName);
         }
 
         public static string GetPathToDirectoryFromAssets(string directoryName)
         {
-            return Directory.GetFiles(Application.dataPath, directoryName, SearchOption.AllDirectories).First();
+            Diagnostics.Log(Directory.GetDirectories(Application.dataPath, directoryName, SearchOption.AllDirectories).ToFormattedString());
+            return Directory.GetDirectories(Application.dataPath, directoryName, SearchOption.AllDirectories)
+                .First();
+            try
+            {
+
+            }
+            catch (InvalidOperationException)
+            {
+                throw new Exception("Could not find files in directory " + directoryName + " from assets");
+            }            
         }
     }
 }

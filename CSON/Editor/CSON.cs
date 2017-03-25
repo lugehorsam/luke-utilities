@@ -20,15 +20,16 @@ namespace Utilities
         [MenuItem("Assets/CSON To JSON")]
         public static void CSONToJSON()
         {  
-            string csonConfigPath = AssetDatabase.FindAssets("t:CSONConfig").First();
+            string csonConfigPath = AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets("t:CSONConfig").First());
+            Diagnostics.Log("cson config path is " + csonConfigPath);
             CSONConfig csonConfig = AssetDatabase.LoadAssetAtPath<CSONConfig>(csonConfigPath);
 
             string bashScriptName = csonConfig.BashScriptName;
             string csonDirectoryName = csonConfig.CsonDirectoryName;
             string jsonDirectoryName = csonConfig.JsonDirectoryName;
 
-            string csonDirectoryPath = IOExtensions.GetPathToDirectoryFromAssets(csonDirectoryName);
-            string jsonDirectoryPath = IOExtensions.GetPathToDirectoryFromAssets(jsonDirectoryName);
+            string csonDirectoryPath = IOExtensions.GetPathToDirectoryFromAssets(csonDirectoryName) + "/";
+            string jsonDirectoryPath = IOExtensions.GetPathToDirectoryFromAssets(jsonDirectoryName) + "/";
 
             BashScript script = new BashScript
             (
