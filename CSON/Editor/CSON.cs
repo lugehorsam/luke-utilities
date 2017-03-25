@@ -1,16 +1,12 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using System.Linq;
 
 namespace Utilities
 {
     [InitializeOnLoad]
     public static class CSON
-    {
-        private const string BASH_SCRIPT_NAME = "CSON.sh";
-        private const string CSON_PATH = "/CSON/";
-        private const string JSON_PATH = "/Resources/JSON/";
-        private static bool TRANSPILE_ON_PLAY = false;
-
+    {        
         static CSON()
         {
             EditorApplication.playmodeStateChanged += HandlePlaymodeStateChanged;
@@ -18,19 +14,28 @@ namespace Utilities
 
         static void HandlePlaymodeStateChanged()
         {
-            if (TRANSPILE_ON_PLAY)
-                CSONToJSON();
+            CSONToJSON();
         }
 
         [MenuItem("Assets/CSON To JSON")]
         public static void CSONToJSON()
-        {
+        {  
+            string csonConfigPath = AssetDatabase.FindAssets("t:CSONConfig").First();
+            CSONConfig csonConfig = AssetDatabase.LoadAssetAtPath<CSONConfig>(csonConfigPath);
+
+            string bashScriptName = csonConfig.BashScriptName;
+            string csonDirectoryName = csonConfig.CsonDirectoryName;
+            string jsonDirectoryName = csonConfig.JsonDirectoryName;
+
+            string csonDirectoryPath = IOExtensions.GetPathToDirectoryFromAssets(csonDirectoryName);
+            string jsonDirectoryPath = IOExtensions.GetPathToDirectoryFromAssets(jsonDirectoryName);
+
             BashScript script = new BashScript
             (
-                IOExtensions.GetFullPathToUnityFile(BASH_SCRIPT_NAME),
+                IOExtensions.GetFullPathToUnityFile(bashScriptName),
                 new [] {
-                    Application.dataPath + CSON_PATH,
-                    Application.dataPath + JSON_PATH
+                    csonDirectoryPath,
+                    jsonDirectoryPath
                 },
                 Application.dataPath
             );
@@ -43,11 +48,8 @@ namespace Utilities
             {
                 Debug.LogError(e.Message);
             }
+            
             Debug.Log(script.StdOut);
-            AssetDatabase.Refresh();
         }
     }
-
-    
-
 }

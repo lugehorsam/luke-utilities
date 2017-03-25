@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Utilities
 {
@@ -45,6 +46,11 @@ namespace Utilities
             }
 
             throw new System.Exception("Couldn't find Unity file: " + fileName);
+        }
+
+        public static string GetPathToDirectoryFromAssets(string directoryName)
+        {
+            return Directory.GetFiles(Application.dataPath, directoryName, SearchOption.AllDirectories).First();
         }
     }
 }
