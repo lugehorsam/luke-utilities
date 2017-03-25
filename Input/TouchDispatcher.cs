@@ -1,91 +1,93 @@
-﻿using UnityEngine;
-using System;
-using System.Collections.ObjectModel;
-
-public class TouchDispatcher : MonoBehaviour
+﻿namespace Utilities.Input
 {
-    new Collider collider;
+    using UnityEngine;
+    using System;
 
-    public event Action<TouchDispatcher, Gesture> OnTouch = (arg1, arg2) => { };
-    public event Action<TouchDispatcher, Gesture> OnHold = (arg1, arg2) => { };
-    public event Action<TouchDispatcher, Gesture> OnRelease = (arg1, arg2) => { };
-    public event Action<TouchDispatcher, Gesture> OnDrag = (arg1, arg2) => { };
-    public event Action<TouchDispatcher, Gesture> OnDragLeave = (arg1, arg2) => { };
-
-    protected virtual void HandleOnTouch(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
-    protected virtual void HandleOnHold(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
-    protected virtual void HandleOnRelease(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
-    protected virtual void HandleOnDrag(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
-    protected virtual void HandleOnDragLeave(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
-
-    protected Gesture currentGesture;
-
-    void Awake()
+    public class TouchDispatcher : MonoBehaviour
     {
-        collider = GetComponent<Collider>();
-    }
+        new Collider collider;
 
-    void Update()
-    {
-        bool mouseIsDown = Input.GetMouseButton(0);
-        bool mouseWasDown = currentGesture != null;
+        public event Action<TouchDispatcher, Gesture> OnTouch = (arg1, arg2) => { };
+        public event Action<TouchDispatcher, Gesture> OnHold = (arg1, arg2) => { };
+        public event Action<TouchDispatcher, Gesture> OnRelease = (arg1, arg2) => { };
+        public event Action<TouchDispatcher, Gesture> OnDrag = (arg1, arg2) => { };
+        public event Action<TouchDispatcher, Gesture> OnDragLeave = (arg1, arg2) => { };
 
-        RaycastHit? hitInfo = GetHitInfo(Input.mousePosition);
+        protected virtual void HandleOnTouch(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
+        protected virtual void HandleOnHold(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
+        protected virtual void HandleOnRelease(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
+        protected virtual void HandleOnDrag(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
+        protected virtual void HandleOnDragLeave(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
 
-        bool firstTouch = !mouseWasDown && mouseIsDown;
-        bool hold = mouseWasDown && mouseIsDown;
-        bool release = mouseWasDown && !mouseIsDown;
-        bool drag = hold && currentGesture.MousePositionCurrent != currentGesture.MousePositionLast;
-        if (firstTouch)
+        protected Gesture currentGesture;
+
+        void Awake()
         {
-            currentGesture = new Gesture();
-            HandleOnTouch(this, currentGesture);
-            OnTouch(this, currentGesture);
+            collider = GetComponent<Collider>();
         }
 
-        if (firstTouch || hold)
+        void Update()
         {
-            GestureFrame gestureFrame = new GestureFrame(Input.mousePosition, hitInfo);
-            currentGesture.AddGestureFrame(gestureFrame);
-            HandleOnHold(this, currentGesture);
-            OnHold(this, currentGesture);
-        }
+            bool mouseIsDown = Input.GetMouseButton(0);
+            bool mouseWasDown = currentGesture != null;
 
+            RaycastHit? hitInfo = GetHitInfo(Input.mousePosition);
 
-        if (drag)
-        {
-            HandleOnDrag(this, currentGesture);
-            OnDrag(this, currentGesture);
-            bool collisionLastFrame = currentGesture.LastFrame.Value.HitForCollider(collider).HasValue;
-            bool collisionThisFrame = currentGesture.CurrentFrame.HitForCollider(collider).HasValue;
-
-            if (collisionLastFrame && !collisionThisFrame)
+            bool firstTouch = !mouseWasDown && mouseIsDown;
+            bool hold = mouseWasDown && mouseIsDown;
+            bool release = mouseWasDown && !mouseIsDown;
+            bool drag = hold && currentGesture.MousePositionCurrent != currentGesture.MousePositionLast;
+            if (firstTouch)
             {
-                HandleOnDragLeave(this, currentGesture);
-                OnDragLeave(this, currentGesture);
+                currentGesture = new Gesture();
+                HandleOnTouch(this, currentGesture);
+                OnTouch(this, currentGesture);
             }
-        }
 
-        if (release)
-        {
-            HandleOnRelease(this, currentGesture);
-            OnRelease(this, currentGesture);
-            currentGesture = null;
-        }    
-    }
-
-    RaycastHit? GetHitInfo(Vector3 mousePosition)
-    {
-        Vector3 origin = Camera.main.ScreenToWorldPoint(mousePosition);
-        RaycastHit[] hits = Physics.RaycastAll(origin, Vector3.forward, 100f);
-        for (int i = 0; i < hits.Length; i++)
-        {
-            RaycastHit hit = hits[i];
-            if (hit.collider == collider)
+            if (firstTouch || hold)
             {
-                return hit;
+                GestureFrame gestureFrame = new GestureFrame(Input.mousePosition, hitInfo);
+                currentGesture.AddGestureFrame(gestureFrame);
+                HandleOnHold(this, currentGesture);
+                OnHold(this, currentGesture);
             }
+
+
+            if (drag)
+            {
+                HandleOnDrag(this, currentGesture);
+                OnDrag(this, currentGesture);
+                bool collisionLastFrame = currentGesture.LastFrame.Value.HitForCollider(collider).HasValue;
+                bool collisionThisFrame = currentGesture.CurrentFrame.HitForCollider(collider).HasValue;
+
+                if (collisionLastFrame && !collisionThisFrame)
+                {
+                    HandleOnDragLeave(this, currentGesture);
+                    OnDragLeave(this, currentGesture);
+                }
+            }
+
+            if (release)
+            {
+                HandleOnRelease(this, currentGesture);
+                OnRelease(this, currentGesture);
+                currentGesture = null;
+            }    
         }
-        return null;
+
+        RaycastHit? GetHitInfo(Vector3 mousePosition)
+        {
+            Vector3 origin = Camera.main.ScreenToWorldPoint(mousePosition);
+            RaycastHit[] hits = Physics.RaycastAll(origin, Vector3.forward, 100f);
+            for (int i = 0; i < hits.Length; i++)
+            {
+                RaycastHit hit = hits[i];
+                if (hit.collider == collider)
+                {
+                    return hit;
+                }
+            }
+            return null;
+        }
     }
 }

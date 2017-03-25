@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProperty, TComponent>
     where TProperty : struct
@@ -21,6 +20,13 @@ public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProp
     public event Action<LerpBinding<TProperty, TComponent>> OnLerp = (binding) => { };
 
     readonly EnumeratorQueue<IEnumerator> lerpQueue = new EnumeratorQueue<IEnumerator>();
+
+    private readonly MonoBehaviour coroutineRunner;
+
+    protected LerpBinding(MonoBehaviour coroutineRunner, GameObject gameObject) : base(gameObject)
+    {
+        this.coroutineRunner = coroutineRunner;
+    }
 
     public abstract Func<TProperty, TProperty, TProperty> GetRandomizeDelegate ();
     public abstract TProperty AddProperty (TProperty property1, TProperty property2);
@@ -80,7 +86,7 @@ public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProp
     void ActivateQueueIfNeeded ()
     {
         if (lerpQueue.Current != null && lerpOnEnqueue) {
-            StartCoroutine (lerpQueue);
+            coroutineRunner.StartCoroutine (lerpQueue);
         }
     }
 

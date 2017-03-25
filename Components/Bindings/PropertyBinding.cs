@@ -2,18 +2,19 @@
 using System;
 
 [Serializable]
-public abstract class PropertyBinding<TProperty, TComponent> : MonoBehaviour
+public abstract class PropertyBinding<TProperty, TComponent>
     where TComponent : Component {
 
-    public TComponent Component {
-        get {
-            return component;
-        }
+    protected TComponent Component { get; private set; }
+    protected GameObject GameObject { get; private set; }
+
+
+    protected PropertyBinding(GameObject gameObject)
+    {
+        Component = gameObject.AddComponent<TComponent>();
+        GameObject = gameObject;
     }
-
-    [SerializeField]
-    TComponent component;
-
+    
     public abstract TProperty GetProperty();
     public abstract void SetProperty(TProperty property);
 

@@ -1,10 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿namespace Utilities.Input
+{
+    public interface ITouchDispatcher {
 
-public interface ITouchDispatcher {
-
-    TouchDispatcher TouchDispatcher
-    {
-        get;
-    }
+        TouchDispatcher TouchDispatcher
+        {
+            get;
+        }
+    }   
 }

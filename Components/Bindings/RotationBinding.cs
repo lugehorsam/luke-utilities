@@ -6,14 +6,14 @@ public class RotationBinding : Vector3Binding<Transform> {
 
     Vector3? trackedRotation; //single rotation representation for conversion to quaternions
 
-    void Awake()
-    {
-        trackedRotation = transform.localEulerAngles;
+    protected RotationBinding(MonoBehaviour coroutineRunner, GameObject gameObject) : base(coroutineRunner, gameObject)
+    {        
+        trackedRotation = GameObject.transform.localEulerAngles;
     }
 
     public sealed override void SetProperty(Vector3 rot) {
         trackedRotation = rot;
-        transform.localEulerAngles = trackedRotation.Value;
+        GameObject.transform.localEulerAngles = trackedRotation.Value;
     }
 
     public sealed override Vector3 GetProperty() {

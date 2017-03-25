@@ -4,6 +4,11 @@ using System;
 
 public class PositionBinding : Vector3Binding<Transform> {
 
+    public PositionBinding(MonoBehaviour coroutineRunner, GameObject gameObject) : base(coroutineRunner, gameObject)
+    {
+        
+    }
+    
     public PositionSpace PositionSpace {
         get {
             return positionSpace;
@@ -18,17 +23,17 @@ public class PositionBinding : Vector3Binding<Transform> {
 
     public override void SetProperty(Vector3 position) {
         if (positionSpace == PositionSpace.LocalPosition) {
-            transform.localPosition = position;
+            GameObject.transform.localPosition = position;
         } else {
-            transform.position = position;
+            GameObject.transform.position = position;
         }
     }
   
     public override Vector3 GetProperty() {
         if (positionSpace == PositionSpace.LocalPosition) {
-            return transform.localPosition;
+            return  GameObject.transform.localPosition;
         } else {
-            return transform.position;
+            return  GameObject.transform.position;
         }
     }
 }

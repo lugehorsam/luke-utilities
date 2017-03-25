@@ -1,16 +1,16 @@
 ﻿using System;
 using UnityEngine;
 
-public class LineBinding : PropertyBinding<Vector3, LineRenderer> {
+public class LineBinding : Vector3Binding<LineRenderer> {
 
     [SerializeField]
     Vector3[] linePositions;
 
-    void Awake()
+    public LineBinding(MonoBehaviour coroutineRunner, GameObject gameObject) : base(coroutineRunner, gameObject)
     {
         Component.SetVertexCount(linePositions.Length);
     }
-
+    
     public override void SetProperty(Vector3 position) {
         linePositions [linePositions.Length - 1] = position;
         Vector3[] linePoints = Array.ConvertAll (linePositions, (vector3) => vector3);

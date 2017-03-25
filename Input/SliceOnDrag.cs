@@ -1,9 +1,8 @@
 using UnityEngine;
 using System;
 
-namespace Slicing
+namespace Utilities.Input
 {
-
     [RequireComponent(typeof(TouchDispatcher))]
     public class SliceOnDrag : MonoBehaviour, ISliceable {
 
@@ -48,6 +47,4 @@ namespace Slicing
             }
         }
     }
-
-
 }

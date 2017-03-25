@@ -4,7 +4,10 @@ using System;
 
 [Serializable]
 public class ColorBinding : LerpBinding<Color, Renderer> {
-   
+    
+    public ColorBinding(MonoBehaviour coroutineRunner, GameObject gameObject) : base(coroutineRunner, gameObject)
+    {
+    }   
     public override void SetProperty(Color color) {
         Component.material.color = color;
     }

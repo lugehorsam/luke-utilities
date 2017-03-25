@@ -6,6 +6,11 @@ using System;
 public abstract class Vector3Binding<TComponent> : LerpBinding<Vector3, TComponent>
     where TComponent : Component {
 
+    protected Vector3Binding(MonoBehaviour coroutineRunner, GameObject gameObject) : base(coroutineRunner, gameObject)
+    {
+        
+    }
+
     protected sealed override Func<Vector3, Vector3, float, Vector3> GetLerpDelegate() {
         return Vector3.Lerp;
     }
