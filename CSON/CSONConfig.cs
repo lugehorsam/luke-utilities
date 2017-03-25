@@ -7,20 +7,47 @@ namespace Utilities
         public const string DEFAULT_BASH_SCRIPT_NAME = "CSON.sh";
         public const string DEFAULT_CSON_DIRECTORY_NAME = "CSON";
         public const string DEFAULT_JSON_DIRECTORY_NAME = "JSON";
+
+        public string CSONDirectoryPathFromAssets
+        {
+            get
+            {
+               return IOExtensions.GetPathToDirectoryFromAssets(CsonDirectoryName) + "/";
+            }
+        }
+
+        public string BashScriptPathFromAssets
+        {
+            get
+            {
+                return IOExtensions.GetPathToFileFromAssets(BashScriptName);
+            }
+        }
         
-        public virtual string BashScriptName
+        protected virtual string BashScriptName
         {
             get { return DEFAULT_BASH_SCRIPT_NAME; }
         }
 
-        public virtual string CsonDirectoryName
+        protected virtual string CsonDirectoryName
         {
             get { return DEFAULT_CSON_DIRECTORY_NAME; }
         }
 
-        public virtual string JsonDirectoryName
+        public string JSONDirectoryPathFromAssets
         {
-            get { return DEFAULT_JSON_DIRECTORY_NAME; }
+            get
+            {
+                return IOExtensions.GetPathToDirectoryFromAssets(JsonDirectoryName) + "/";
+            }
+        }
+
+        protected virtual string JsonDirectoryName
+        {
+            get
+            {
+                return DEFAULT_JSON_DIRECTORY_NAME;
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Utilities
             }
         }
 
-        public static string GetFullPathToUnityFile(string fileName)
+        public static string GetPathToFileFromAssets(string fileName)
         {
             string [] paths = GetAllFilesRecursive(Application.dataPath);
 
@@ -52,17 +52,8 @@ namespace Utilities
 
         public static string GetPathToDirectoryFromAssets(string directoryName)
         {
-            Diagnostics.Log(Directory.GetDirectories(Application.dataPath, directoryName, SearchOption.AllDirectories).ToFormattedString());
             return Directory.GetDirectories(Application.dataPath, directoryName, SearchOption.AllDirectories)
-                .First();
-            try
-            {
-
-            }
-            catch (InvalidOperationException)
-            {
-                throw new Exception("Could not find files in directory " + directoryName + " from assets");
-            }            
+                .First();                  
         }
     }
 }
