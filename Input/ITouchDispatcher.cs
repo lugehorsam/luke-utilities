@@ -1,8 +1,8 @@
 ﻿namespace Utilities.Input
 {
-    public interface ITouchDispatcher {
+    public interface ITouchDispatcher<T> {
 
-        TouchDispatcher TouchDispatcher
+        TouchDispatcher<T> TouchDispatcher
         {
             get;
         }

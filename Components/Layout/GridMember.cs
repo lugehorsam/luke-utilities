@@ -10,16 +10,23 @@ public class GridMember<T> : IGridMember<T>, IComparable<GridMember<T>> where T 
     public int Index
     {
         get { return Grid.ToIndex(row, column); }
-        set
-        {
-            row = Grid.RowOfIndex(value);
-            column = Grid.ColOfIndex(value);
-        }
+    }
+
+    public int Row
+    {
+        get { return row; }
+        set { row = value; }
     }
     
     [SerializeField]
     private int row;
 
+    public int Column
+    {
+        get { return column; }
+        set { column = value; }
+    }
+    
     [SerializeField]
     private int column;
 

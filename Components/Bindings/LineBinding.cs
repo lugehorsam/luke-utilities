@@ -1,23 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class LineBinding : Vector3Binding<LineRenderer> {
+public class LineBinding : Vector3Binding<LineRenderer>
+{
 
-    [SerializeField]
-    Vector3[] linePositions;
-
-    public LineBinding(MonoBehaviour coroutineRunner, GameObject gameObject) : base(coroutineRunner, gameObject)
+    private readonly List<Vector3> linePositions;
+    
+    public LineBinding(List<Vector3> initialLinePositions,
+        MonoBehaviour coroutineRunner, GameObject gameObject
+    ) : base(coroutineRunner, gameObject)
     {
-        Component.SetVertexCount(linePositions.Length);
+        Component.SetVertexCount(initialLinePositions.Count);
     }
     
     public override void SetProperty(Vector3 position) {
-        linePositions [linePositions.Length - 1] = position;
-        Vector3[] linePoints = Array.ConvertAll (linePositions, (vector3) => vector3);
-        Component.SetPositions (linePoints);
+        linePositions [linePositions.Count - 1] = position;
+        Component.SetPositions (linePositions.ToArray());
     }
 
     public override Vector3 GetProperty() {
-        return linePositions [linePositions.Length - 1];
+        return linePositions [linePositions.Count - 1];
     }
 }

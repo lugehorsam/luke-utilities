@@ -1,14 +1,14 @@
 using UnityEngine;
 using System.Linq;
 
+/**
 namespace Utilities.Input
 { 
-    [RequireComponent(typeof(TouchDispatcher))]
     public class RotateOnDrag : MonoBehaviour
     {
         Direction faceDirection;
 
-        TouchDispatcher touchDispatcher;
+        TouchDispatcher<T> touchDispatcher;
         new Collider collider;
         new Rigidbody rigidbody;
 
@@ -101,3 +101,4 @@ namespace Utilities.Input
         }
     }
 }
+**/

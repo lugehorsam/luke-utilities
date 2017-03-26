@@ -1,5 +1,6 @@
 using UnityEngine;
 
+/**
 namespace Utilities.Input
 {
     [RequireComponent(typeof(TouchDispatcher))]
@@ -37,3 +38,4 @@ namespace Utilities.Input
         }
     }
 }
+**/

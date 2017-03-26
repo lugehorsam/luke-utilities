@@ -10,7 +10,13 @@ public interface IGridMember<T> where T : IGridMember<T>, new() {
         set;
     }
 
-    int Index
+    int Row
+    {
+        get;
+        set;
+    }
+    
+    int Column
     {
         get;
         set;

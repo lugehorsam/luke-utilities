@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Utilities
 {
     [Serializable]
-    public class Grid<T> where T : IGridMember<T>, new()
+    public class Grid<T> : ISerializationCallbackReceiver where T : IGridMember<T>, new() 
     {   
         public T[] Elements
         {
-            get { return elements; }
+            get { return processedElements; }
         }
 
         private T[] processedElements;
@@ -59,13 +61,20 @@ namespace Utilities
             processedElements = new T[maxIndex + 1];
             for (int i = 0; i <= maxIndex; i++)
             {
-                bool serializedContainsIndex = processedElements.Any(member => member != null && member.Index == i);
-                if (!serializedContainsIndex)
+                int row = ToRowCol(i)[0];
+                int col = ToRowCol(i)[1];
+                
+                T serializedMember = elements.FirstOrDefault(member => member != null && member.Row == row && member.Column == col);
+                
+                if (serializedMember == null)
                 {
-                    processedElements[i] = new T();
-                    processedElements[i].Grid = this;
-                    processedElements[i].Index = i;
+                    serializedMember = new T();
                 }
+
+                serializedMember.Row = row;
+                serializedMember.Column = col;
+                processedElements[i] = serializedMember;
+                processedElements[i].Grid = this;
             }
         }
 
@@ -88,8 +97,14 @@ namespace Utilities
             return new int[2]{ RowOfIndex(index), ColOfIndex(index)};
         }
 
-        int[] RowColOf(T startElement) {
-            return ToRowCol (Array.IndexOf (processedElements, startElement));
+        int[] RowColOf(T startElement)
+        {                
+            int index = Array.IndexOf(processedElements, startElement);
+            if (index < 0)
+            {
+                throw new Exception("Grid does not contain element " + startElement + " , grid " + processedElements.ToFormattedString());
+            }
+            return ToRowCol (index);
         }
 
         public int RowOfIndex(int index) {
@@ -99,5 +114,41 @@ namespace Utilities
         public int ColOfIndex(int index) {
             return index % columns;
         }
+
+        public T[] GetAdjacentElements(T startElement) {
+          
+            List<T> adjacentElements = new List<T> ();
+            int[] rowCol = RowColOf (startElement);
+            int row = rowCol [0];
+            int col = rowCol [1];
+            int leftCol = col - 1;
+            int rightCol = col + 1;
+            int topRow = row + 1;
+            int bottomRow = row - 1;
+
+            if (leftCol >= 0) {
+                adjacentElements.Add (
+                    processedElements[ToIndex(row, leftCol)]
+                );                
+            } 
+
+            if (rightCol < Columns) {
+                adjacentElements.Add (
+                    processedElements[ToIndex(row, rightCol)]
+                );                            
+            }
+
+            if (bottomRow >= 0) {
+                adjacentElements.Add (
+                    processedElements[ToIndex(bottomRow, col)]
+                );                           
+            }
+
+            if (topRow < Rows) {
+                adjacentElements.Add(processedElements[ToIndex(topRow, col)]);
+            }
+
+            return adjacentElements.ToArray();
+        }		
     }
 }
