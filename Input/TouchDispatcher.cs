@@ -56,10 +56,11 @@
 
             RaycastHit? hitInfo = GetHitInfo(Input.mousePosition);
 
-            bool firstTouch = !mouseWasDown && mouseIsDown;
+            bool firstTouch = !mouseWasDown && mouseIsDown && hitInfo.HasValue;
             bool hold = mouseWasDown && mouseIsDown;
             bool release = mouseWasDown && !mouseIsDown;
             bool drag = hold && currentGesture.MousePositionCurrent != currentGesture.MousePositionLast;
+            
             if (firstTouch)
             {
                 currentGesture = new Gesture();

@@ -19,6 +19,11 @@ public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProp
 
     public event Action<LerpBinding<TProperty, TComponent>> OnLerp = (binding) => { };
 
+    public IEnumerator LerpQueue
+    {
+        get { return lerpQueue; }
+    }
+
     readonly EnumeratorQueue<IEnumerator> lerpQueue = new EnumeratorQueue<IEnumerator>();
 
     private readonly MonoBehaviour coroutineRunner;
