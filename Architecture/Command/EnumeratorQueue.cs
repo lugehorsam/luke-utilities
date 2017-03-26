@@ -49,10 +49,13 @@ public class EnumeratorQueue<T> : IEnumerator<T>
         }
 
         if (!currentEnumerator.MoveNext ()) {
+            Diagnostics.Log("can't move next");
             MoveEnumeratorToStack (currentEnumerator);
             return false;
-        }
-
+        } 
+        else 
+            Diagnostics.Log("moved next");
+    
         return true;
     }
 
@@ -99,4 +102,8 @@ public class EnumeratorQueue<T> : IEnumerator<T>
     {
 
     }
+}
+
+public class EnumeratorQueue : EnumeratorQueue<IEnumerator>
+{
 }

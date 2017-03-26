@@ -19,12 +19,12 @@ public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProp
 
     public event Action<LerpBinding<TProperty, TComponent>> OnLerp = (binding) => { };
 
-    public IEnumerator LerpQueue
+    public EnumeratorQueue LerpQueue
     {
         get { return lerpQueue; }
     }
 
-    readonly EnumeratorQueue<IEnumerator> lerpQueue = new EnumeratorQueue<IEnumerator>();
+    readonly EnumeratorQueue lerpQueue = new EnumeratorQueue();
 
     private readonly MonoBehaviour coroutineRunner;
 
@@ -98,12 +98,14 @@ public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProp
     IEnumerator ApplyFiniteLerp (FiniteLerp<TProperty> lerp)
     {
         while (!lerp.HasReachedTargetTime) {
+            Diagnostics.Log("updating lerp");
             TProperty lerpedProperty = lerp.GetLerpedProperty (GetProperty (), GetLerpDelegate());
             SetProperty (lerpedProperty);
             lerp.UpdateTime ();
             OnLerp (this);
             yield return null;
         }
+        Diagnostics.Log("lerp done");
     }
 
     IEnumerator ApplyInfiniteLerp(InfiniteLerp<TProperty> lerp)
