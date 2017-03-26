@@ -8,10 +8,11 @@
         public T DispatchObject
         {
             get;
-            set;
+            private set;
         }
         
-        new Collider collider;
+        private new Collider collider;
+        private new Rigidbody rigidbody;
 
         public event Action<TouchDispatcher<T>, Gesture> OnTouch = (arg1, arg2) => { };
         public event Action<TouchDispatcher<T>, Gesture> OnHold = (arg1, arg2) => { };
@@ -27,13 +28,29 @@
 
         protected Gesture currentGesture;
 
-        void Awake()
-        {
-            collider = GetComponent<Collider>();
-        }
+        public void Init(
+            Vector3 colliderSize,
+            T dispatchObject
+        )
+        {            
+            var boxCollider =  gameObject.AddComponent<BoxCollider>();
+            boxCollider.size = colliderSize;
+            collider = boxCollider;
+            rigidbody = gameObject.AddComponent<Rigidbody>();
+            rigidbody.isKinematic = true;
+            rigidbody.useGravity = false;
+            DispatchObject = dispatchObject;
 
+        }
+        
         void Update()
         {
+            if (collider == null)
+            {
+                Diagnostics.LogWarning("Touch dispatcher added to " + name + " with no collider");
+                return;
+            }           
+           
             bool mouseIsDown = Input.GetMouseButton(0);
             bool mouseWasDown = currentGesture != null;
 

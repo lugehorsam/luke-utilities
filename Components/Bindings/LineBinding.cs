@@ -1,25 +1,41 @@
-﻿using System;
+﻿using Utilities;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class LineBinding : Vector3Binding<LineRenderer>
 {
-
-    private readonly List<Vector3> linePositions;
+    public ObservableList<Vector3> LinePositions
+    {
+        get { return linePositions; }
+    }
     
-    public LineBinding(List<Vector3> initialLinePositions,
+    private readonly ObservableList<Vector3> linePositions = new ObservableList<Vector3>();
+    
+    public LineBinding(
         MonoBehaviour coroutineRunner, GameObject gameObject
     ) : base(coroutineRunner, gameObject)
     {
-        Component.SetVertexCount(initialLinePositions.Count);
-    }
+        linePositions.OnAdd += HandlePositionAdd;
+        linePositions.OnRemove += HandlePositionRemove;
+    }    
     
-    public override void SetProperty(Vector3 position) {
+    public override void SetProperty(Vector3 position)
+    {
         linePositions [linePositions.Count - 1] = position;
-        Component.SetPositions (linePositions.ToArray());
     }
 
-    public override Vector3 GetProperty() {
+    public override Vector3 GetProperty() 
+    {
         return linePositions [linePositions.Count - 1];
+    }
+
+    void HandlePositionAdd(Vector3 point)
+    {
+        Component.SetPositions (linePositions.ToArray());   
+    }
+
+    void HandlePositionRemove(Vector3 point, int removalIndex)
+    {
+        Component.SetPositions (linePositions.ToArray());   
     }
 }
