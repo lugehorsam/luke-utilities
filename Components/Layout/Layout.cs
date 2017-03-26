@@ -4,6 +4,11 @@ using UnityEngine;
 
 public abstract class Layout
 {
+    public Transform Transform
+    {
+        get { return gameObject.transform; }
+    }
+    
     private readonly GameObject gameObject;
 
     public ReadOnlyCollection<ILayoutMember> LayoutMembers

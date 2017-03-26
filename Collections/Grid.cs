@@ -68,6 +68,7 @@ namespace Utilities
                 
                 if (serializedMember == null)
                 {
+                    Diagnostics.Log("Creating new");
                     serializedMember = new T();
                 }
 
@@ -76,6 +77,8 @@ namespace Utilities
                 processedElements[i] = serializedMember;
                 processedElements[i].Grid = this;
             }
+            
+            Diagnostics.Log("total processed elements is " + processedElements.Length);
         }
 
         public int GetMaxIndex()
