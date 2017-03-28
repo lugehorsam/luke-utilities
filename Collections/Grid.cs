@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace Utilities
 {
     [Serializable]
     public class Grid<T> : ISerializationCallbackReceiver where T : IGridMember<T>, new() 
     {   
-        public T[] Elements
+        public ObservableList<T> Elements
         {
             get { return processedElements; }
         }
 
-        private T[] processedElements;
+        private ObservableList<T> processedElements;
     
         [SerializeField]
         private T[] elements;
@@ -58,7 +57,7 @@ namespace Utilities
         void SetMemberDataFromSerializedElements()
         {
             int maxIndex = GetMaxIndex();
-            processedElements = new T[maxIndex + 1];
+            processedElements = new ObservableList<T>();
             for (int i = 0; i <= maxIndex; i++)
             {
                 int row = ToRowCol(i)[0];
@@ -68,17 +67,14 @@ namespace Utilities
                 
                 if (serializedMember == null)
                 {
-                    Diagnostics.Log("Creating new");
                     serializedMember = new T();
                 }
 
                 serializedMember.Row = row;
                 serializedMember.Column = col;
-                processedElements[i] = serializedMember;
+                processedElements.Add(serializedMember);
                 processedElements[i].Grid = this;
-            }
-            
-            Diagnostics.Log("total processed elements is " + processedElements.Length);
+            }            
         }
 
         public int GetMaxIndex()
@@ -101,8 +97,8 @@ namespace Utilities
         }
 
         int[] RowColOf(T startElement)
-        {                
-            int index = Array.IndexOf(processedElements, startElement);
+        {
+            int index = processedElements.IndexOf(startElement);
             if (index < 0)
             {
                 throw new Exception("Grid does not contain element " + startElement + " , grid " + processedElements.ToFormattedString());

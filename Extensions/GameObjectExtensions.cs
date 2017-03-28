@@ -61,6 +61,11 @@ public static class GameObjectExtensions
     public static T GetOrAddComponent<T>(this GameObject thisGameObject) where T : Component
     {
         T component = thisGameObject.GetComponent<T>();
-        return component ?? thisGameObject.gameObject.AddComponent<T>();
+        
+        if (component == null)
+            component = thisGameObject.AddComponent<T>();
+        
+        Diagnostics.Log("returning " + component);
+        return component;
     }
 }

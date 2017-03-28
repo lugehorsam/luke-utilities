@@ -1,9 +1,14 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Datum
+namespace Utilities
 {
-    public class DatumBehavior<TDatum> : IGameObject {
+    public class View<TDatum> {
+        
+        public GameObject GameObject
+        {
+            get;
+        }
 
         public event Action<TDatum, TDatum> OnDataChanged = (d1, d2) => { };
 
@@ -21,18 +26,13 @@ namespace Datum
         }
 
         TDatum datum;
-
-        public GameObject GameObject
-        {
-            get;
-            private set;
-        }
-
-        public DatumBehavior()
-        {
-            GameObject = new GameObject();
-        }
     
         protected virtual void HandleAfterDatumUpdate (TDatum oldData, TDatum newData) {}
-    }
+
+        public View(TDatum datum)
+        {
+            GameObject = new GameObject();
+            Datum = datum;
+        }
+    }   
 }

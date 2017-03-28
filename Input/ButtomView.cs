@@ -1,9 +1,10 @@
 ﻿using System;
 using UnityEngine.UI;
 using UnityEngine;
-using Datum;
+using Utilities;
 
-public class ButtomDatumBehavior<TDatum> : DatumBehavior<TDatum>, IButton
+/**
+public class ButtomView<TDatum> : View<TDatum>, IButton
     where TDatum : struct {
 
     public event Action<IInput> OnInput
@@ -25,3 +26,4 @@ public class ButtomDatumBehavior<TDatum> : DatumBehavior<TDatum>, IButton
 
     [SerializeField] private Button button;
 }
+**/

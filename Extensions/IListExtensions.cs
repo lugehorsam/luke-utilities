@@ -7,4 +7,10 @@ public static class IListExtensions {
     {
         return thisIList.Select ((item) => otherList.IndexOf (item)).ToList ();
     }
+
+    public static void Replace<T>(this IList<T> thisList, T oldItem, T newItem)
+    {
+        var oldItemIndex = thisList.IndexOf(oldItem);
+        thisList[oldItemIndex] = newItem;
+    }
 }

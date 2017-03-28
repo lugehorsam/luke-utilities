@@ -2,10 +2,9 @@
 using System;
 using System.Collections.Generic;
 
-public class EnumeratorQueue<T> : IEnumerator<T>
-    where T : IEnumerator
+public class EnumeratorQueue : IEnumerator
 {
-    public event Action<T, T> OnNextEnumerator = (oldEnumerator, newEnumerator) => { };
+    public event Action<IEnumerator, IEnumerator> OnNextEnumerator = (oldEnumerator, newEnumerator) => { };
 
     public int Count {
         get {
@@ -13,24 +12,15 @@ public class EnumeratorQueue<T> : IEnumerator<T>
         }
     }
 
-    public T Current
+    public object Current
     {
         get { return currentEnumerator; }
     }
 
-    object IEnumerator.Current
-    {
-        get { return currentEnumerator; }
-    }
+    readonly LinkedList<IEnumerator> nextEnumerators = new LinkedList<IEnumerator>();
+    readonly Stack<IEnumerator> oldEnumerators = new Stack<IEnumerator>();
 
-    T IEnumerator<T>.Current {
-        get { return currentEnumerator; }
-    }
-
-    readonly LinkedList<T> nextEnumerators = new LinkedList<T>();
-    readonly Stack<T> oldEnumerators = new Stack<T>();
-
-    private T currentEnumerator;
+    private IEnumerator currentEnumerator;
 
     public void Dispose()
     {
@@ -51,7 +41,7 @@ public class EnumeratorQueue<T> : IEnumerator<T>
         if (!currentEnumerator.MoveNext ()) {
             Diagnostics.Log("can't move next");
             MoveEnumeratorToStack (currentEnumerator);
-            return false;
+            return MoveNext();
         } 
         else 
             Diagnostics.Log("moved next");
@@ -64,20 +54,34 @@ public class EnumeratorQueue<T> : IEnumerator<T>
         throw new NotImplementedException ();
     }
 
-    public void Add (T enumerator)
+    public void Add (IEnumerator enumerator)
     {
         nextEnumerators.AddLast (enumerator);
     }
 
-    public void AddRange(IEnumerable<T> enumerators)
+    public void Add(Action action)
     {
-        foreach (T enumerator in enumerators)
+        nextEnumerators.AddLast
+        (
+            ActionWrapper(action)
+        );
+    }
+
+    IEnumerator ActionWrapper(Action action)
+    {
+        action();
+        yield return null;
+    }
+
+    public void AddRange(IEnumerable<IEnumerator> enumerators)
+    {
+        foreach (IEnumerator enumerator in enumerators)
         {
             Add(enumerator);
         }
     }
 
-    void MoveEnumeratorToStack (T enumerator)
+    void MoveEnumeratorToStack (IEnumerator enumerator)
     {
         nextEnumerators.RemoveFirst ();
         oldEnumerators.Push (enumerator);
@@ -90,9 +94,9 @@ public class EnumeratorQueue<T> : IEnumerator<T>
         }
     }
 
-    public EnumeratorQueue(IEnumerable<T> collection)
+    public EnumeratorQueue(IEnumerable<IEnumerator> collection)
     {
-        foreach (T item in collection)
+        foreach (IEnumerator item in collection)
         {
             nextEnumerators.AddLast(item);
         }
@@ -102,8 +106,4 @@ public class EnumeratorQueue<T> : IEnumerator<T>
     {
 
     }
-}
-
-public class EnumeratorQueue : EnumeratorQueue<IEnumerator>
-{
 }
