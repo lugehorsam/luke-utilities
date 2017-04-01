@@ -65,7 +65,6 @@ public static class GameObjectExtensions
         if (component == null)
             component = thisGameObject.AddComponent<T>();
         
-        Diagnostics.Log("returning " + component);
         return component;
     }
 }
