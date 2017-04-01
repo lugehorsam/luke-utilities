@@ -98,7 +98,6 @@ public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProp
     IEnumerator ApplyFiniteLerp (FiniteLerp<TProperty> lerp)
     {
         while (!lerp.HasReachedTargetTime) {
-            Diagnostics.Log("updating lerp");
             TProperty lerpedProperty = lerp.GetLerpedProperty (GetProperty (), GetLerpDelegate());
             SetProperty (lerpedProperty);
             lerp.UpdateTime ();

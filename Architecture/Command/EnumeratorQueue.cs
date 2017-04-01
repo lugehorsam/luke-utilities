@@ -39,13 +39,10 @@ public class EnumeratorQueue : IEnumerator
         }
 
         if (!currentEnumerator.MoveNext ()) {
-            Diagnostics.Log("can't move next");
             MoveEnumeratorToStack (currentEnumerator);
             return MoveNext();
         } 
-        else 
-            Diagnostics.Log("moved next");
-    
+            
         return true;
     }
 

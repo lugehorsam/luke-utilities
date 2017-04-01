@@ -3,11 +3,16 @@ using UnityEngine;
 
 namespace Utilities
 {
-    public class View<TDatum> {
+    public abstract class View<TDatum> {
         
         public GameObject GameObject
         {
             get;
+        }
+
+        public Transform Transform
+        {
+            get { return GameObject.GetComponent<Transform>(); }
         }
 
         public event Action<TDatum, TDatum> OnDataChanged = (d1, d2) => { };

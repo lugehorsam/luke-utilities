@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
@@ -14,6 +15,11 @@ namespace Utilities
         }
 
         private ObservableList<T> processedElements;
+
+        public ReadOnlyCollection<T> SerializedElements
+        {
+            get { return new ReadOnlyCollection<T>(elements); }
+        }
     
         [SerializeField]
         private T[] elements;
