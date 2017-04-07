@@ -22,7 +22,7 @@ namespace Utilities
             {
                 TDatum oldData = datum;
                 datum = value;
-                HandleAfterDatumUpdate (oldData, datum);
+                HandleDatumChanged (oldData, datum);
                 OnDataChanged (oldData, datum);
             }
             get {
@@ -32,7 +32,7 @@ namespace Utilities
 
         TDatum datum;
     
-        protected virtual void HandleAfterDatumUpdate (TDatum oldData, TDatum newData) {}
+        protected virtual void HandleDatumChanged (TDatum oldData, TDatum newData) {}
 
         public View(TDatum datum)
         {
