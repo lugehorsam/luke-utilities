@@ -39,5 +39,10 @@ namespace Utilities
             GameObject = new GameObject();
             Datum = datum;
         }
+
+        public override string ToString()
+        {
+            return this.ToString(datum);
+        }
     }   
 }

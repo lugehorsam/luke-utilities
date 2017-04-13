@@ -30,9 +30,9 @@ public static class Diagnostics {
     public static void Report(string message, params string[] formatters)
     {
         if (formatters == null)
-            Debug.LogWarning(message);
+            Debug.LogError(message);
         else
-            Debug.LogWarning(string.Format(message, formatters));
+            Debug.LogError(string.Format(message, formatters));
     }
 
     public static void Report (Exception e)

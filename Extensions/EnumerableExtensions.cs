@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 public static class EnumerableExtensions {
 
@@ -10,7 +11,10 @@ public static class EnumerableExtensions {
 
         string formattedString = "";
         foreach (T item in thisEnumerable) {
-            formattedString += (item.ToString() + ", ");
+            formattedString += (item);
+
+            if (!item.Equals(thisEnumerable.LastOrDefault()))
+                formattedString += ", ";
         }
         return formattedString;
     }
