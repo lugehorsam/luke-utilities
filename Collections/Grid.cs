@@ -9,12 +9,12 @@ namespace Utilities
     [Serializable]
     public class Grid<T> : ISerializationCallbackReceiver where T : IGridMember<T>, new() 
     {   
-        public ObservableList<T> Elements
+        public ObservableList<T> Members
         {
-            get { return processedElements; }
+            get { return processedMembers; }
         }
 
-        private ObservableList<T> processedElements;
+        private ObservableList<T> processedMembers;
 
         public ReadOnlyCollection<T> SerializedElements
         {
@@ -63,7 +63,7 @@ namespace Utilities
         void SetMemberDataFromSerializedElements()
         {
             int maxIndex = GetMaxIndex();
-            processedElements = new ObservableList<T>();
+            processedMembers = new ObservableList<T>();
             for (int i = 0; i <= maxIndex; i++)
             {
                 int row = ToRowCol(i)[0];
@@ -78,8 +78,8 @@ namespace Utilities
 
                 serializedMember.Row = row;
                 serializedMember.Column = col;
-                processedElements.Add(serializedMember);
-                processedElements[i].Grid = this;
+                processedMembers.Add(serializedMember);
+                processedMembers[i].Grid = this;
             }            
         }
 
@@ -104,16 +104,16 @@ namespace Utilities
 
         int[] RowColOf(T startElement)
         {
-            int index = processedElements.IndexOf(startElement);
+            int index = processedMembers.IndexOf(startElement);
             if (index < 0)
             {
-                throw new Exception("Grid does not contain element " + startElement + " , grid " + processedElements.ToFormattedString());
+                throw new Exception("Grid does not contain element " + startElement + " , grid " + processedMembers.ToFormattedString());
             }
             return ToRowCol (index);
         }
 
         public int RowOfIndex(int index) {
-            return (int) Mathf.Floor (index / rows);
+            return (int) Mathf.Floor (index / columns);
         }
 
         public int ColOfIndex(int index) {
@@ -133,24 +133,24 @@ namespace Utilities
 
             if (leftCol >= 0) {
                 adjacentElements.Add (
-                    processedElements[ToIndex(row, leftCol)]
+                    processedMembers[ToIndex(row, leftCol)]
                 );                
             } 
 
             if (rightCol < Columns) {
                 adjacentElements.Add (
-                    processedElements[ToIndex(row, rightCol)]
+                    processedMembers[ToIndex(row, rightCol)]
                 );                            
             }
 
             if (bottomRow >= 0) {
                 adjacentElements.Add (
-                    processedElements[ToIndex(bottomRow, col)]
+                    processedMembers[ToIndex(bottomRow, col)]
                 );                           
             }
 
             if (topRow < Rows) {
-                adjacentElements.Add(processedElements[ToIndex(topRow, col)]);
+                adjacentElements.Add(processedMembers[ToIndex(topRow, col)]);
             }
 
             return adjacentElements.ToArray();

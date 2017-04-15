@@ -104,7 +104,6 @@ public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProp
             OnLerp (this);
             yield return null;
         }
-        Diagnostics.Log("lerp done");
     }
 
     IEnumerator ApplyInfiniteLerp(InfiniteLerp<TProperty> lerp)
