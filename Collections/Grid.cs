@@ -1,88 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using UnityEngine;
 
 namespace Utilities
 {
-    [Serializable]
-    public class Grid<T> : ISerializationCallbackReceiver where T : IGridMember<T>, new() 
+    public class Grid<T> where T : IGridMember<T>
     {   
         public ObservableList<T> Members
         {
-            get { return processedMembers; }
-        }
-
-        private ObservableList<T> processedMembers;
-
-        public ReadOnlyCollection<T> SerializedElements
-        {
-            get { return new ReadOnlyCollection<T>(elements); }
+            get { return members; }
         }
     
-        [SerializeField]
-        private T[] elements;
+        private readonly ObservableList<T> members = new ObservableList<T>();
 
         public int Rows
         {
             get { return rows; }
         }
     
-        [SerializeField]
-        private int rows;
+        int rows;
 
         public int Columns
         {
             get { return columns; }
         }
 
-        [SerializeField]
-        private int columns;
+        protected int columns;
 
-        public void OnBeforeSerialize()
+        public Grid(int rows, int columns)
         {
-        
+            members.OnAdd += HandleMemberAdd;
+            members.OnRemove += HandleMemberRemove;
+            
+            this.rows = rows;
+            this.columns = columns;
+        }
+
+        void HandleMemberAdd(T member)
+        {
+            ValidateMember(member);
+        }
+
+        void HandleMemberRemove(T member, int idx)
+        {
+        }
+
+        void ValidateMember(T member)
+        {
+            if (member.Column >= columns || member.Row >= rows)
+            {
+                throw new Exception(string.Format("Added invalid member {0}", member));
+            }
         }
     
-        public virtual void OnAfterDeserialize()
-        {
-            if (!RowsAndColumnsAreDefined())
-            {
-                throw new Exception("Rows and columns are not defined!");
-            }
-
-            if (elements == null)
-            {
-                Diagnostics.LogWarning("Elements is null");
-            }
-        
-            SetMemberDataFromSerializedElements();
-        }
-
-        void SetMemberDataFromSerializedElements()
-        {
-            int maxIndex = GetMaxIndex();
-            processedMembers = new ObservableList<T>();
-            for (int i = 0; i <= maxIndex; i++)
-            {
-                int row = ToRowCol(i)[0];
-                int col = ToRowCol(i)[1];
-                
-                T serializedMember = elements.FirstOrDefault(member => member != null && member.Row == row && member.Column == col);
-                
-                if (serializedMember == null)
-                {
-                    serializedMember = new T();
-                }
-
-                serializedMember.Row = row;
-                serializedMember.Column = col;
-                processedMembers.Add(serializedMember);
-                processedMembers[i].Grid = this;
-            }            
-        }
-
         public int GetMaxIndex()
         {
             return rows * columns - 1;
@@ -92,22 +62,17 @@ namespace Utilities
         {
             return row * columns + col;
         }
-
-        bool RowsAndColumnsAreDefined()
-        {
-            return rows != 0 && columns != 0;
-        }    
-    
+ 
         int[] ToRowCol(int index) {
             return new int[2]{ RowOfIndex(index), ColOfIndex(index)};
         }
 
         int[] RowColOf(T startElement)
         {
-            int index = processedMembers.IndexOf(startElement);
+            int index = members.IndexOf(startElement);
             if (index < 0)
             {
-                throw new Exception("Grid does not contain element " + startElement + " , grid " + processedMembers.ToFormattedString());
+                throw new Exception("Grid does not contain element " + startElement + " , grid " + members.ToFormattedString());
             }
             return ToRowCol (index);
         }
@@ -133,24 +98,24 @@ namespace Utilities
 
             if (leftCol >= 0) {
                 adjacentElements.Add (
-                    processedMembers[ToIndex(row, leftCol)]
+                    members[ToIndex(row, leftCol)]
                 );                
             } 
 
             if (rightCol < Columns) {
                 adjacentElements.Add (
-                    processedMembers[ToIndex(row, rightCol)]
+                    members[ToIndex(row, rightCol)]
                 );                            
             }
 
             if (bottomRow >= 0) {
                 adjacentElements.Add (
-                    processedMembers[ToIndex(bottomRow, col)]
+                    members[ToIndex(bottomRow, col)]
                 );                           
             }
 
             if (topRow < Rows) {
-                adjacentElements.Add(processedMembers[ToIndex(topRow, col)]);
+                adjacentElements.Add(members[ToIndex(topRow, col)]);
             }
 
             return adjacentElements.ToArray();

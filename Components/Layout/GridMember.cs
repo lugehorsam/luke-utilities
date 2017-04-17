@@ -3,7 +3,7 @@ using UnityEngine;
 using Utilities;
 
 [Serializable]
-public class GridMember<T> : IGridMember<T>, IComparable<GridMember<T>> where T : GridMember<T>, new()
+public class GridMember<T> : IGridMember<T>, IComparable<GridMember<T>> where T : GridMember<T>
 {
     public Grid<T> Grid { get; set; }
 
@@ -33,5 +33,10 @@ public class GridMember<T> : IGridMember<T>, IComparable<GridMember<T>> where T 
     public int CompareTo(GridMember<T> other)
     {
         return Index.CompareTo(other.Index);
+    }
+
+    public override string ToString()
+    {
+        return this.ToString(Row, Column);
     }
 }
