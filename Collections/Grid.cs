@@ -5,13 +5,9 @@ using UnityEngine;
 namespace Utilities
 {
     public class Grid<T> where T : IGridMember<T>
-    {   
-        public ObservableList<T> Members
-        {
-            get { return members; }
-        }
-    
-        private readonly ObservableList<T> members = new ObservableList<T>();
+    {
+
+        private readonly List<T> members;
 
         public int Rows
         {
@@ -27,29 +23,27 @@ namespace Utilities
 
         protected int columns;
 
-        public Grid(int rows, int columns)
-        {
-            members.OnAdd += HandleMemberAdd;
-            members.OnRemove += HandleMemberRemove;
-            
+        public Grid(int rows, int columns, List<T> members)
+        {           
             this.rows = rows;
             this.columns = columns;
+            this.members = members;
+            ValidateMembers();
         }
 
-        void HandleMemberAdd(T member)
+        void ValidateMembers()
         {
-            ValidateMember(member);
-        }
-
-        void HandleMemberRemove(T member, int idx)
-        {
+            foreach (var member in members)
+            {
+                ValidateMember(member);
+            }
         }
 
         void ValidateMember(T member)
         {
             if (member.Column >= columns || member.Row >= rows)
             {
-                throw new Exception(string.Format("Added invalid member {0}", member));
+                throw new Exception(string.Format("Invalid member {0}", member));
             }
         }
     

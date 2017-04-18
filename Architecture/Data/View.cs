@@ -3,8 +3,41 @@ using UnityEngine;
 
 namespace Utilities
 {
-    public abstract class View<TDatum> {
+    public abstract class View<TDatum> : View {
         
+        public event Action<TDatum, TDatum> OnDataChanged
+        {
+            add { datum.OnStateChanged += value; }
+            remove { datum.OnStateChanged -= value; }
+        }
+
+        public virtual TDatum Datum {
+            set
+            {
+                datum.Set(value);
+            }
+            get {
+                return datum;
+            }
+        }
+
+        private readonly State<TDatum> datum;
+    
+        protected virtual void HandleDatumChanged (TDatum oldData, TDatum newData) {}
+
+        public View(TDatum datum)
+        {
+            Datum = datum;
+        }
+
+        public override string ToString()
+        {
+            return this.ToString(datum);
+        }
+    }
+
+    public class View
+    {
         public GameObject GameObject
         {
             get;
@@ -15,34 +48,9 @@ namespace Utilities
             get { return GameObject.GetComponent<Transform>(); }
         }
 
-        public event Action<TDatum, TDatum> OnDataChanged = (d1, d2) => { };
-
-        public virtual TDatum Datum {
-            set
-            {
-                TDatum oldData = datum;
-                datum = value;
-                HandleDatumChanged (oldData, datum);
-                OnDataChanged (oldData, datum);
-            }
-            get {
-                return datum;
-            }
-        }
-
-        TDatum datum;
-    
-        protected virtual void HandleDatumChanged (TDatum oldData, TDatum newData) {}
-
-        public View(TDatum datum)
+        public View()
         {
             GameObject = new GameObject();
-            Datum = datum;
         }
-
-        public override string ToString()
-        {
-            return this.ToString(datum);
-        }
-    }   
+    }
 }

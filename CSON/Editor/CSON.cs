@@ -23,7 +23,14 @@ namespace Utilities
             Environment.SetEnvironmentVariable("MONO_MANAGED_WATCHER", "enabled");
 #endif
             
-            string csonConfigPath = AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets("CSONConfig").First());
+            string csonConfigPath = AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets("CSONConfig").FirstOrDefault());
+            
+            if (csonConfigPath == null)
+            {
+                Diagnostics.Log("No CSON Config found. CSON disabled.");
+                return;
+            }
+            
             CSONConfig csonConfig = AssetDatabase.LoadAssetAtPath<CSONConfig>(csonConfigPath);
           
             fileWatcher = new FileSystemWatcher(Path.Combine(Application.dataPath, csonConfig.CSONDirectoryPathFromAssets), "*.cson");           
