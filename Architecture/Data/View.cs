@@ -14,14 +14,14 @@ namespace Utilities
         public virtual TDatum Datum {
             set
             {
-                datum.Set(value);
+                datum.State = value;
             }
             get {
                 return datum;
             }
         }
 
-        private readonly State<TDatum> datum;
+        private readonly StateMachine<TDatum> datum = new StateMachine<TDatum>();
     
         protected virtual void HandleDatumChanged (TDatum oldData, TDatum newData) {}
 
@@ -38,6 +38,11 @@ namespace Utilities
 
     public class View
     {
+        protected virtual string Name
+        {
+            get { return "GO"; }
+        }
+        
         public GameObject GameObject
         {
             get;
@@ -51,6 +56,7 @@ namespace Utilities
         public View()
         {
             GameObject = new GameObject();
+            GameObject.name = Name;
         }
     }
 }

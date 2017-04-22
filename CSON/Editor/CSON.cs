@@ -3,7 +3,6 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
-using System.IO;
 
 namespace Utilities
 {
@@ -22,17 +21,14 @@ namespace Utilities
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
             Environment.SetEnvironmentVariable("MONO_MANAGED_WATCHER", "enabled");
 #endif
-            
-            string csonConfigPath = AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets("CSONConfig").FirstOrDefault());
-            
-            if (csonConfigPath == null)
-            {
-                Diagnostics.Log("No CSON Config found. CSON disabled.");
-                return;
-            }
-            
+            var config = AssetDatabase.FindAssets("CSONConfig").FirstOrDefault();
+
+            string csonConfigPath = AssetDatabase.GUIDToAssetPath(config);                                    
             CSONConfig csonConfig = AssetDatabase.LoadAssetAtPath<CSONConfig>(csonConfigPath);
-          
+
+            if (!csonConfig.Enabled)
+                return;
+            
             fileWatcher = new FileSystemWatcher(Path.Combine(Application.dataPath, csonConfig.CSONDirectoryPathFromAssets), "*.cson");           
             fileWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.LastAccess;
             fileWatcher.IncludeSubdirectories = true;

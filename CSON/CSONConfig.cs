@@ -8,6 +8,13 @@ namespace Utilities
         public const string DEFAULT_CSON_DIRECTORY_NAME = "CSON";
         public const string DEFAULT_JSON_DIRECTORY_NAME = "JSON";
 
+        public bool Enabled
+        {
+            get { return enabled; }
+        }
+        
+        [SerializeField] private bool enabled = true;
+
         public string CSONDirectoryPathFromAssets
         {
             get
