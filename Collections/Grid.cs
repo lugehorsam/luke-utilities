@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace Utilities
 {
-    public class Grid<T> where T : IGridMember<T>
+    public class Grid<T> where T : IGridMember
     {
-
-        private readonly List<T> members;
+        public ReadOnlyCollection<T> Members
+        {
+            get { return new ReadOnlyCollection<T>(members); }
+        }
+        
+        private readonly IList<T> members;
 
         public int Rows
         {
@@ -23,12 +28,23 @@ namespace Utilities
 
         protected int columns;
 
-        public Grid(int rows, int columns, List<T> members)
+        public Grid(int rows, int columns, IList<T> members)
         {           
             this.rows = rows;
             this.columns = columns;
             this.members = members;
             ValidateMembers();
+        }
+
+        public Grid(int rows, int columns) : this(rows, columns, new List<T>())
+        {
+            
+        }
+
+        public void AddMember(T member)
+        {
+            members.Add(member);
+            ValidateMember(member);
         }
 
         void ValidateMembers()

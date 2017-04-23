@@ -1,61 +1,47 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using UnityEngine.UI;
 
-public abstract class Layout
+namespace Utilities
 {
-    public GameObject GameObject
-    {
-        get { return gameObject; }
-    }
 
-    private readonly GameObject gameObject;
-
-    public ReadOnlyCollection<ILayoutMember> LayoutMembers
+    public abstract class Layout<T> : View where T : ILayoutMember
     {
-        get { return new ReadOnlyCollection<ILayoutMember>(layoutMembers); }
-    }
-
-    private readonly List<ILayoutMember> layoutMembers = new List<ILayoutMember>();
-    
-    public Layout()
-    {
-        gameObject = new GameObject();
-        gameObject.name = "Layout";
-    }
-
-    public void AddLayoutMember(ILayoutMember layoutMember)
-    {
-        if (layoutMember != null)
+        public ReadOnlyCollection<T> LayoutMembers
         {
-            layoutMember.GameObject.transform.SetParent(gameObject.transform);
+            get { return new ReadOnlyCollection<T> (layoutMembers); }
         }
-        layoutMembers.Add(layoutMember);
-        DoLayout();
-    }
 
-    public void AddLayoutMembers(IList<ILayoutMember> layoutMembers)
-    {
-        foreach (var member in layoutMembers)
+        private readonly List<T> layoutMembers;
+
+        public Layout(List<T> members)
+        {
+            layoutMembers = members;
+            DoLayout();
+        }
+        
+        public void DoLayout()
+        {
+            for (int i = 0; i < layoutMembers.Count; i++)
+            {
+                T behavior = layoutMembers[i];
+
+                if (behavior == null)
+                    continue;
+                
+                behavior.GameObject.transform.SetParent(GameObject.transform);
+                behavior.GameObject.transform.SetSiblingIndex(i);
+                behavior.OnLocalLayout(GetIdealLocalPosition(behavior));
+            }
+        }
+
+        public void AddLayoutMember(T member)
         {
             layoutMembers.Add(member);
+            DoLayout();
         }
-        DoLayout();
-    }
-    
-    public void DoLayout ()
-    {
-        for (int i = 0; i < layoutMembers.Count; i++) 
-        {
-            ILayoutMember behavior = layoutMembers [i];
-            
-            if (behavior == null)
-                continue;
-            
-            behavior.GameObject.transform.SetSiblingIndex (i);
-            behavior.OnLocalLayout(GetIdealLocalPosition(behavior));          
-        }
-    }
-    
-    protected abstract Vector2 GetIdealLocalPosition(ILayoutMember behavior);
+
+        protected abstract Vector2 GetIdealLocalPosition(T element);
+    }   
 }

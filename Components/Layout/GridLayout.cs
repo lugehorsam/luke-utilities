@@ -1,24 +1,32 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
 
-/// <summary>
-/// Arbitrary grid layout. Bottom left is row 0, col 0
-/// </summary>
-public class GridLayout : Layout {
-
-    private readonly int columns;
-    private readonly int rows;
-
-    public GridLayout(int rows, int columns)
+namespace Utilities
+{
+ 
+    /// <summary>
+    /// Arbitrary grid layout. Bottom left is row 0, col 0
+    /// </summary>
+    public class GridLayout<T> : Layout<T> where T : IGridMember, ILayoutMember
     {
-        this.rows = rows;
-        this.columns = columns;
-    }
+        private readonly Grid<T> _grid;
+        private readonly RectTransform _rectTransform;
+        private readonly float _cellWidth;
+        private readonly float _cellHeight;
 
-    protected override Vector2 GetIdealLocalPosition(ILayoutMember behavior)
-    {
-        int behaviorIndex = LayoutMembers.IndexOf(behavior);
-        int row = behaviorIndex % columns;
-        int col = behaviorIndex / columns;
-        return new Vector2(row * 1, col * 1);
-    }
+        public GridLayout(Grid<T> grid, float cellWidth, float cellHeight) : base(grid.Members.ToList())
+        {
+            _grid = grid;
+            _rectTransform = GameObject.AddComponent<RectTransform>();
+            _cellWidth = cellWidth;
+            _cellHeight = cellHeight;
+        }      
+
+        protected override Vector2 GetIdealLocalPosition(T element)
+        {
+            return new Vector2(element.Column * _cellWidth, element.Row * _cellHeight);
+        }
+    }   
 }

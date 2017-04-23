@@ -2,24 +2,24 @@
 using System.Collections.Generic;
 using Utilities;
 
-public interface IGridMember<T> where T : IGridMember<T> {
+public interface IGridMember<T> : IGridMember where T : IGridMember<T> {
     
     Grid<T> Grid
     {
         get;
         set;
-    }
+    }    
+}
 
+public interface IGridMember
+{
     int Row
     {
         get;
-        set;
     }
     
     int Column
     {
         get;
-        set;
     }
-    
 }
