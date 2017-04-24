@@ -24,7 +24,6 @@ namespace Utilities
 
         protected override Vector2 GetIdealLocalPosition(T element)
         {
-            Debug.Log("column " + element.Column + " and cell width " + _cellWidth);
             return new Vector2(element.Column * _cellWidth, element.Row * _cellHeight);
         }
     }   
