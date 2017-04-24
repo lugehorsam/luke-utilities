@@ -1,19 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace Utilities
 {
-    public class Grid<T> where T : IGridMember
-    {
-        public ReadOnlyCollection<T> Members
-        {
-            get { return new ReadOnlyCollection<T>(members); }
-        }
-        
-        private readonly IList<T> members;
-
+    public class Grid<T> : ObservableList<T> where T : IGridMember<T>
+    {       
         public int Rows
         {
             get { return rows; }
@@ -28,28 +20,28 @@ namespace Utilities
 
         protected int columns;
 
-        public Grid(int rows, int columns, IList<T> members)
+        public Grid(int rows, int columns)
         {           
             this.rows = rows;
             this.columns = columns;
-            this.members = members;
-            ValidateMembers();
+            OnAdd += HandleElementAdded;
+            OnRemove += HandleElementRemoved;
         }
 
-        public Grid(int rows, int columns) : this(rows, columns, new List<T>())
+        void HandleElementAdded(T element)
+        {           
+            element.Grid = this;
+            ValidateMember(element);
+        }
+
+        void HandleElementRemoved(T element, int removalIndex)
         {
-            
+            element.Grid = null;
         }
-
-        public void AddMember(T member)
-        {
-            members.Add(member);
-            ValidateMember(member);
-        }
-
+        
         void ValidateMembers()
         {
-            foreach (var member in members)
+            foreach (var member in this)
             {
                 ValidateMember(member);
             }
@@ -79,10 +71,10 @@ namespace Utilities
 
         int[] RowColOf(T startElement)
         {
-            int index = members.IndexOf(startElement);
+            int index = IndexOf(startElement);
             if (index < 0)
             {
-                throw new Exception("Grid does not contain element " + startElement + " , grid " + members.ToFormattedString());
+                throw new Exception("Grid does not contain element " + startElement + " , grid " + this.ToFormattedString());
             }
             return ToRowCol (index);
         }
@@ -108,24 +100,24 @@ namespace Utilities
 
             if (leftCol >= 0) {
                 adjacentElements.Add (
-                    members[ToIndex(row, leftCol)]
+                    this[ToIndex(row, leftCol)]
                 );                
             } 
 
             if (rightCol < Columns) {
                 adjacentElements.Add (
-                    members[ToIndex(row, rightCol)]
+                    this[ToIndex(row, rightCol)]
                 );                            
             }
 
             if (bottomRow >= 0) {
                 adjacentElements.Add (
-                    members[ToIndex(bottomRow, col)]
+                    this[ToIndex(bottomRow, col)]
                 );                           
             }
 
             if (topRow < Rows) {
-                adjacentElements.Add(members[ToIndex(topRow, col)]);
+                adjacentElements.Add(this[ToIndex(topRow, col)]);
             }
 
             return adjacentElements.ToArray();

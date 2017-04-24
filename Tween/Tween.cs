@@ -17,7 +17,7 @@ using UnityEngine;
 namespace DigitalRuby.Tween
 {
     /// <summary>
-    /// StateMachine of an ITween object
+    /// LevelStateController of an ITween object
     /// </summary>
     public enum TweenState
     {

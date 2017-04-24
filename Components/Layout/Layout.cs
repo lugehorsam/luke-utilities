@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Utilities
 {
@@ -18,9 +17,8 @@ namespace Utilities
         public Layout(List<T> members)
         {
             layoutMembers = members;
-            DoLayout();
         }
-        
+                
         public void DoLayout()
         {
             for (int i = 0; i < layoutMembers.Count; i++)

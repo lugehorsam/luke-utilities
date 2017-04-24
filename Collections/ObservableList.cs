@@ -3,12 +3,12 @@ using System;
 using System.Linq;
 using System.Collections;
 
-public class ObservableList<TDatum> : List<TDatum>
+public class ObservableList<T> : List<T>
 {
-    public event Action<TDatum, int> OnRemove = delegate { };
-    public event Action<TDatum> OnAdd = delegate { };
+    public event Action<T, int> OnRemove = delegate { };
+    public event Action<T> OnAdd = delegate { };
     
-    public new void Add(TDatum item)
+    public new void Add(T item)
     {
         if (item == null) {
             return;
@@ -16,7 +16,7 @@ public class ObservableList<TDatum> : List<TDatum>
         base.Add(item);
         OnAdd(item);
     }
-    public new void Remove(TDatum item)
+    public new void Remove(T item)
     {
         if (item == null) {
             return;
@@ -25,19 +25,19 @@ public class ObservableList<TDatum> : List<TDatum>
         base.Remove(item);
         OnRemove(item, index);
     }
-    public new void AddRange(IEnumerable<TDatum> collection)
+    public new void AddRange(IEnumerable<T> collection)
     {
         if (!collection.Any()) {
             return;
         }
         base.AddRange(collection);
-        foreach (TDatum element in collection) {
+        foreach (T element in collection) {
             OnAdd (element);
         }
     }
     public new void RemoveRange(int index, int count)
     {
-        List<TDatum> itemsToRemove = base.GetRange (index, count).ToList();
+        List<T> itemsToRemove = base.GetRange (index, count).ToList();
         if (itemsToRemove.Count <= 0) {
             return;
         }
@@ -48,7 +48,7 @@ public class ObservableList<TDatum> : List<TDatum>
     }
     public new void Clear()
     {
-        List<TDatum> previousItems = this.ToList();
+        List<T> previousItems = this.ToList();
         if (previousItems.Count <= 0) {
             return;
         }
@@ -58,7 +58,7 @@ public class ObservableList<TDatum> : List<TDatum>
         }
 
     }
-    public new void Insert(int index, TDatum item)
+    public new void Insert(int index, T item)
     {
         if (item == null) {
             return;
@@ -66,19 +66,19 @@ public class ObservableList<TDatum> : List<TDatum>
         base.Insert(index, item);
         OnAdd(item);
     }
-    public new void InsertRange(int index, IEnumerable<TDatum> collection)
+    public new void InsertRange(int index, IEnumerable<T> collection)
     {
         if (!collection.Any()) {
             return;
         }
         base.InsertRange(index, collection);
-        foreach (TDatum item in collection) {
+        foreach (T item in collection) {
             OnAdd (item);
         }
     }
-    public new void RemoveAll(Predicate<TDatum> match)
+    public new void RemoveAll(Predicate<T> match)
     {
-        List<TDatum> itemsToRemove = base.FindAll (match).ToList();
+        List<T> itemsToRemove = base.FindAll (match).ToList();
         if (!itemsToRemove.Any()) {
             return;
         }
@@ -93,9 +93,9 @@ public class ObservableList<TDatum> : List<TDatum>
         RemoveAll ((data) => true);
     }
 
-    public ObservableList(IList<TDatum> list)
+    public ObservableList(IList<T> list)
     {
-        foreach (TDatum item in list) {
+        foreach (T item in list) {
             Add (item);
         }
     }
@@ -104,7 +104,7 @@ public class ObservableList<TDatum> : List<TDatum>
 
     }
 
-    public new TDatum this[int index]
+    public new T this[int index]
     {
         get
         {
@@ -112,7 +112,7 @@ public class ObservableList<TDatum> : List<TDatum>
         }
         set
         {
-            TDatum oldValue = this[index];
+            T oldValue = this[index];
             base[index] = value;
             if (oldValue != null) {
                 OnRemove (oldValue, index);
@@ -128,35 +128,43 @@ public class ObservableList<TDatum> : List<TDatum>
         return this.ToArray().ToString();
     }
 
-    public void RegisterObserver<TCollection> (TCollection observer) where TCollection : ICollection<TDatum>
+    public void RegisterObserver<TCollection> (TCollection observer) where TCollection : ICollection<T>
+    {
+
+    }
+
+    public void RegisterObserver<TObserverElement>(
+        ICollection<TObserverElement> observer, 
+        Func<T, TObserverElement> elementTransform
+    )
     {
         OnAdd += (item) =>
         {
             Diagnostics.Log("on add called");
-            observer.Add(item);
+            observer.Add(elementTransform(item));
         };
 
         OnRemove += (removedDatum, removalIndices) =>
         {
-            observer.Remove(removedDatum);
+            observer.Remove(elementTransform(removedDatum));
         };
 
-        foreach (TDatum datum in this)
+        foreach (T datum in this)
         {
-            observer.Add(datum);
+            observer.Add(elementTransform(datum));
         }
     }
 
-    public void Bind(ObservableList<TDatum> thisList, ObservableList<TDatum> otherList)
+    public void Bind(ObservableList<T> thisList, ObservableList<T> otherList)
     {
-        List<TDatum> thisListSilent = thisList;
-        List<TDatum> otherListSilent = otherList;
+        List<T> thisListSilent = thisList;
+        List<T> otherListSilent = otherList;
     }
 
     /**
 
     public void Bind<TSourceData> (DynamicDataListFetcher<TSourceData> newDynamicDataSource,
-                                    int sourceDatumIndex) where TSourceData : struct, IComposite<TDatum> {
+                                    int sourceDatumIndex) where TSourceData : struct, IComposite<T> {
         if (array.Count > 0) {
             array.Clear ();
             unsubscribeFromSource ();
