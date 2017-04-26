@@ -4,7 +4,7 @@ public static class ObjectExtensions
 {
     public static string ToString(this Object thisObject, params object[] members)
     {
-        string result = "[" + thisObject.GetHashCode() + ", ";
+        string result = "[";
 
         for (int i = 0; i < members.Length; i++)
         {

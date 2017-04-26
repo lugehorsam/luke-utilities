@@ -32,7 +32,7 @@ namespace Utilities
 
         public override string ToString()
         {
-            return this.ToString(datum);
+            return this.ToString("View", datum.State);
         }
     }
 
