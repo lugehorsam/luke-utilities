@@ -7,32 +7,33 @@ namespace Utilities
         
         public event Action<TDatum, TDatum> OnDataChanged
         {
-            add { datum.OnStateChanged += value; }
-            remove { datum.OnStateChanged -= value; }
+            add { stateMachine.OnStateChanged += value; }
+            remove { stateMachine.OnStateChanged -= value; }
         }
 
         public virtual TDatum Datum {
             set
             {
-                datum.State = value;
+                stateMachine.State = value;
             }
             get {
-                return datum;
+                return stateMachine.State;
             }
         }
 
-        private readonly StateMachine<TDatum> datum = new StateMachine<TDatum>();
+        private readonly StateMachine<TDatum> stateMachine = new StateMachine<TDatum>();
     
         protected virtual void HandleDatumChanged (TDatum oldData, TDatum newData) {}
 
         public View(TDatum datum)
         {
+            stateMachine.OnStateChanged += HandleDatumChanged;
             Datum = datum;
         }
 
         public override string ToString()
         {
-            return this.ToString("View", datum.State);
+            return this.ToString("View", stateMachine.State);
         }
     }
 

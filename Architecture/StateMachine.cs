@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Utilities
 {
@@ -28,7 +29,7 @@ namespace Utilities
         
                 if (newState != null)
                     newState.HandleTransitionTo();
-        
+
                 OnStateChanged(oldProperty, value);
             }
         }
@@ -40,11 +41,6 @@ namespace Utilities
             State = initialState;
         }
     
-        public StateMachine() {}
-
-        public static implicit operator T(StateMachine<T> thisStateMachine)
-        {
-            return thisStateMachine._state;
-        }
+        public StateMachine() {}    
     }   
 }
