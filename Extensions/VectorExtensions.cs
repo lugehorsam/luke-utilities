@@ -143,4 +143,16 @@ public static class VectorExtensions {
                thisVector.y.ApproximatelyEquals(otherVector.y, differenceCap) &&
                thisVector.z.ApproximatelyEquals(otherVector.z, differenceCap);
     }
+
+    public static Vector2[] GetOffsetCombinations(this Vector2 thisVector2, float offsetX, float offsetY)
+    {
+        return new Vector2[]
+        {
+            thisVector2,
+            new Vector2(thisVector2.x + offsetX, thisVector2.y),
+            new Vector2(thisVector2.x, thisVector2.y + offsetY),
+            new Vector2(thisVector2.x + offsetX, thisVector2.y + offsetY) 
+        };
+
+    }
 }

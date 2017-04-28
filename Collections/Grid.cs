@@ -66,7 +66,7 @@ namespace Utilities
         }
  
         int[] ToRowCol(int index) {
-            return new int[2]{ RowOfIndex(index), ColOfIndex(index)};
+            return new int[2]{ RowOfIndex(index), ColumnOfIndex(index)};
         }
 
         int[] RowColOf(T startElement)
@@ -83,7 +83,7 @@ namespace Utilities
             return (int) Mathf.Floor (index / columns);
         }
 
-        public int ColOfIndex(int index) {
+        public int ColumnOfIndex(int index) {
             return index % columns;
         }
 

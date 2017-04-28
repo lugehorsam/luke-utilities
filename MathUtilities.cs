@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 public static class MathUtils
 {
@@ -19,7 +23,8 @@ public static class MathUtils
     //Two non-parallel lines which may or may not touch each other have a point on each line which are closest
     //to each other. This function finds those two points. If the lines are not parallel, the function 
     //outputs true, otherwise false.
-    public static bool ClosestPointsOnTwoLines(out Vector3 closestPointLine1, out Vector3 closestPointLine2, Vector3 linePoint1, Vector3 lineVec1, Vector3 linePoint2, Vector3 lineVec2)
+    public static bool ClosestPointsOnTwoLines(out Vector3 closestPointLine1, out Vector3 closestPointLine2,
+        Vector3 linePoint1, Vector3 lineVec1, Vector3 linePoint2, Vector3 lineVec2)
     {
 
         closestPointLine1 = Vector3.zero;
@@ -48,7 +53,8 @@ public static class MathUtils
             return true;
         }
 
-        else {
+        else
+        {
             return false;
         }
     }
@@ -57,9 +63,36 @@ public static class MathUtils
     {
         float angle = Vector2.Angle(vectorA, vectorB);
         Vector3 cross = Vector3.Cross(vectorA, vectorB);
-        if (cross.z < 0) angle = -angle;
+        //if (cross.z < 0) angle = -angle;
+
+        Debug.Log("angle from " + vectorA.ToString("F4") + " To " + vectorB.ToString("F4") + " is " + angle);
+
         return angle;
     }
+
+    public static void SortInCycle(Vector3[] vectors, CycleDirection direction)
+    {
+        Vector3 center = GetAverageVector(vectors);
+
+        //clockwise
+        Array.Sort(vectors, (v1, v2) =>
+        {
+            v1 -= center;
+            v2 -= center;
+            return Mathf.Atan2(v1.x, v1.y).CompareTo(Mathf.Atan2(v2.x, v2.y));
+        });
+    }
+
+    public static Vector3 GetAverageVector(IEnumerable<Vector3> vectors)
+    {
+        Vector3 currentValue = default(Vector3);
+
+        foreach (var vector in vectors)
+        {
+            currentValue += vector;
+        }
+
+        Debug.Log("current value " + currentValue);
+        return currentValue / vectors.Count();
+    }
 }
-
-

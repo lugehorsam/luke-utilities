@@ -1,8 +1,9 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿namespace Utilities
+{
+    public interface IMultiCollider2D {
+        MultiCollider MultiCollider {
+            get;
+        }
+    }   
 
-public interface IMultiCollider2D {
-    MultiCollider MultiCollider {
-        get;
-    }
 }

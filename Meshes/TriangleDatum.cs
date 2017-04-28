@@ -186,6 +186,7 @@ public struct TriangleDatum : IComparer<VertexDatum> {
         {
             return 0;
         }
+        
         VertexDatum anchorVertex = GetCenterPoint();
         Vector3 vector1 = vertex1 - anchorVertex;
         Vector3 vector2 = vertex2 - anchorVertex;
