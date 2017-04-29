@@ -10,7 +10,7 @@ namespace Utilities.Input
         public Action<SliceDatum> OnSlice = (slice) => { };
         TouchDispatcher touchDispatcher;
 
-        public Collider Collider
+        public BoxCollider2D BoxCollider2D
         {
             get { return collider; }
         }
@@ -19,7 +19,7 @@ namespace Utilities.Input
         {
             get { return meshFilter.mesh; }
         }
-        new Collider collider;
+        new BoxCollider2D collider;
         MeshFilter meshFilter;
 
         [SerializeField]
@@ -29,7 +29,7 @@ namespace Utilities.Input
         {
             meshFilter = GetComponent<MeshFilter>();
             touchDispatcher = GetComponent<TouchDispatcher>();
-            collider = GetComponent<Collider>();
+            collider = GetComponent<BoxCollider2D>();
             touchDispatcher.OnDragLeave += OnDragLeave;
         }
 

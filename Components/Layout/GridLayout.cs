@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Utilities
@@ -9,6 +10,7 @@ namespace Utilities
     /// </summary>
     public class GridLayout<T> : Layout<T> where T : IGridMember<T>, ILayoutMember
     {
+        public event Action<int> OnIndexTouch = delegate { };
         protected override string Name { get { return "GridLayout";  } }
 
         public float CellHeight
@@ -25,7 +27,7 @@ namespace Utilities
         private readonly float _cellWidth;
         private readonly float _cellHeight;        
         private readonly RectTransform _rectTransform;
-        private readonly List<LineSquare> _cellOutlines;
+        private readonly List<GridCell> _cellOutlines;
         
         public GridLayout(Grid<T> grid, float cellWidth, float cellHeight) : base(grid)
         {
@@ -38,26 +40,29 @@ namespace Utilities
             DoLayout();
         }
 
-        List<LineSquare> CreateCellOutlines()
+        List<GridCell> CreateCellOutlines()
         {
-            var lineSquares = new List<LineSquare>();
-            for (int i = 0; i < _grid.Rows * _grid.Columns - 1; i++)
+            var lineSquares = new List<GridCell>();
+            for (int i = 0; i < _grid.Rows * _grid.Columns; i++)
             {
                 Vector2[] squarePoints = GetSquarePoints(i);
-                var lineSquare = new LineSquare
+                var gridCell = new GridCell
                 (
                     squarePoints[0],
                     squarePoints[1],
                     squarePoints[2],
-                    squarePoints[3]
+                    squarePoints[3],
+                    new Vector3(_cellWidth, _cellHeight)
                 );
                 
-                lineSquare.LineWidth = .1f;
-                lineSquare.Transform.SetParent(Transform);
+                gridCell.LineWidth = .025f;
+                gridCell.Transform.SetParent(Transform);
                 lineSquares.Add
                 (
-                    lineSquare    
-                );            
+                    gridCell    
+                );
+                
+                gridCell.TouchDispatcher.OnTouch += (cell, gesture) => OnIndexTouch(i);
             }
 
             return lineSquares;

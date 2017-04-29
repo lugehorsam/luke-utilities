@@ -37,6 +37,14 @@ public struct GestureFrame {
                       hitInfo :
                       null;
     }
+    
+    public RaycastHit? HitForCollider(Collider2D otherCollider)
+    {
+        return hitInfo.HasValue && 
+               hitInfo.Value.collider == otherCollider ? 
+            hitInfo :
+            null;
+    }
 
     public override string ToString()
     {

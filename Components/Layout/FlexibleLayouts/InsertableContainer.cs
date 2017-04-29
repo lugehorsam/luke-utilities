@@ -16,8 +16,8 @@ public abstract class InsertableContainer<TDatum, TBehavior> : FlexibleContainer
     public int? GetInsertionIndex (TBehavior colliderBehavior)
     {
         MultiCollider multiCollider = colliderBehavior.GetComponent<MultiCollider> ();
-        Collider leftCollider = multiCollider.GetLeftOverlap ();
-        Collider rightCollider = multiCollider.GetRightOverlap ();
+        BoxCollider2D leftCollider = multiCollider.GetLeftOverlap ();
+        BoxCollider2D rightCollider = multiCollider.GetRightOverlap ();
         int insertionIndex;
 
         if (leftCollider == null && rightCollider == null) {
@@ -42,8 +42,8 @@ public abstract class InsertableContainer<TDatum, TBehavior> : FlexibleContainer
 
     public bool IsOverlap (TBehavior behavior)
     {
-        Collider leftOverlap = behavior.MultiCollider.GetLeftOverlap ();
-        Collider rightOverlap = behavior.MultiCollider.GetRightOverlap ();
+        BoxCollider2D leftOverlap = behavior.MultiCollider.GetLeftOverlap ();
+        BoxCollider2D rightOverlap = behavior.MultiCollider.GetRightOverlap ();
 
         return (leftOverlap != null && this.Behaviors.Contains (leftOverlap.GetComponent<TBehavior> ()))
                 || (rightOverlap != null && this.Behaviors.Contains (rightOverlap.GetComponent<TBehavior> ()));

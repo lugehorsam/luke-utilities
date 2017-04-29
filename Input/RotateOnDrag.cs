@@ -9,7 +9,7 @@ namespace Utilities.Input
         Direction faceDirection;
 
         TouchDispatcher<T> touchDispatcher;
-        new Collider collider;
+        new BoxCollider2D collider;
         new Rigidbody rigidbody;
 
         [SerializeField]
@@ -24,7 +24,7 @@ namespace Utilities.Input
         {
             touchDispatcher = GetComponent<TouchDispatcher>();
             rigidbody = GetComponent<Rigidbody>();
-            collider = GetComponent<Collider>();
+            collider = GetComponent<BoxCollider2D>();
             touchDispatcher.OnDrag += OnDrag;
             touchDispatcher.OnRelease += OnDragDeselect;
         }
