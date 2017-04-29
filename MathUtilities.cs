@@ -63,10 +63,7 @@ public static class MathUtils
     {
         float angle = Vector2.Angle(vectorA, vectorB);
         Vector3 cross = Vector3.Cross(vectorA, vectorB);
-        //if (cross.z < 0) angle = -angle;
-
-        Debug.Log("angle from " + vectorA.ToString("F4") + " To " + vectorB.ToString("F4") + " is " + angle);
-
+        if (cross.z < 0) angle = -angle;
         return angle;
     }
 
@@ -92,7 +89,6 @@ public static class MathUtils
             currentValue += vector;
         }
 
-        Debug.Log("current value " + currentValue);
         return currentValue / vectors.Count();
     }
 }

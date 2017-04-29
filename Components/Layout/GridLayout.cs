@@ -45,7 +45,7 @@ namespace Utilities
             var lineSquares = new List<GridCell>();
             for (int i = 0; i < _grid.Rows * _grid.Columns; i++)
             {
-                Vector2[] squarePoints = GetSquarePoints(i);
+                Vector2[] squarePoints = GetSquarePoints(0);
                 var gridCell = new GridCell
                 (
                     squarePoints[0],
@@ -57,12 +57,15 @@ namespace Utilities
                 
                 gridCell.LineWidth = .025f;
                 gridCell.Transform.SetParent(Transform);
+                gridCell.Transform.localPosition = RowAndColumnToPosition(_grid.RowOfIndex(i), _grid.ColumnOfIndex(i));
                 lineSquares.Add
                 (
                     gridCell    
                 );
+
+                int currIndex = i;
                 
-                gridCell.TouchDispatcher.OnTouch += (cell, gesture) => OnIndexTouch(i);
+                gridCell.TouchDispatcher.OnTouch += (cell, gesture) => OnIndexTouch(currIndex);
             }
 
             return lineSquares;
@@ -70,7 +73,12 @@ namespace Utilities
                 
         protected override Vector2 GetIdealLocalPosition(T element)
         {
-            return new Vector2(element.Column * _cellWidth, element.Row * _cellHeight);
+            return RowAndColumnToPosition(element.Row, element.Column);
+        }
+
+        Vector3 RowAndColumnToPosition(int row, int column)
+        {
+            return new Vector2(column * _cellWidth, row * _cellHeight);   
         }
 
         public void ShowOutline(bool show)

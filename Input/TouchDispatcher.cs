@@ -11,13 +11,13 @@
             private set;
         }
 
-        public BoxCollider2D BoxCollider2D
+        public BoxCollider BoxCollider
         {
-            get { return _boxCollider2D; }
+            get { return _boxCollider; }
         }
         
-        private BoxCollider2D _boxCollider2D;
-        private Rigidbody2D _rigidbody;
+        private BoxCollider _boxCollider;
+        private Rigidbody _rigidbody;
 
         public event Action<TouchDispatcher<T>, Gesture> OnTouch = (arg1, arg2) => { };
         public event Action<TouchDispatcher<T>, Gesture> OnHold = (arg1, arg2) => { };
@@ -38,12 +38,12 @@
             T dispatchObject
         )
         {            
-            _boxCollider2D = gameObject.AddComponent<BoxCollider2D>();
-            _boxCollider2D.size = colliderSize;
+            _boxCollider = gameObject.AddComponent<BoxCollider>();
+            _boxCollider.size = colliderSize;
             
-            _rigidbody = gameObject.AddComponent<Rigidbody2D>();
+            _rigidbody = gameObject.AddComponent<Rigidbody>();
             _rigidbody.isKinematic = true;
-            _rigidbody.gravityScale = 0;
+            _rigidbody.useGravity = false;
             
             DispatchObject = dispatchObject;
 
@@ -51,7 +51,7 @@
         
         void Update()
         {
-            if (_boxCollider2D == null)
+            if (_boxCollider == null)
             {
                 Diagnostics.LogWarning("Touch dispatcher added to " + name + " with no _boxCollider2D");
                 return;
@@ -87,8 +87,8 @@
             {
                 HandleOnDrag(this, currentGesture);
                 OnDrag(this, currentGesture);
-                bool collisionLastFrame = currentGesture.LastFrame.Value.HitForCollider(_boxCollider2D).HasValue;
-                bool collisionThisFrame = currentGesture.CurrentFrame.HitForCollider(_boxCollider2D).HasValue;
+                bool collisionLastFrame = currentGesture.LastFrame.Value.HitForCollider(_boxCollider).HasValue;
+                bool collisionThisFrame = currentGesture.CurrentFrame.HitForCollider(_boxCollider).HasValue;
 
                 if (collisionLastFrame && !collisionThisFrame)
                 {
@@ -112,7 +112,7 @@
             for (int i = 0; i < hits.Length; i++)
             {
                 RaycastHit hit = hits[i];
-                if (hit.collider == _boxCollider2D)
+                if (hit.collider == _boxCollider)
                 {
                     return hit;
                 }
