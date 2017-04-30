@@ -1,17 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Utilities
 {
-    public abstract class View<TDatum> : View {
+    public class View<T> : View {
         
-        public event Action<TDatum, TDatum> OnDataChanged
+        public event Action<T, T> OnDataChanged
         {
             add { stateMachine.OnStateChanged += value; }
             remove { stateMachine.OnStateChanged -= value; }
         }
 
-        public virtual TDatum Datum {
+        public virtual T Datum {
             set
             {
                 stateMachine.State = value;
@@ -21,11 +23,16 @@ namespace Utilities
             }
         }
 
-        private readonly StateMachine<TDatum> stateMachine = new StateMachine<TDatum>();
+        private readonly StateMachine<T> stateMachine = new StateMachine<T>();
     
-        protected virtual void HandleDatumChanged (TDatum oldData, TDatum newData) {}
+        protected virtual void HandleDatumChanged (T oldData, T newData) {}
 
-        public View(TDatum datum)
+        public View()
+        {
+            stateMachine.OnStateChanged += HandleDatumChanged;
+        }
+
+        public View(T datum)
         {
             stateMachine.OnStateChanged += HandleDatumChanged;
             Datum = datum;
@@ -34,7 +41,7 @@ namespace Utilities
         public override string ToString()
         {
             return this.ToString("View", stateMachine.State);
-        }
+        }       
     }
 
     public class View

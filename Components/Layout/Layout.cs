@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace Utilities
 {
-
     public abstract class Layout<T> : View where T : ILayoutMember
     {
         public ReadOnlyCollection<T> LayoutMembers
@@ -12,9 +11,9 @@ namespace Utilities
             get { return new ReadOnlyCollection<T> (layoutMembers); }
         }
 
-        private readonly List<T> layoutMembers;
+        private readonly IList<T> layoutMembers;
 
-        public Layout(List<T> members)
+        public Layout(IList<T> members)
         {
             layoutMembers = members;
         }
@@ -32,12 +31,6 @@ namespace Utilities
                 behavior.GameObject.transform.SetSiblingIndex(i);
                 behavior.OnLocalLayout(GetIdealLocalPosition(behavior));
             }
-        }
-
-        public void AddLayoutMember(T member)
-        {
-            layoutMembers.Add(member);
-            DoLayout();
         }
 
         protected abstract Vector2 GetIdealLocalPosition(T element);

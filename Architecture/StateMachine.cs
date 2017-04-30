@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace Utilities
 {
- 
     public class StateMachine<T>
     {
         public event Action<T, T> OnStateChanged = (arg1, arg2) => { };

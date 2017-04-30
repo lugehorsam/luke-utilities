@@ -39,4 +39,14 @@ public class GridMember<T> : IGridMember<T>, IComparable<GridMember<T>> where T 
     {
         return this.ToString(Row, Column);
     }
+
+    public GridMember(int row, int column)
+    {
+        this.row = row;
+        this.column = column;
+    }
+
+    public GridMember()
+    {
+    }
 }

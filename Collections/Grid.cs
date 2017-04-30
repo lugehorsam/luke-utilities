@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Utilities
 {
-    public class Grid<T> : ObservableList<T> where T : IGridMember<T>
-    {       
+    public class Grid<T> : Collection<T> where T : IGridMember<T>
+    {
+        private List<T> _members = new List<T>();
+
         public int Rows
         {
             get { return rows; }
@@ -24,21 +27,34 @@ namespace Utilities
         {           
             this.rows = rows;
             this.columns = columns;
-            OnAdd += HandleElementAdded;
-            OnRemove += HandleElementRemoved;
         }
 
-        void HandleElementAdded(T element)
-        {           
-            element.Grid = this;
-            ValidateMember(element);
-        }
-
-        void HandleElementRemoved(T element, int removalIndex)
+        protected override void InsertItem(int index, T item)
         {
-            element.Grid = null;
+            item.Grid = this;
+            ValidateMember(item);
         }
         
+        public bool Contains(T element)
+        {
+            return _members.Contains(element);
+        }
+
+        protected override void RemoveItem(int index)
+        {
+            T removedItem = Items[index];
+            removedItem.Grid = null;
+            ValidateMembers();
+        }
+
+        protected override void ClearItems()
+        {
+            foreach (var item in Items)
+            {
+                item.Grid = null;
+            }
+        }
+
         void ValidateMembers()
         {
             foreach (var member in this)

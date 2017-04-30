@@ -7,7 +7,12 @@ public class LifecycleDispatcher : MonoBehaviour
 
     void Update()
     {
+        HandleUpdate();
         OnUpdate();
+    }
+
+    protected virtual void HandleUpdate()
+    {
     }
 
 }

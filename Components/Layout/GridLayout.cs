@@ -50,11 +50,11 @@ namespace Utilities
             _rectTransform = GameObject.AddComponent<RectTransform>();
             _cellWidth = cellWidth;
             _cellHeight = cellHeight;
-            _cellOutlines = CreateCellOutlines();
+            _cellOutlines = CreateCells();
             DoLayout();
         }
 
-        List<GridCell> CreateCellOutlines()
+        List<GridCell> CreateCells()
         {
             var lineSquares = new List<GridCell>();
             for (int i = 0; i < _grid.Rows * _grid.Columns; i++)

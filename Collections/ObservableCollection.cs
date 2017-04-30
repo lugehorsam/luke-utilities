@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Linq;
-using System.Collections;
+using System.Collections.ObjectModel;
 
 public class ObservableList<T> : List<T>
 {
@@ -126,70 +126,6 @@ public class ObservableList<T> : List<T>
     public override string ToString ()
     {
         return this.ToArray().ToString();
-    }
-
-    public void RegisterObserver<TCollection> (TCollection observer) where TCollection : ICollection<T>
-    {
-
-    }
-
-    public void RegisterObserver<TObserverElement>(
-        ICollection<TObserverElement> observer, 
-        Func<T, TObserverElement> elementTransform
-    )
-    {
-        OnAdd += (item) =>
-        {
-            Diagnostics.Log("on add called");
-            observer.Add(elementTransform(item));
-        };
-
-        OnRemove += (removedDatum, removalIndices) =>
-        {
-            observer.Remove(elementTransform(removedDatum));
-        };
-
-        foreach (T datum in this)
-        {
-            observer.Add(elementTransform(datum));
-        }
-    }
-
-    public void Bind(ObservableList<T> thisList, ObservableList<T> otherList)
-    {
-        List<T> thisListSilent = thisList;
-        List<T> otherListSilent = otherList;
-    }
-
-    /**
-
-    public void Bind<TSourceData> (DynamicDataListFetcher<TSourceData> newDynamicDataSource,
-                                    int sourceDatumIndex) where TSourceData : struct, IComposite<T> {
-        if (array.Count > 0) {
-            array.Clear ();
-            unsubscribeFromSource ();
-        }
-
-        Action<TSourceData []> handleDataPublished = (TSourceData [] sourceData) => {
-            if (sourceDatumIndex >= sourceData.Length) {
-                return;
-            }
-            HandleNewData (sourceData [sourceDatumIndex].GetCompositeData ());
-        };
-
-        newDynamicDataSource.Datum += handleDataPublished;
-
-        unsubscribeFromSource = () => {
-            newDynamicDataSource.DataStream -= handleDataPublished;
-        };
-
-        pushToSource = () => {
-            TSourceData [] newData = newDynamicDataSource.Datum.ToArray ();
-            newData [sourceDatumIndex].SetCompositeData (array);
-            newDynamicDataSource.Set (newData);
-        };
-    }
-
-**/
+    }   
 }
 

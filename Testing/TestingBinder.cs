@@ -13,9 +13,9 @@ public class TestingBinder : DataBinder<DiagnosticsData, TestingButton> {
     [SerializeField]
     RectTransform buttonHolder;
 
-    protected override ObservableList<DiagnosticsData> GetOverrideData ()
+    protected override ObservableCollection<DiagnosticsData> GetOverrideData ()
     {
-        var data = new ObservableList<DiagnosticsData>();
+        var data = new ObservableCollection<DiagnosticsData>();
         data.Add (new DiagnosticsData (TogglePanel, "Open Console", KeyCode.C));
         data.Add (new DiagnosticsData (() => PlayerPrefs.DeleteAll (), "Clear Cache"));
         LogType[] logTypes = Enum.GetValues (typeof(LogType)) as LogType[];
