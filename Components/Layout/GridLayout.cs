@@ -10,8 +10,13 @@ namespace Utilities
     /// </summary>
     public class GridLayout<T> : Layout<T> where T : IGridMember<T>, ILayoutMember
     {
-        public event Action<int> OnIndexTouch = delegate { };
+        public event Action<int> OnCellTouch = delegate { };
         protected override string Name { get { return "GridLayout";  } }
+
+        public Grid<T> Grid
+        {
+            get { return _grid; }
+        }
 
         public float CellHeight
         {
@@ -21,7 +26,17 @@ namespace Utilities
         public float CellWidth
         {
             get { return _cellWidth; }
-        } 
+        }
+
+        public float TotalHeight
+        {
+            get { return CellHeight * _grid.Rows; }
+        }
+
+        private float TotalWidth
+        {
+            get { return CellWidth * _grid.Columns; }
+        }
 
         private readonly Grid<T> _grid;
         private readonly float _cellWidth;
@@ -36,7 +51,6 @@ namespace Utilities
             _cellWidth = cellWidth;
             _cellHeight = cellHeight;
             _cellOutlines = CreateCellOutlines();
-            ShowOutline(true);
             DoLayout();
         }
 
@@ -65,7 +79,7 @@ namespace Utilities
 
                 int currIndex = i;
                 
-                gridCell.TouchDispatcher.OnTouch += (cell, gesture) => OnIndexTouch(currIndex);
+                gridCell.TouchDispatcher.OnTouch += (cell, gesture) => OnCellTouch(currIndex);
             }
 
             return lineSquares;
@@ -78,7 +92,7 @@ namespace Utilities
 
         Vector3 RowAndColumnToPosition(int row, int column)
         {
-            return new Vector2(column * _cellWidth, row * _cellHeight);   
+            return new Vector2(column * _cellWidth - TotalWidth * .5f, row * _cellHeight - TotalHeight * .5f);   
         }
 
         public void ShowOutline(bool show)
