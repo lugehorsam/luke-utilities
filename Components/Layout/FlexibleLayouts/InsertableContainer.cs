@@ -24,16 +24,16 @@ public abstract class InsertableContainer<TDatum, TBehavior> : FlexibleContainer
             return null;
         } else {
             List<TDatum> dataToIgnore = new List<TDatum> ();
-            if (Data.Contains (colliderBehavior.Datum)) {
-                dataToIgnore.Add (colliderBehavior.Datum);
+            if (Data.Contains (colliderBehavior.Data)) {
+                dataToIgnore.Add (colliderBehavior.Data);
             }
             if (leftCollider != null) {
                 TBehavior leftBehavior = leftCollider.GetComponent<TBehavior> ();
-                insertionIndex = Data.IndexOf (leftBehavior.Datum) + 1;
+                insertionIndex = Data.IndexOf (leftBehavior.Data) + 1;
             } else { 
                 //right collider not null
                 TBehavior rightBehavior = rightCollider.GetComponent<TBehavior> ();
-                insertionIndex = Data.IndexOf (rightBehavior.Datum);
+                insertionIndex = Data.IndexOf (rightBehavior.Data);
             }
         }
 

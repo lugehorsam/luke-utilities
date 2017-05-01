@@ -21,7 +21,7 @@ public abstract class DataBinder<TDatum, TBehavior> : BehaviorManager<TDatum, TB
                                TBehavior behavior)
     {
         if (receivingBinder == this) {
-            Diagnostics.Report ("Datum manager " + this + "Trying to transfer array to itself");
+            Diagnostics.Report ("Data manager " + this + "Trying to transfer array to itself");
         }
 
         List<TDatum> silenTDatum = array;
@@ -41,13 +41,13 @@ public abstract class DataBinder<TDatum, TBehavior> : BehaviorManager<TDatum, TB
 
     public override string ToString ()
     {
-        return string.Format ("[DataBinder: Identifier={0} Datum={1}]", gameObject.name, Datum.ToFormattedString());
+        return string.Format ("[DataBinder: Identifier={0} Data={1}]", gameObject.name, Data.ToFormattedString());
     }
 
     void TryReportBadConfig ()
     {
         if (array.Count != Behaviors.Count) {
-            Diagnostics.Report ("Datum and behaviors have uneven counts " + array.ToFormattedString () + " , " + Behaviors.ToFormattedString ());
+            Diagnostics.Report ("Data and behaviors have uneven counts " + array.ToFormattedString () + " , " + Behaviors.ToFormattedString ());
         }
     }gor
 }
