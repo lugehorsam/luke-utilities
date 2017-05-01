@@ -1,10 +1,14 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Utilities
 {
+    [Serializable]
     public class StateMachine<T>
     {
-        public event Action<T, T> OnStateChanged = (arg1, arg2) => { };
+        public delegate void StateChangedHandler(T oldState, T newState);
+        
+        public event StateChangedHandler OnStateChanged = (arg1, arg2) => { };
 
         public T State
         {
@@ -32,6 +36,7 @@ namespace Utilities
             }
         }
 
+        [SerializeField]
         private T _state;
 
         public StateMachine(T initialState)

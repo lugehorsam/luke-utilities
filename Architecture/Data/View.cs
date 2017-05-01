@@ -7,7 +7,7 @@ namespace Utilities
 {
     public class View<T> : View {
         
-        public event Action<T, T> OnDataChanged
+        public event StateMachine<T>.StateChangedHandler OnDataChanged
         {
             add { stateMachine.OnStateChanged += value; }
             remove { stateMachine.OnStateChanged -= value; }
