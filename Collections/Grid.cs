@@ -31,6 +31,7 @@ namespace Utilities
 
         protected override void InsertItem(int index, T item)
         {
+            base.InsertItem(index, item);
             item.Grid = this;
             ValidateMember(item);
         }
@@ -42,6 +43,7 @@ namespace Utilities
 
         protected override void RemoveItem(int index)
         {
+            base.RemoveItem(index);
             T removedItem = Items[index];
             removedItem.Grid = null;
             ValidateMembers();
@@ -49,6 +51,7 @@ namespace Utilities
 
         protected override void ClearItems()
         {
+            base.ClearItems();
             foreach (var item in Items)
             {
                 item.Grid = null;

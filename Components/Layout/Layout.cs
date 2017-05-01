@@ -20,6 +20,7 @@ namespace Utilities
                 
         public void DoLayout()
         {
+            Debug.Log("doing layout on list hahsh code " + layoutMembers.GetHashCode() + " and count " + layoutMembers.Count);
             for (int i = 0; i < layoutMembers.Count; i++)
             {
                 T behavior = layoutMembers[i];
