@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace Utilities
@@ -8,19 +9,33 @@ namespace Utilities
         where K : View<T>, new()
         
     {
+        public ReadOnlyCollection<T> Data
+        {
+            get{return new ReadOnlyCollection<T>(_data);}
+        }
+        
         private readonly IList<T> _data;
+        
+        public ReadOnlyCollection<K> Views
+        {
+            get{ return new ReadOnlyCollection<K>(_views);}
+        }
         private readonly IList<K> _views;
 
-        public DataStore(IList<T> data, IList<K> views)
+        public DataStore(IList<T> data, IList<K> views = null)
         {
-            _data = data;
-            _views = views;
+            _views = views ?? new List<K>();
 
             foreach (T datum in data)
             {
-                K view = new K();
-                view.SetData(datum);
-                views.Add(view);
+                if (_views.Any(view => view.HasData(datum)))
+                {
+                    continue;
+                }
+                
+                K newView = new K();
+                newView.SetData(datum);
+                _views.Add(newView);
             }
         }
 
@@ -51,6 +66,11 @@ namespace Utilities
         public T GetData(K view)
         {
             return _data.FirstOrDefault(view.HasData);
+        }
+
+        public K GetView(T data)
+        {
+            return _views.FirstOrDefault(view => view.HasData(data));   
         }
 
         protected virtual void HandleDataAdded(T data, K view)

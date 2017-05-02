@@ -43,9 +43,9 @@ namespace Utilities
 
         protected override void RemoveItem(int index)
         {
-            base.RemoveItem(index);
             T removedItem = Items[index];
             removedItem.Grid = null;
+            base.RemoveItem(index);
             ValidateMembers();
         }
 
