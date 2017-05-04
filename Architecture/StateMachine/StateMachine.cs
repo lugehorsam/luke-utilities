@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Utilities
 {
     [Serializable]
-    public class StateMachine<T>
+    public class StateMachine<T> : IStateMachine
     {
         public delegate void StateChangedHandler(T oldState, T newState);
         
@@ -23,9 +23,12 @@ namespace Utilities
                 T oldProperty = _state;
                 _state = value;
 
+                HandleStateTransition(oldProperty, _state);
+
                 IState oldState = oldProperty as IState;
                 IState newState = value as IState;
         
+                
                 if (oldState != null)
                     oldState.HandleTransitionFrom();
         
@@ -43,7 +46,11 @@ namespace Utilities
         {
             State = initialState;
         }
-    
+
+        protected virtual void HandleStateTransition(T oldState, T newState)
+        {
+        }
+
         public StateMachine() {}    
     }   
 }

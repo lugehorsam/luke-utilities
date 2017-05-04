@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Utilities
 {
-    public class DataStore<T, K>
+    public class ViewFactory<T, K>
         where K : View<T>, new()
         
     {
@@ -21,9 +21,11 @@ namespace Utilities
             get{ return new ReadOnlyCollection<K>(_views);}
         }
         private readonly IList<K> _views;
-
-        public DataStore(IList<T> data, IList<K> views = null)
+                
+        public ViewFactory(IList<T> data, IList<K> views = null)
         {
+                  
+            _data = data;
             _views = views ?? new List<K>();
 
             foreach (T datum in data)
@@ -39,21 +41,27 @@ namespace Utilities
             }
         }
 
+        public ViewFactory()
+        {
+            _data = new List<T>();
+            _views = new List<K>();
+        }
+
         public void Add(T data, K view)
         {
             _data.Add(data);
             _views.Add(view);
-            Debug.Log("adding view to list code " + _views.GetHashCode());
-            HandleDataAdded(data, view);
+            HandleAfterDataAdd(data, view);
         }
 
         public void Add(T data)
         {
+            HandleBeforeDataAdd(data);
             var newView = new K();
             newView.SetData(data);
             Add(data, newView);         
         }
-
+        
         public void Remove(T data)
         {
             _data.Remove(data);
@@ -72,8 +80,13 @@ namespace Utilities
         {
             return _views.FirstOrDefault(view => view.HasData(data));   
         }
+        
+        protected virtual void HandleBeforeDataAdd(T data)
+        {
+            
+        }
 
-        protected virtual void HandleDataAdded(T data, K view)
+        protected virtual void HandleAfterDataAdd(T data, K view)
         {
             
         }

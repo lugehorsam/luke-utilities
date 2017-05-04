@@ -93,7 +93,7 @@ namespace Utilities
             int index = IndexOf(startElement);
             if (index < 0)
             {
-                throw new Exception("Grid does not contain element " + startElement + " , grid " + this.ToFormattedString());
+                throw new Exception("GridLayout does not contain element " + startElement + " , grid " + this.ToFormattedString());
             }
             return ToRowCol (index);
         }
