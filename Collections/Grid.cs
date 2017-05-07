@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Linq;
+using Rune;
 using UnityEngine;
 
 namespace Utilities
 {
-    public class Grid<T> : Collection<T> where T : IGridMember<T>
+    [Serializable]
+    public class Grid<T> : ObservableCollection<T> where T : IGridMember<T>
     {
-        private List<T> _members = new List<T>();
-
         public int Rows
         {
             get { return rows; }
         }
     
+        [SerializeField]
         int rows;
 
         public int Columns
@@ -21,6 +23,7 @@ namespace Utilities
             get { return columns; }
         }
 
+        [SerializeField]
         protected int columns;
 
         public Grid(int rows, int columns)
@@ -29,34 +32,22 @@ namespace Utilities
             this.columns = columns;
         }
 
-        protected override void InsertItem(int index, T item)
+        public T GetElementWithIndex(int index)
         {
-            base.InsertItem(index, item);
+            return Items.FirstOrDefault(member => ToIndex(member.Row, member.Column) == index);
+        }
+
+        protected sealed override void HandleAfterItemAdd(T item)
+        {
             item.Grid = this;
             ValidateMember(item);
         }
         
-        public bool Contains(T element)
+        protected sealed override void HandleAfterItemRemove(T item)
         {
-            return _members.Contains(element);
-        }
-
-        protected override void RemoveItem(int index)
-        {
-            T removedItem = Items[index];
-            removedItem.Grid = null;
-            base.RemoveItem(index);
+            item.Grid = null;
             ValidateMembers();
-        }
-
-        protected override void ClearItems()
-        {
-            base.ClearItems();
-            foreach (var item in Items)
-            {
-                item.Grid = null;
-            }
-        }
+        }       
 
         void ValidateMembers()
         {
@@ -93,7 +84,7 @@ namespace Utilities
             int index = IndexOf(startElement);
             if (index < 0)
             {
-                throw new Exception("GridLayout does not contain element " + startElement + " , grid " + this.ToFormattedString());
+                throw new Exception("RuneLevel does not contain element " + startElement + " , grid " + this.ToFormattedString());
             }
             return ToRowCol (index);
         }

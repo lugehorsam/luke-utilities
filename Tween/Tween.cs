@@ -48,7 +48,7 @@ namespace DigitalRuby.Tween
         DoNotModify,
 
         /// <summary>
-        /// Causes the tween to progress to the end value immediately.
+        /// Causes the tween to progress to the endIndex value immediately.
         /// </summary>
         Complete
     }
@@ -95,11 +95,11 @@ namespace DigitalRuby.Tween
         }
 
         /// <summary>
-        /// Start and add a float tween
+        /// StartIndex and add a float tween
         /// </summary>
         /// <param name="key">Key</param>
-        /// <param name="start">Start value</param>
-        /// <param name="end">End value</param>
+        /// <param name="start">StartIndex value</param>
+        /// <param name="end">EndIndex value</param>
         /// <param name="duration">Duration in seconds</param>
         /// <param name="scaleFunc">Scale function</param>
         /// <param name="progress">Progress handler</param>
@@ -116,11 +116,11 @@ namespace DigitalRuby.Tween
         }
 
         /// <summary>
-        /// Start and add a Vector2 tween
+        /// StartIndex and add a Vector2 tween
         /// </summary>
         /// <param name="key">Key</param>
-        /// <param name="start">Start value</param>
-        /// <param name="end">End value</param>
+        /// <param name="start">StartIndex value</param>
+        /// <param name="end">EndIndex value</param>
         /// <param name="duration">Duration in seconds</param>
         /// <param name="scaleFunc">Scale function</param>
         /// <param name="progress">Progress handler</param>
@@ -137,11 +137,11 @@ namespace DigitalRuby.Tween
         }
 
         /// <summary>
-        /// Start and add a Vector3 tween
+        /// StartIndex and add a Vector3 tween
         /// </summary>
         /// <param name="key">Key</param>
-        /// <param name="start">Start value</param>
-        /// <param name="end">End value</param>
+        /// <param name="start">StartIndex value</param>
+        /// <param name="end">EndIndex value</param>
         /// <param name="duration">Duration in seconds</param>
         /// <param name="scaleFunc">Scale function</param>
         /// <param name="progress">Progress handler</param>
@@ -158,11 +158,11 @@ namespace DigitalRuby.Tween
         }
 
         /// <summary>
-        /// Start and add a Vector4 tween
+        /// StartIndex and add a Vector4 tween
         /// </summary>
         /// <param name="key">Key</param>
-        /// <param name="start">Start value</param>
-        /// <param name="end">End value</param>
+        /// <param name="start">StartIndex value</param>
+        /// <param name="end">EndIndex value</param>
         /// <param name="duration">Duration in seconds</param>
         /// <param name="scaleFunc">Scale function</param>
         /// <param name="progress">Progress handler</param>
@@ -179,10 +179,10 @@ namespace DigitalRuby.Tween
         }
 
         /// <summary>
-        /// Start and add a Color tween
+        /// StartIndex and add a Color tween
         /// </summary>
-        /// <param name="start">Start value</param>
-        /// <param name="end">End value</param>
+        /// <param name="start">StartIndex value</param>
+        /// <param name="end">EndIndex value</param>
         /// <param name="duration">Duration in seconds</param>
         /// <param name="scaleFunc">Scale function</param>
         /// <param name="progress">Progress handler</param>
@@ -199,10 +199,10 @@ namespace DigitalRuby.Tween
         }
 
         /// <summary>
-        /// Start and add a Quaternion tween
+        /// StartIndex and add a Quaternion tween
         /// </summary>
-        /// <param name="start">Start value</param>
-        /// <param name="end">End value</param>
+        /// <param name="start">StartIndex value</param>
+        /// <param name="end">EndIndex value</param>
         /// <param name="duration">Duration in seconds</param>
         /// <param name="scaleFunc">Scale function</param>
         /// <param name="progress">Progress handler</param>
@@ -335,8 +335,8 @@ namespace DigitalRuby.Tween
         /// <summary>
         /// Starts a tween.
         /// </summary>
-        /// <param name="start">The start value.</param>
-        /// <param name="end">The end value.</param>
+        /// <param name="start">The startIndex value.</param>
+        /// <param name="end">The endIndex value.</param>
         /// <param name="duration">The duration of the tween.</param>
         /// <param name="scaleFunc">A function used to scale progress over time. Parameter is a value from 0 to 1, return value is 0 to 1.</param>
         /// <param name="progress">Progress callback</param>
@@ -408,7 +408,7 @@ namespace DigitalRuby.Tween
         /// </summary>
         /// <remarks>
         /// C# generics are good but not good enough. We need a delegate to know how to
-        /// interpolate between the start and end values for the given type.
+        /// interpolate between the startIndex and endIndex values for the given type.
         /// </remarks>
         /// <param name="lerpFunc">The interpolation function for the tween type.</param>
         public Tween(Func<ITween<T>, T, T, float, T> lerpFunc)
@@ -420,8 +420,8 @@ namespace DigitalRuby.Tween
         /// <summary>
         /// Starts a tween.
         /// </summary>
-        /// <param name="start">The start value.</param>
-        /// <param name="end">The end value.</param>
+        /// <param name="start">The startIndex value.</param>
+        /// <param name="end">The endIndex value.</param>
         /// <param name="duration">The duration of the tween.</param>
         /// <param name="scaleFunc">A function used to scale progress over time.</param>
         /// <param name="progress">Progress callback</param>

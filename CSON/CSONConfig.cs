@@ -13,7 +13,7 @@ namespace Utilities
             get { return enabled; }
         }
         
-        [SerializeField] private bool enabled = true;
+        [SerializeField] private bool enabled = false;
 
         public string CSONDirectoryPathFromAssets
         {

@@ -68,7 +68,7 @@ namespace Utilities
 
         public Transform Transform
         {
-            get { return GameObject.GetComponent<Transform>(); }
+            get { return GameObject.GetComponent<Transform>() ?? GameObject.GetComponent<RectTransform>(); }
         }
 
         public View()

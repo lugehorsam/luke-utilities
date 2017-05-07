@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
@@ -6,86 +7,39 @@ using UnityEngine;
 namespace Utilities
 {
     public class ViewFactory<T, K>
-        where K : View<T>, new()
-        
+        where K : View<T>
+
     {
-        public ReadOnlyCollection<T> Data
-        {
-            get{return new ReadOnlyCollection<T>(_data);}
-        }
-        
-        private readonly IList<T> _data;
-        
+        public event Action<T, K> OnAfterViewAdd = delegate { };
+        public event Action<T, K> OnAfterViewRemove = delegate { };
+           
         public ReadOnlyCollection<K> Views
         {
-            get{ return new ReadOnlyCollection<K>(_views);}
-        }
-        private readonly IList<K> _views;
-                
-        public ViewFactory(IList<T> data, IList<K> views = null)
-        {
-                  
-            _data = data;
-            _views = views ?? new List<K>();
-
-            foreach (T datum in data)
-            {
-                if (_views.Any(view => view.HasData(datum)))
-                {
-                    continue;
-                }
-                
-                K newView = new K();
-                newView.SetData(datum);
-                _views.Add(newView);
-            }
-        }
-
-        public ViewFactory()
-        {
-            _data = new List<T>();
-            _views = new List<K>();
-        }
-
-        public void Add(T data, K view)
-        {
-            _data.Add(data);
-            _views.Add(view);
-            HandleAfterDataAdd(data, view);
-        }
-
-        public void Add(T data)
-        {
-            HandleBeforeDataAdd(data);
-            var newView = new K();
-            newView.SetData(data);
-            Add(data, newView);         
+            get{ return new ReadOnlyCollection<K>(_views); }
         }
         
-        public void Remove(T data)
+        private readonly IList<K> _views = new List<K>();
+
+        private readonly Func<T, K> _viewConstructor;
+
+        void Add(T data)
         {
-            _data.Remove(data);
+            var newView = _viewConstructor(data);
+            newView.SetData(data);
+            _views.Add(newView);
+            HandleAfterDataAdd(data, newView);
+            OnAfterViewAdd(data, newView);
+        }
+        
+        void Remove(T data)
+        {
             var oldView = _views.First(view => view.HasData(data));
             GameObject.Destroy(oldView.GameObject);
             _views.Remove(oldView);
             HandleDataRemoved(data, oldView);
-        }
-
-        public T GetData(K view)
-        {
-            return _data.FirstOrDefault(view.HasData);
-        }
-
-        public K GetView(T data)
-        {
-            return _views.FirstOrDefault(view => view.HasData(data));   
+            OnAfterViewRemove(data, oldView);
         }
         
-        protected virtual void HandleBeforeDataAdd(T data)
-        {
-            
-        }
-
         protected virtual void HandleAfterDataAdd(T data, K view)
         {
             
@@ -95,5 +49,18 @@ namespace Utilities
         {
             
         }
+
+        public ViewFactory(ObservableCollection<T> collection, Func<T, K> viewConstructor)
+        {
+            _viewConstructor = viewConstructor;
+            collection.OnAfterItemAdd += Add;
+            collection.OnAfterItemRemove += Remove;
+
+            foreach (var item in collection)
+            {
+                Add(item);
+            }
+        }
     }
 }
+

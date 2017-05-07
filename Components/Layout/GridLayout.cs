@@ -11,7 +11,7 @@ namespace Utilities
     public class GridLayout<T> : Layout<T> where T : IGridMember<T>, ILayoutMember
     {
         public event Action<int> OnCellTouch = delegate { };
-        protected override string Name { get { return "GridLayout";  } }
+        protected override string Name { get { return "RuneLevel";  } }
 
         public Grid<T> Grid
         {

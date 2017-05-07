@@ -29,6 +29,8 @@ namespace Utilities
             if (!csonConfig.Enabled)
                 return;
             
+            Debug.Log("Is cson config enabled " + csonConfig.Enabled);
+            
             fileWatcher = new FileSystemWatcher(Path.Combine(Application.dataPath, csonConfig.CSONDirectoryPathFromAssets), "*.cson");           
             fileWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.LastAccess;
             fileWatcher.IncludeSubdirectories = true;
