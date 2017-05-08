@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
@@ -66,6 +67,14 @@ namespace Utilities
         public void OnAfterDeserialize()
         {
 
+           Debug.Log("after desesrialize this is " + this + " and items are " + this.Items);
+
+        }
+
+        public void RegisterObserver(IList<T> otherList)
+        {
+            OnAfterItemAdd += otherList.Add;
+            OnAfterItemRemove += item => otherList.Remove(item);
         }
     }
    

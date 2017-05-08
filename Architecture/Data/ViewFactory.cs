@@ -6,12 +6,12 @@ using UnityEngine;
 
 namespace Utilities
 {
-    public class ViewFactory<T, K>
+    public class ViewFactory<T, K> : IObservable<K>
         where K : View<T>
 
     {
-        public event Action<T, K> OnAfterViewAdd = delegate { };
-        public event Action<T, K> OnAfterViewRemove = delegate { };
+        public event Action<K> OnAdd = delegate { };
+        public event Func<K, bool> OnRemove = delegate { return false; };
            
         public ReadOnlyCollection<K> Views
         {
@@ -28,7 +28,7 @@ namespace Utilities
             newView.SetData(data);
             _views.Add(newView);
             HandleAfterDataAdd(data, newView);
-            OnAfterViewAdd(data, newView);
+            OnAdd(newView);
         }
         
         void Remove(T data)
@@ -37,17 +37,15 @@ namespace Utilities
             GameObject.Destroy(oldView.GameObject);
             _views.Remove(oldView);
             HandleDataRemoved(data, oldView);
-            OnAfterViewRemove(data, oldView);
+            OnRemove(oldView);
         }
         
         protected virtual void HandleAfterDataAdd(T data, K view)
-        {
-            
+        {            
         }
 
         protected virtual void HandleDataRemoved(T data, K view)
-        {
-            
+        {            
         }
 
         public ViewFactory(ObservableCollection<T> collection, Func<T, K> viewConstructor)

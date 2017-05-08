@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Linq;
-using Rune;
 using UnityEngine;
 
 namespace Utilities
@@ -26,6 +24,11 @@ namespace Utilities
         [SerializeField]
         protected int columns;
 
+        public Grid()
+        {
+            
+        }
+        
         public Grid(int rows, int columns)
         {           
             this.rows = rows;
@@ -61,7 +64,7 @@ namespace Utilities
         {
             if (member.Column >= columns || member.Row >= rows)
             {
-                throw new Exception(string.Format("Invalid member {0}", member));
+                throw new Exception(string.Format("Invalid member {0} rows and columns of grid {1}, {2}", member, rows, columns));
             }
         }
     

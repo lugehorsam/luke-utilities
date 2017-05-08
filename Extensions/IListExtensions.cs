@@ -34,4 +34,14 @@ public static class IListExtensions {
 
         return newList;
     }
+
+    public static void Observe<T>(this IList<T> thisList, IObservable<T> observable)
+    {
+        observable.OnAdd += thisList.Add;
+        observable.OnRemove += (item) =>
+        {
+            Diagnostics.Log("ha " + item);
+            return thisList.Remove(item);
+        };
+    }
 }

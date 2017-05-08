@@ -51,7 +51,9 @@ namespace Utilities
             _cellWidth = cellWidth;
             _cellHeight = cellHeight;
             _cellOutlines = CreateCells();
-            DoLayout();
+            _grid.OnAfterItemAdd += delegate { DoLayout(); };
+            _grid.OnAfterItemRemove += delegate { DoLayout(); };
+
         }
 
         List<GridCell> CreateCells()
@@ -113,5 +115,6 @@ namespace Utilities
             
             return offsetCombinations;
         }
+                
     }   
 }
