@@ -36,28 +36,7 @@ namespace Utilities
             }
 
             return newList;
-        }
-
-        public static void Observe<T>(this ICollection<T> thisList, IObservableCollection<T> observableCollection)
-        {
-            observableCollection.OnAfterItemAdd += thisList.Add;
-            observableCollection.OnAfterItemRemove += (item) =>
-            {
-                Diagnostics.Log("ha " + item);
-                thisList.Remove(item);
-            };
-        }
-    
-        public static void Bind<T>(this ICollection<T> thisList, IObservableCollection<T> observableCollection)
-        {
-            foreach (T item in observableCollection.Items)
-            {
-                thisList.Add(item);                
-            }
-            
-            thisList.Observe(observableCollection);
-        }
-    }
-    
+        }       
+    }    
 
 }
