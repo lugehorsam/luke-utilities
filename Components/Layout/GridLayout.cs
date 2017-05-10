@@ -89,7 +89,8 @@ namespace Utilities
                 
         protected override Vector2 GetIdealLocalPosition(T element)
         {
-            return RowAndColumnToPosition(element.Row, element.Column);
+            Vector2 lowerLeft = RowAndColumnToPosition(element.Row, element.Column);            
+            return new Vector2(lowerLeft.x + _cellWidth/2, lowerLeft.y + _cellHeight/2);
         }
 
         Vector3 RowAndColumnToPosition(int row, int column)

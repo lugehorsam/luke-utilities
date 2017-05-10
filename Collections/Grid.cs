@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Utilities
 {
-    [Serializable]
     public class Grid<T> : ObservableCollection<T> where T : IGridMember<T>
     {
         public int Rows

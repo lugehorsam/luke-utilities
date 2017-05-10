@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using UnityEngine;
 
 namespace Utilities
 {
-    public class ObservableCollection<T> : Collection<T>, ISerializationCallbackReceiver
+    public class ObservableCollection<T> : Collection<T>, IObservableCollection<T>
     {
         public event Action<T> OnAfterItemRemove = delegate { };
+        public ReadOnlyCollection<T> Items { get { return new ReadOnlyCollection<T>(base.Items); } }
         public event Action<T> OnAfterItemAdd = delegate { };
 
         protected sealed override void ClearItems()
@@ -18,7 +18,6 @@ namespace Utilities
             {
                 OnAfterItemRemove(oldItem);
                 HandleAfterItemRemove(oldItem);
-
             }
         }
 
@@ -29,7 +28,6 @@ namespace Utilities
             HandleAfterItemRemove(oldItem);
             OnAfterItemRemove(oldItem);
             HandleAfterItemAdd(item);
-
             OnAfterItemAdd(item);
 
         }
@@ -58,25 +56,21 @@ namespace Utilities
         {
         
         }
-
-        public void OnBeforeSerialize()
-        {
-            
-        }
-
-        public void OnAfterDeserialize()
-        {
-
-           Debug.Log("after desesrialize this is " + this + " and items are " + this.Items);
-
-        }
-
+       
         public void RegisterObserver(IList<T> otherList)
         {
             OnAfterItemAdd += otherList.Add;
             OnAfterItemRemove += item => otherList.Remove(item);
         }
-    }
-   
 
+        public ObservableCollection(IList<T> list) : base(list)
+        {
+            
+        }
+
+        public ObservableCollection()
+        {
+            
+        }
+    }
 }

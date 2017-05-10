@@ -1,47 +1,63 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 
-public static class IListExtensions {
+namespace Utilities
+{
 
-    public static List<int> GetItemIndicesIn<T> (this IList<T> thisIList, IList<T> otherList)
-    {
-        return thisIList.Select ((item) => otherList.IndexOf (item)).ToList ();
-    }
+    public static class IListExtensions {
 
-    public static void Replace<T>(this IList<T> thisList, T oldItem, T newItem)
-    {
-        var oldItemIndex = thisList.IndexOf(oldItem);
-        thisList[oldItemIndex] = newItem;
-    }
-
-    /// <summary>
-    /// No duplicates in a row.
-    /// </summary>
-    /// <returns></returns>
-    public static List<T> DistinctSequence<T>(this IList<T> thisList)
-    {
-        List<T> newList = new List<T>();
-
-        for (int i = 0; i < thisList.Count; i++)
+        public static List<int> GetItemIndicesIn<T> (this IList<T> thisIList, IList<T> otherList)
         {
-            T currentItem = thisList[i];
-
-            if (i == 0 || !currentItem.Equals(thisList[i - 1]))
-            {
-                newList.Add(currentItem);
-            }
+            return thisIList.Select ((item) => otherList.IndexOf (item)).ToList ();
         }
 
-        return newList;
-    }
-
-    public static void Observe<T>(this IList<T> thisList, IObservable<T> observable)
-    {
-        observable.OnAdd += thisList.Add;
-        observable.OnRemove += (item) =>
+        public static void Replace<T>(this IList<T> thisList, T oldItem, T newItem)
         {
-            Diagnostics.Log("ha " + item);
-            return thisList.Remove(item);
-        };
+            var oldItemIndex = thisList.IndexOf(oldItem);
+            thisList[oldItemIndex] = newItem;
+        }
+
+        /// <summary>
+        /// No duplicates in a row.
+        /// </summary>
+        /// <returns></returns>
+        public static List<T> DistinctSequence<T>(this IList<T> thisList)
+        {
+            List<T> newList = new List<T>();
+
+            for (int i = 0; i < thisList.Count; i++)
+            {
+                T currentItem = thisList[i];
+
+                if (i == 0 || !currentItem.Equals(thisList[i - 1]))
+                {
+                    newList.Add(currentItem);
+                }
+            }
+
+            return newList;
+        }
+
+        public static void Observe<T>(this ICollection<T> thisList, IObservableCollection<T> observableCollection)
+        {
+            observableCollection.OnAfterItemAdd += thisList.Add;
+            observableCollection.OnAfterItemRemove += (item) =>
+            {
+                Diagnostics.Log("ha " + item);
+                thisList.Remove(item);
+            };
+        }
+    
+        public static void Bind<T>(this ICollection<T> thisList, IObservableCollection<T> observableCollection)
+        {
+            foreach (T item in observableCollection.Items)
+            {
+                thisList.Add(item);                
+            }
+            
+            thisList.Observe(observableCollection);
+        }
     }
+    
+
 }
