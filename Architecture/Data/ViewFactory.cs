@@ -8,10 +8,12 @@ namespace Utilities
         where K : View<T> {
         
         private readonly Func<T, K> _viewConstructor;
+        protected readonly ObservableCollection<T> _data;
         
         public ViewFactory(ObservableCollection<T> collection, Func<T, K> viewConstructor) : base(new ObservableCollection<K>())
         {
             _viewConstructor = viewConstructor;
+            _data = collection;
             collection.OnAfterItemAdd += HandleAfterDataAdd;
             collection.OnAfterItemRemove += HandleAfterDataRemove;
 

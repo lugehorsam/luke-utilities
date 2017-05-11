@@ -1,17 +1,23 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Utilities
 {
     
 
     public static class ICollectionExt {
+        
+                
+        public static void Observe<T, K>(this ICollection<T> thisCollection, IObservableCollection<K> observableCollection, Func<K, T> transform)
+        {
+            observableCollection.OnAfterItemAdd += k => thisCollection.Add(transform(k));
+            observableCollection.OnAfterItemRemove += k => thisCollection.Remove(transform(k));
+        }
 
         public static void Observe<T>(this ICollection<T> thisCollection, IObservableCollection<T> observableCollection)
         {
             observableCollection.OnAfterItemAdd += thisCollection.Add;
-            observableCollection.OnAfterItemRemove += (item) =>
+            observableCollection.OnAfterItemRemove += item =>
             {
                 thisCollection.Remove(item);
             };
@@ -25,6 +31,9 @@ namespace Utilities
             }
             
             thisCollection.Observe(observableCollection);
-        }}
+        }
+    }
+    
+    
 
 }
