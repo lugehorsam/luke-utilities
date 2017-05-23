@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public static class EnumerableExtensions {
@@ -17,6 +18,11 @@ public static class EnumerableExtensions {
                 formattedString += ", ";
         }
         return formattedString;
+    }
+
+    public static T GetRandomElement<T>(this IEnumerable<T> thisEnumerable)
+    {
+        throw new NotImplementedException();        
     }
 
   

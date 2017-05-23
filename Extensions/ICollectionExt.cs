@@ -31,9 +31,8 @@ namespace Utilities
             }
             
             thisCollection.Observe(observableCollection);
-        }
+        }        
     }
-    
     
 
 }

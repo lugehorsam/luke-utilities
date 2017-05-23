@@ -1,22 +1,31 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Utilities;
+﻿namespace Utilities
+{
+ 
+    public interface IGridMember<T> : IGridMember where T : IGridMember<T> {
+    
+        Grid<T> Grid
+        {
+            get;
+            set;
+        }    
+    }
 
-public interface IGridMember<T> where T : IGridMember<T> {
+    public interface IGridMember {
     
-    Grid<T> Grid
-    {
-        get;
-        set;
-    }    
+        IGrid Grid
+        {
+            get;
+            set;
+        }    
     
-    int Row
-    {
-        get;
-    }
+        int Row
+        {
+            get;
+        }
     
-    int Column
-    {
-        get;
-    }
+        int Column
+        {
+            get;
+        }
+    }  
 }

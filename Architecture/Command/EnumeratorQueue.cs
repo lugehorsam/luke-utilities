@@ -57,6 +57,11 @@ public class EnumeratorQueue : IEnumerator
         nextEnumerators.AddLast (enumerator);
     }
 
+    public void AddParallel(IEnumerator enumerator)
+    {
+        nextEnumerators.AddLast(ActionWrapper(enumerator.Complete));
+    }
+
     public void Add(Action action)
     {
         nextEnumerators.AddLast

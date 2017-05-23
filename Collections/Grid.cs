@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Utilities
 {
-    public class Grid<T> : ObservableCollection<T> where T : IGridMember<T>
+    public class Grid<T> : ObservableCollection<T>, IGrid where T : IGridMember
     {
         public int Rows
         {
@@ -91,14 +91,6 @@ namespace Utilities
             return ToRowCol (index);
         }
 
-        public int RowOfIndex(int index) {
-            return (int) Mathf.Floor (index / columns);
-        }
-
-        public int ColumnOfIndex(int index) {
-            return index % columns;
-        }
-
         public T[] GetAdjacentElements(T startElement) {
           
             List<T> adjacentElements = new List<T> ();
@@ -134,5 +126,13 @@ namespace Utilities
 
             return adjacentElements.ToArray();
         }		
+        
+        public int RowOfIndex(int index) {
+            return (int) Mathf.Floor (index / columns);
+        }
+        
+        public int ColumnOfIndex(int index) {
+            return index % columns;
+        }
     }
 }

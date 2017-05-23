@@ -3,9 +3,9 @@ using UnityEngine;
 using Utilities;
 
 [Serializable]
-public class GridMember<T> : IGridMember<T>, IComparable<GridMember<T>> where T : GridMember<T>
+public class GridMember : IGridMember, IComparable<GridMember>
 {
-    public Grid<T> Grid { get; set; }
+    public IGrid Grid { get; set; }
 
     public int Index
     {
@@ -30,7 +30,7 @@ public class GridMember<T> : IGridMember<T>, IComparable<GridMember<T>> where T 
     [SerializeField]
     private int column;
 
-    public int CompareTo(GridMember<T> other)
+    public int CompareTo(GridMember other)
     {
         return Index.CompareTo(other.Index);
     }
