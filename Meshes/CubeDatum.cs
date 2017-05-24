@@ -1,14 +1,18 @@
 ﻿using System;
 using UnityEngine;
 
-[Serializable]
-public struct CubeDatum {
+namespace Utilities.Meshes
+{
 
-    [SerializeField]
-    SquareDatum[] squares;
+    [Serializable]
+    public struct CubeDatum {
 
-    public CubeDatum(SquareDatum[] squares)
-    {
-        this.squares = squares;
+        [SerializeField]
+        SquareMesh[] squares;
+
+        public CubeDatum(SquareMesh[] squares)
+        {
+            this.squares = squares;
+        }
     }
 }
