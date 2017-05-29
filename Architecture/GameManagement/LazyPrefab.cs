@@ -11,7 +11,7 @@ namespace Utilities
         public LazyPrefab(Transform holder, Vector3 pos) : base(holder, pos) {}
         public LazyPrefab(Transform holder) : base(holder) {}
 
-        public override T Instantiate<T>(Transform holder = null)
+        public sealed override T Instantiate<T>()
         {
             instance = instance ?? base.Instantiate<T>().gameObject;
             return instance.GetOrAddComponent<T>();

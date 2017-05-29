@@ -33,7 +33,7 @@ namespace Utilities
         
         void HandleAfterDataRemove(T data)
         {
-            var oldView = Items.First(view => view.Data.Equals(data));
+            var oldView = this.First(view => view.Data.Equals(data));
             GameObject.Destroy(oldView.GameObject);
             _observableCollection.Remove(oldView);
             HandleAfterViewRemove(data, oldView);

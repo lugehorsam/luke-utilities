@@ -41,7 +41,13 @@ namespace Utilities
         public override string ToString()
         {
             return this.ToString("View", stateMachine.State);
-        }       
+        }
+
+        public void Bind(StateMachine<T> stateMachine)
+        {
+            Data = stateMachine.State;
+            stateMachine.OnStateChanged += (oldVal, newVal) => Data = newVal;
+        } 
     }
 
     public class View

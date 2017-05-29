@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Utilities
 {
     public class Grid<T> : ObservableCollection<T>, IGrid where T : IGridMember
-    {
+    {                
         public int Rows
         {
             get { return rows; }
@@ -23,12 +24,12 @@ namespace Utilities
         [SerializeField]
         protected int columns;
 
-        public Grid()
+        public Grid() : base(new List<T>())
         {
             
         }
         
-        public Grid(int rows, int columns)
+        public Grid(int rows, int columns) : base (new List<T>())
         {           
             this.rows = rows;
             this.columns = columns;
@@ -42,7 +43,7 @@ namespace Utilities
         protected sealed override void HandleAfterItemAdd(T item)
         {
             item.Grid = this;
-            ValidateMember(item);
+            ValidateMembers();
         }
         
         protected sealed override void HandleAfterItemRemove(T item)
@@ -53,10 +54,15 @@ namespace Utilities
 
         void ValidateMembers()
         {
+
+            var asList = ((List<T>) base.Items);
+            
+            asList.Sort((element1, element2) => element1.Index.CompareTo(element2.Index));
+            
             foreach (var member in this)
             {
                 ValidateMember(member);
-            }
+            }            
         }
 
         void ValidateMember(T member)
@@ -83,7 +89,7 @@ namespace Utilities
 
         int[] RowColOf(T startElement)
         {
-            int index = IndexOf(startElement);
+            int index = startElement.Index;
             if (index < 0)
             {
                 throw new Exception("RuneLevel does not contain element " + startElement + " , grid " + this.ToFormattedString());
@@ -94,7 +100,9 @@ namespace Utilities
         public T[] GetAdjacentElements(T startElement) {
           
             List<T> adjacentElements = new List<T> ();
+            
             int[] rowCol = RowColOf (startElement);
+            
             int row = rowCol [0];
             int col = rowCol [1];
             int leftCol = col - 1;
@@ -103,13 +111,15 @@ namespace Utilities
             int bottomRow = row - 1;
 
             if (leftCol >= 0) {
-                adjacentElements.Add (
+                adjacentElements.Add 
+                (
                     this[ToIndex(row, leftCol)]
                 );                
             } 
 
             if (rightCol < Columns) {
-                adjacentElements.Add (
+                adjacentElements.Add 
+                (
                     this[ToIndex(row, rightCol)]
                 );                            
             }
@@ -124,15 +134,19 @@ namespace Utilities
                 adjacentElements.Add(this[ToIndex(topRow, col)]);
             }
 
+            Debug.Log("Adjacent nodes of start " + startElement + " are " + adjacentElements.ToFormattedString());
+
             return adjacentElements.ToArray();
-        }		
+        }       
         
         public int RowOfIndex(int index) {
+            Debug.Log("row of index is " + index + " is "  + (int) Mathf.Floor (index / columns));
             return (int) Mathf.Floor (index / columns);
         }
         
         public int ColumnOfIndex(int index) {
             return index % columns;
         }
+        
     }
 }

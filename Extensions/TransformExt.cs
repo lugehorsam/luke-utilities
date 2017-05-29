@@ -22,4 +22,17 @@ public static class TransformExt {
     {
         thisTransform.localPosition = new Vector3 (thisTransform.localPosition.x, thisTransform.localPosition.y, z);
     }
+    
+    public static void ResetLocalValues( this Transform t ) {
+        t.localPosition = Vector3.zero;
+        t.localRotation = Quaternion.identity;
+        t.localScale = Vector3.one;
+    }
+    
+    public static void ResetLocalValues( this RectTransform t ) {
+        t.anchoredPosition = Vector2.zero;
+        t.localRotation = Quaternion.identity;
+        t.localScale = Vector3.one;
+        t.sizeDelta = Vector2.zero;
+    }
 }

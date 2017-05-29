@@ -22,6 +22,11 @@ namespace Utilities
             this.instantiationHolder = instantiationHolder;
             localPosition = Vector3.zero;
         }
+        
+        public Prefab(GameObject gameObjectToWrap)
+        {
+            prefab = gameObjectToWrap;
+        }
 
         GameObject CreateGameObject()
         {
@@ -41,13 +46,13 @@ namespace Utilities
             return instance;
         }
 
-        public virtual T Instantiate<T> (Transform holder = null) where T : Component
+        public virtual T Instantiate<T> () where T : Component
         {
             var instance = CreateGameObject();
             T component = instance.GetOrAddComponent<T>();
             InitGameObject(instance);
             return component;
-        }
+        }       
 
         void InitGameObject(GameObject gameObject)
         {

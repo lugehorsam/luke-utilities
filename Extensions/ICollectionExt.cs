@@ -25,7 +25,7 @@ namespace Utilities
     
         public static void Bind<T>(this ICollection<T> thisCollection, IObservableCollection<T> observableCollection)
         {
-            foreach (T item in observableCollection.Items)
+            foreach (T item in observableCollection)
             {
                 thisCollection.Add(item);                
             }

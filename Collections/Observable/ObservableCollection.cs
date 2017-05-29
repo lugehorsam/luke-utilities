@@ -7,12 +7,11 @@ namespace Utilities
     public class ObservableCollection<T> : Collection<T>, IObservableCollection<T>
     {
         public event Action<T> OnAfterItemRemove = delegate { };
-        public ReadOnlyCollection<T> Items { get { return new ReadOnlyCollection<T>(base.Items); } }
         public event Action<T> OnAfterItemAdd = delegate { };
 
         protected sealed override void ClearItems()
         {
-            var oldItems = Items;
+            var oldItems = Items;            
             base.ClearItems();
             foreach (var oldItem in oldItems)
             {
