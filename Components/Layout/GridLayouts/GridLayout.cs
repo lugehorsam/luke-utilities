@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Utilities.Input;
 
 namespace Utilities
 {
-
     /// <summary>
     /// Arbitrary grid layout. Bottom left is row 0, col 0
     /// </summary>
@@ -54,8 +54,12 @@ namespace Utilities
             _rectTransform = GameObject.AddComponent<RectTransform>();
             _cellWidth = cellWidth;
             _cellHeight = cellHeight;
-            _grid.OnAfterItemAdd += delegate { DoLayout(); };
-            _grid.OnAfterItemRemove += delegate { DoLayout(); };
+            foreach (var item in grid)
+            {
+                HandleGridItemAdd(item);
+            }
+            _grid.OnAfterItemAdd += HandleGridItemAdd;
+            _grid.OnAfterItemRemove += HandleGridItemRemove;
         }
                
         protected override Vector2 GetIdealLocalPosition(T element)
@@ -78,6 +82,32 @@ namespace Utilities
             ).GetOffsetCombinations(CellWidth, CellHeight);
             
             return offsetCombinations;
-        }	
+        }
+
+        void HandleGridItemAdd(T item)
+        {
+            var dispatcher = item as ITouchDispatcher;
+            
+            if (dispatcher != null)
+                dispatcher.TouchDispatcher.OnTouch += TouchDispatcherTouched;
+            
+            DoLayout();            
+        }
+
+        void HandleGridItemRemove(T item)
+        {
+            var dispatcher = item as ITouchDispatcher;
+            
+            if (dispatcher != null)
+                dispatcher.TouchDispatcher.OnTouch -= TouchDispatcherTouched;
+            
+             DoLayout();   
+        }
+
+        void TouchDispatcherTouched(TouchDispatcher dispatcher, Gesture gesture)
+        {
+            var gridMember = dispatcher.GetComponent<ViewBinding>().View as IGridMember;
+            OnCellTouch(gridMember.Index);
+        }
     }
 }

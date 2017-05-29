@@ -1,27 +1,28 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
 
-public class RotationBinding : Vector3Binding<Transform> {
+namespace Utilities
+{ 
+    public class RotationBinding : Vector3Binding<Transform> {
 
-    Vector3? trackedRotation; //single rotation representation for conversion to quaternions
+        Vector3? trackedRotation; //single rotation representation for conversion to quaternions
 
-    protected RotationBinding(MonoBehaviour coroutineRunner, GameObject gameObject) : base(coroutineRunner, gameObject)
-    {        
-        trackedRotation = GameObject.transform.localEulerAngles;
-    }
+        protected RotationBinding(MonoBehaviour coroutineRunner, GameObject gameObject) : base(coroutineRunner, gameObject)
+        {        
+            trackedRotation = GameObject.transform.localEulerAngles;
+        }
 
-    public sealed override void SetProperty(Vector3 rot) {
-        trackedRotation = rot;
-        GameObject.transform.localEulerAngles = trackedRotation.Value;
-    }
+        public sealed override void SetProperty(Vector3 rot) {
+            trackedRotation = rot;
+            GameObject.transform.localEulerAngles = trackedRotation.Value;
+        }
 
-    public sealed override Vector3 GetProperty() {
-        return trackedRotation.Value;
-    }
+        public sealed override Vector3 GetProperty() {
+            return trackedRotation.Value;
+        }
 
-    public sealed override Vector3 AddProperty(Vector3 v1, Vector3 v2)
-    {
-        return base.AddProperty(v1, v2);
-    }
+        public sealed override Vector3 AddProperty(Vector3 v1, Vector3 v2)
+        {
+            return base.AddProperty(v1, v2);
+        }
+    }   
 }

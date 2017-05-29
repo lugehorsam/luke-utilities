@@ -3,14 +3,8 @@
     using UnityEngine;
     using System;
 
-    public class TouchDispatcher<T> : MonoBehaviour
+    public class TouchDispatcher : MonoBehaviour
     {
-        public T DispatchObject
-        {
-            get;
-            private set;
-        }
-
         public BoxCollider BoxCollider
         {
             get { return _boxCollider; }
@@ -19,34 +13,28 @@
         private BoxCollider _boxCollider;
         private Rigidbody _rigidbody;
 
-        public event Action<TouchDispatcher<T>, Gesture> OnTouch = (arg1, arg2) => { };
-        public event Action<TouchDispatcher<T>, Gesture> OnHold = (arg1, arg2) => { };
-        public event Action<TouchDispatcher<T>, Gesture> OnRelease = (arg1, arg2) => { };
-        public event Action<TouchDispatcher<T>, Gesture> OnDrag = (arg1, arg2) => { };
-        public event Action<TouchDispatcher<T>, Gesture> OnDragLeave = (arg1, arg2) => { };
+        public event Action<TouchDispatcher, Gesture> OnTouch = (arg1, arg2) => { };
+        public event Action<TouchDispatcher, Gesture> OnHold = (arg1, arg2) => { };
+        public event Action<TouchDispatcher, Gesture> OnRelease = (arg1, arg2) => { };
+        public event Action<TouchDispatcher, Gesture> OnDrag = (arg1, arg2) => { };
+        public event Action<TouchDispatcher, Gesture> OnDragLeave = (arg1, arg2) => { };
 
-        protected virtual void HandleOnTouch(TouchDispatcher<T> touchDispatcher, Gesture gestureFrame) { }
-        protected virtual void HandleOnHold(TouchDispatcher<T> touchDispatcher, Gesture gestureFrame) { }
-        protected virtual void HandleOnRelease(TouchDispatcher<T> touchDispatcher, Gesture gestureFrame) { }
-        protected virtual void HandleOnDrag(TouchDispatcher<T> touchDispatcher, Gesture gestureFrame) { }
-        protected virtual void HandleOnDragLeave(TouchDispatcher<T> touchDispatcher, Gesture gestureFrame) { }
+        protected virtual void HandleOnTouch(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
+        protected virtual void HandleOnHold(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
+        protected virtual void HandleOnRelease(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
+        protected virtual void HandleOnDrag(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
+        protected virtual void HandleOnDragLeave(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
 
         protected Gesture currentGesture;
 
-        public void Init(
-            Vector3 colliderSize,
-            T dispatchObject
-        )
+        public void Init(Vector3 colliderSize)
         {            
             _boxCollider = gameObject.AddComponent<BoxCollider>();
             _boxCollider.size = colliderSize;
             
             _rigidbody = gameObject.AddComponent<Rigidbody>();
             _rigidbody.isKinematic = true;
-            _rigidbody.useGravity = false;
-            
-            DispatchObject = dispatchObject;
-
+            _rigidbody.useGravity = false;           
         }
         
         void Update()

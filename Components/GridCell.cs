@@ -8,11 +8,11 @@ namespace Utilities
     {
         private readonly LineRenderer _lineRenderer;
 
-        public TouchDispatcher<GridCell> TouchDispatcher
+        public TouchDispatcher TouchDispatcher
         {
             get { return _touchDispatcher; }
         }
-        private readonly TouchDispatcher<GridCell> _touchDispatcher;
+        private readonly TouchDispatcher _touchDispatcher;
         
         public float LineWidth
         {
@@ -24,8 +24,8 @@ namespace Utilities
                
         public GridCell(Vector3 vector1, Vector3 vector2, Vector3 vector3, Vector3 vector4, Vector3 size)
         {
-            _touchDispatcher = GameObject.AddComponent<GridCellDispatcher>();
-            _touchDispatcher.Init(size, this);
+            _touchDispatcher = GameObject.AddComponent<TouchDispatcher>();
+            _touchDispatcher.Init(size);
             _touchDispatcher.BoxCollider.center = size / 2;
             
             var initialVectors = new []
@@ -46,11 +46,6 @@ namespace Utilities
             (
                 sortedVectors.ToArray()
             );
-        }
-
-        class GridCellDispatcher : TouchDispatcher<GridCell>
-        {
-            
         }
     }
 }

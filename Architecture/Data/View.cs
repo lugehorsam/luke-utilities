@@ -65,6 +65,8 @@ namespace Utilities
         {
             GameObject = new GameObject();
             GameObject.name = Name;
-        }
+            var binding = GameObject.AddComponent<ViewBinding>();
+            binding.View = this;
+        }                
     }
 }
