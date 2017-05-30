@@ -4,6 +4,7 @@ using DigitalRuby.Tween;
 public enum TweenType
 {
     Linear,
+    CubicEaseInOut,
     CubicEaseOut
 }
 
@@ -14,7 +15,8 @@ public static class TweenTypeExtensions
         switch (tweenType) {
             case TweenType.CubicEaseOut:
                 return TweenScaleFunctions.CubicEaseOut;
-            case TweenType.Linear:
+            case TweenType.CubicEaseInOut:
+                return TweenScaleFunctions.CubicEaseInOut;
             default:
                 return TweenScaleFunctions.Linear;
         }

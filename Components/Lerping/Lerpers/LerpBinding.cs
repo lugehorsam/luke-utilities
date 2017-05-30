@@ -30,7 +30,7 @@ namespace Utilities
 
         private readonly MonoBehaviour coroutineRunner;
 
-        protected LerpBinding(MonoBehaviour coroutineRunner, GameObject gameObject) : base(gameObject)
+        protected LerpBinding(MonoBehaviour coroutineRunner, GameObject gameObject, TComponent component) : base(gameObject, component)
         {
             this.coroutineRunner = coroutineRunner;
         }

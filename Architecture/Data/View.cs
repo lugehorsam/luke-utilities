@@ -31,13 +31,7 @@ namespace Utilities
         {
             stateMachine.OnStateChanged += HandleDatumChanged;
         }
-
-        public View(T data)
-        {
-            stateMachine.OnStateChanged += HandleDatumChanged;
-            Data = data;
-        }
-
+        
         public override string ToString()
         {
             return this.ToString("View", stateMachine.State);

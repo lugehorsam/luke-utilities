@@ -6,7 +6,7 @@ namespace Utilities
     [Serializable]
     public class ColorBinding : LerpBinding<Color, Renderer> {
     
-        public ColorBinding(MonoBehaviour coroutineRunner, GameObject gameObject) : base(coroutineRunner, gameObject)
+        public ColorBinding(MonoBehaviour coroutineRunner, GameObject gameObject, Renderer renderer) : base(coroutineRunner, gameObject, renderer)
         {
         }   
         public override void SetProperty(Color color) {

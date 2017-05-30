@@ -31,14 +31,10 @@ namespace Utilities
 
         public bool MoveNext ()
         {
-            Diagnostics.Log("Doing lerp " + nextEnumerators.Count);
-
             if (nextEnumerators.First == null)
                 return false;
 
             currentEnumerator = nextEnumerators.First.Value;
-
-            Diagnostics.Log("next in lerp " +currentEnumerator);
 
             if (currentEnumerator == null) {
                 return false;
@@ -46,7 +42,6 @@ namespace Utilities
 
             if (!currentEnumerator.MoveNext ()) {
                 MoveEnumeratorToStack (currentEnumerator);
-                Diagnostics.Log("Recursing");
                 return MoveNext();
             } 
                         
@@ -61,11 +56,6 @@ namespace Utilities
         public void Add (IEnumerator enumerator)
         {
             nextEnumerators.AddLast (enumerator);
-        }
-
-        public void AddParallel(IEnumerator enumerator)
-        {
-            nextEnumerators.AddLast(ActionWrapper(enumerator.Complete));
         }
 
         public void Add(Action action)

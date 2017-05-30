@@ -54,8 +54,7 @@ namespace Utilities
 
         void ValidateMembers()
         {
-
-            var asList = ((List<T>) base.Items);
+            var asList = (List<T>) base.Items;
             
             asList.Sort((element1, element2) => element1.Index.CompareTo(element2.Index));
             
@@ -133,20 +132,16 @@ namespace Utilities
             if (topRow < Rows) {
                 adjacentElements.Add(this[ToIndex(topRow, col)]);
             }
-
-            Debug.Log("Adjacent nodes of start " + startElement + " are " + adjacentElements.ToFormattedString());
-
+            
             return adjacentElements.ToArray();
         }       
         
         public int RowOfIndex(int index) {
-            Debug.Log("row of index is " + index + " is "  + (int) Mathf.Floor (index / columns));
             return (int) Mathf.Floor (index / columns);
         }
         
         public int ColumnOfIndex(int index) {
             return index % columns;
-        }
-        
+        }        
     }
 }

@@ -6,7 +6,7 @@ namespace Utilities
 
         Vector3? trackedRotation; //single rotation representation for conversion to quaternions
 
-        protected RotationBinding(MonoBehaviour coroutineRunner, GameObject gameObject) : base(coroutineRunner, gameObject)
+        protected RotationBinding(MonoBehaviour coroutineRunner, GameObject gameObject) : base(coroutineRunner, gameObject, gameObject.transform)
         {        
             trackedRotation = GameObject.transform.localEulerAngles;
         }

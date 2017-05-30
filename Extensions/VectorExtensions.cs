@@ -3,19 +3,24 @@ using System.Collections;
 using System;
 
 public static class VectorExtensions {
-    public static Vector2 ToVector2(this Vector3 thisVector) {
+    
+    public static Vector2 ToVector2(this Vector3 thisVector) 
+    {
         return new Vector2(thisVector.x, thisVector.y);
     }
 
-    public static Vector3 ToVector3(this Vector3 thisVector, Transform transform) {
+    public static Vector3 ToVector3(this Vector3 thisVector, Transform transform) 
+    {
         return new Vector3(thisVector.x, thisVector.y, transform.position.z);
     }
 
-    public static Vector3 ToVector3(this Vector2 thisVector) {
+    public static Vector3 ToVector3(this Vector2 thisVector) 
+    {
         return new Vector3(thisVector.x, thisVector.y, 0f);
     }
 
-    public static Vector3 GetRandomVectorWithinCamera(float minYBot = 0f, float maxYBot = 0f) {
+    public static Vector3 GetRandomVectorWithinCamera(float minYBot = 0f, float maxYBot = 0f) 
+    {
         float screenX = Randomizer.Randomize(0.0f, Camera.main.pixelWidth);
         float screenY = UnityEngine.Random.Range(minYBot, maxYBot);
         float screenZ = UnityEngine.Random.Range(Camera.main.nearClipPlane, Camera.main.farClipPlane);
@@ -63,7 +68,6 @@ public static class VectorExtensions {
 
         return 0f;
     }
-
 
     public static Axis DominantAxis(this Vector3 thisVector)
     {
@@ -153,6 +157,20 @@ public static class VectorExtensions {
             new Vector2(thisVector2.x, thisVector2.y + offsetY),
             new Vector2(thisVector2.x + offsetX, thisVector2.y + offsetY) 
         };
+    }
+    
+    public static Vector3 SetX(this Vector3 thisVector, float x)
+    {
+        return new Vector3(x, thisVector.y, thisVector.z);
+    }
 
+    public static Vector3 SetY(this Vector3 thisVector, float y)
+    {
+        return new Vector3(thisVector.x, y, thisVector.z);
+    }
+    
+    public static Vector3 SetZ(this Vector3 thisVector, float z)
+    {
+        return new Vector3(thisVector.x, thisVector.y, z);
     }
 }

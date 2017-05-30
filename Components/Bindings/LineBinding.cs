@@ -12,8 +12,8 @@ namespace Utilities
         private readonly ObservableList<Vector3> linePositions = new ObservableList<Vector3>();
     
         public LineBinding(
-            MonoBehaviour coroutineRunner, GameObject gameObject
-        ) : base(coroutineRunner, gameObject)
+            MonoBehaviour coroutineRunner, GameObject gameObject, LineRenderer lineRenderer
+        ) : base(coroutineRunner, gameObject, lineRenderer)
         {
             linePositions.OnAdd += HandlePositionAdd;
             linePositions.OnRemove += HandlePositionRemove;

@@ -5,13 +5,13 @@ using System;
 public abstract class PropertyBinding<TProperty, TComponent>
     where TComponent : Component {
 
-    protected TComponent Component { get; private set; }
-    protected GameObject GameObject { get; private set; }
+    protected TComponent Component { get; }
+    protected GameObject GameObject { get; }
 
 
-    protected PropertyBinding(GameObject gameObject)
+    protected PropertyBinding(GameObject gameObject, TComponent component)
     {
-        Component = gameObject.AddComponent<TComponent>();
+        Component = component;
         GameObject = gameObject;
     }
     

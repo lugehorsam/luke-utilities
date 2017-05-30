@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class FontBinding : PropertyBinding<Font, TextMesh> {
 
-    public FontBinding(GameObject gameObject) : base(gameObject)
+    public FontBinding(GameObject gameObject, TextMesh textMesh) : base(gameObject, textMesh)
     {
     }
     
