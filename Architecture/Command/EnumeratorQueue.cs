@@ -9,40 +9,73 @@ namespace Utilities
         public int Count 
         {
             get {
-                return nextEnumerators.Count;
+                return _nextEnumerators.Count;
             }
         }
 
         public object Current
         {
-            get { return currentEnumerator; }
+            get { return _currentEnumerator; }
         }
 
-        readonly LinkedList<EnumeratorData> nextEnumerators = new LinkedList<EnumeratorData>();
-        readonly Stack<EnumeratorData> oldEnumerators = new Stack<EnumeratorData>();
+        private readonly LinkedList<EnumeratorData> _nextEnumerators = new LinkedList<EnumeratorData>();
+        private readonly Stack<EnumeratorData> _oldEnumerators = new Stack<EnumeratorData>();
 
-        private EnumeratorData currentEnumerator;
+        private EnumeratorData _currentEnumerator;
 
         public void Dispose()
         {
             throw new NotImplementedException();
         }
 
+        private readonly List<IEnumerator> _parallelEnumerators = new List<IEnumerator>();
+
         public bool MoveNext ()
         {
-            if (nextEnumerators.First == null)
-                return false;
+            bool isParallelEnumerator = TryUpdateParallelEnumerators();
+            
+            if (_nextEnumerators.First == null)
+                return isParallelEnumerator;
 
-            currentEnumerator = nextEnumerators.First.Value;
+            _currentEnumerator = _nextEnumerators.First.Value;
 
-            if (!currentEnumerator.MoveNext ()) {
-                MoveEnumeratorToStack (currentEnumerator);
-                return MoveNext();
-            } 
-                        
-            return true;
+            if (_currentEnumerator.CommandMode == CommandMode.Serial)
+            {
+                if (_currentEnumerator.MoveNext())
+                {
+                    return true;
+                }
+                
+                MoveEnumeratorToStack (_currentEnumerator);
+                return isParallelEnumerator;                      
+            }
+            else
+            {
+                _nextEnumerators.Remove(_currentEnumerator);
+                _parallelEnumerators.Add(_currentEnumerator);
+                return true;
+            }                        
         }
 
+        bool TryUpdateParallelEnumerators()
+        {
+            bool updatedAtLeastOne = false;
+            var enumeratorsToUpdate = new List<IEnumerator>(_parallelEnumerators);
+            foreach (var enumerator in enumeratorsToUpdate)
+            {
+                if (!enumerator.MoveNext())
+                {
+                    _parallelEnumerators.Remove(enumerator); //TODO move it to the stack directly afterwards
+                }
+                else
+                {
+                    updatedAtLeastOne = true;
+                }
+            }
+
+            return updatedAtLeastOne;
+        }
+        
         public void Reset ()
         {
             throw new NotImplementedException ();
@@ -50,12 +83,12 @@ namespace Utilities
 
         public void AddSerial (IEnumerator enumerator)
         {
-            nextEnumerators.AddLast (new EnumeratorData(enumerator, CommandMode.Serial));
+            _nextEnumerators.AddLast (new EnumeratorData(enumerator, CommandMode.Serial));
         }
 
         public void AddParallel(Action action)
         {
-            nextEnumerators.AddLast
+            _nextEnumerators.AddLast
             (
                 new EnumeratorData(ActionWrapper(action),CommandMode.Parallel)
             );
@@ -63,7 +96,7 @@ namespace Utilities
 
         public void AddParallel(IEnumerator enumerator)
         {
-            nextEnumerators.AddLast(new EnumeratorData(enumerator, CommandMode.Parallel));
+            _nextEnumerators.AddLast(new EnumeratorData(enumerator, CommandMode.Parallel));
         }
 
         IEnumerator ActionWrapper(Action action)
@@ -82,14 +115,14 @@ namespace Utilities
 
         void MoveEnumeratorToStack (EnumeratorData enumerator)
         {
-            nextEnumerators.RemoveFirst ();
-            oldEnumerators.Push (enumerator);
+            _nextEnumerators.RemoveFirst ();
+            _oldEnumerators.Push (enumerator);
         }
 
         public void StopCurrentEnumerator ()
         {
-            if (nextEnumerators.First != null) {
-                MoveEnumeratorToStack (nextEnumerators.First.Value);
+            if (_nextEnumerators.First != null) {
+                MoveEnumeratorToStack (_nextEnumerators.First.Value);
             }
         }       
 

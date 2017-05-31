@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace Utilities
 {
@@ -8,7 +7,6 @@ namespace Utilities
 	{
 		void AddSerial(IEnumerator enumerator);
 		void AddParallel(Action action);
-		void AddRange(IEnumerable<IEnumerator> enumerators);
 		void AddParallel(IEnumerator enumerator);
 	}	
 }

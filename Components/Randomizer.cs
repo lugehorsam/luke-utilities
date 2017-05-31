@@ -22,7 +22,7 @@ public static class Randomizer {
 	}
 
 	public static Color Randomize(Color color1, Color color2) {
-		return Color.Lerp (color1, color2, UnityEngine.Random.value);
+		return Color.Lerp (color1, color2, Random.value);
 	}
 
 	public static T[] RandomDistinct<T>(
@@ -34,7 +34,7 @@ public static class Randomizer {
 
 		while (distinctValues.Count < numDistinct && collectionCopy.Count > 0)
 		{
-			var randomElement = collectionCopy.ElementAt(Randomize(0, collectionCopy.Count() - 1));
+			var randomElement = collectionCopy.GetRandomElement();
 			collectionCopy.Remove(randomElement);
 			distinctValues.Add(randomElement);
 		}
