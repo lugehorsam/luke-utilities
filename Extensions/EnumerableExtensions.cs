@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 
 public static class EnumerableExtensions {
 
@@ -22,8 +22,18 @@ public static class EnumerableExtensions {
 
     public static T GetRandomElement<T>(this IEnumerable<T> thisEnumerable)
     {
-        throw new NotImplementedException();        
-    }
+        int randNum = Randomizer.Randomize(0, thisEnumerable.Count() - 1);
 
-  
+        int counter = 0;
+        foreach (var item in thisEnumerable)
+        {
+            if (counter == randNum)
+            {
+                return item;
+            }
+            counter++;
+        }
+
+        return default(T);
+    }     
 }

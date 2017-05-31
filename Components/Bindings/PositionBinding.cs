@@ -5,7 +5,7 @@ namespace Utilities
  
     public class PositionBinding : Vector3Binding<Transform> {
 
-        public PositionBinding(MonoBehaviour coroutineRunner, GameObject gameObject) : base(coroutineRunner, gameObject, gameObject.transform)
+        public PositionBinding(GameObject gameObject) : base(gameObject, gameObject.transform)
         {        
         }
     

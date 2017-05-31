@@ -8,16 +8,6 @@ namespace Utilities
         where TProperty : struct
         where TComponent : Component 
     {
-        public bool LerpOnEnqueue {
-            get {
-                return lerpOnEnqueue;
-            }
-            set {
-                lerpOnEnqueue = value;
-            }            
-        }
-
-        bool lerpOnEnqueue = true;
 
         public event Action<LerpBinding<TProperty, TComponent>> OnLerp = (binding) => { };
 
@@ -28,11 +18,8 @@ namespace Utilities
 
         readonly EnumeratorQueue lerpQueue = new EnumeratorQueue();
 
-        private readonly MonoBehaviour coroutineRunner;
-
-        protected LerpBinding(MonoBehaviour coroutineRunner, GameObject gameObject, TComponent component) : base(gameObject, component)
+        protected LerpBinding(GameObject gameObject, TComponent component) : base(gameObject, component)
         {
-            this.coroutineRunner = coroutineRunner;
         }
 
         public abstract Func<TProperty, TProperty, TProperty> GetRandomizeDelegate ();
@@ -60,27 +47,22 @@ namespace Utilities
 
         public void EnqueueFiniteLerp (FiniteLerp<TProperty> lerp, bool stopOtherEnumerators = true)
         {
-            lerpQueue.Add(ApplyFiniteLerp(lerp));
+            lerpQueue.AddSerial(ApplyFiniteLerp(lerp));
 
             if (stopOtherEnumerators) 
             {
                 StopOtherEnumerators();
-            }
- 
-            ActivateQueueIfNeeded ();
+            } 
         }
 
         public void EnqueueInfiniteLerp(InfiniteLerp<TProperty> lerp, bool stopOtherEnumerators = true)
         {
-            lerpQueue.Add(ApplyInfiniteLerp(lerp));
+            lerpQueue.AddSerial(ApplyInfiniteLerp(lerp));
             if (stopOtherEnumerators)
             {
                 StopOtherEnumerators();
             }
-
-            ActivateQueueIfNeeded();
         }
-
 
         void StopOtherEnumerators()
         {
@@ -88,14 +70,7 @@ namespace Utilities
             {
                 lerpQueue.StopCurrentEnumerator();
             }
-        }
-
-        void ActivateQueueIfNeeded ()
-        {
-            if (lerpQueue.Current != null && lerpOnEnqueue) {
-                coroutineRunner.StartCoroutine (lerpQueue);
-            }
-        }
+        }       
 
         IEnumerator ApplyFiniteLerp (FiniteLerp<TProperty> lerp)
         {

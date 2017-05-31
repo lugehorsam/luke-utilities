@@ -7,7 +7,7 @@ namespace Utilities
     public abstract class Vector3Binding<TComponent> : LerpBinding<Vector3, TComponent>
         where TComponent : Component {
 
-        protected Vector3Binding(MonoBehaviour coroutineRunner, GameObject gameObject, TComponent component) : base(coroutineRunner, gameObject, component)
+        protected Vector3Binding(GameObject gameObject, TComponent component) : base(gameObject, component)
         {        
         }
 

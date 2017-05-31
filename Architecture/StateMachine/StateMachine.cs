@@ -51,6 +51,11 @@ namespace Utilities
         {
         }
 
-        public StateMachine() {}    
+        public StateMachine() {}
+        
+        public static implicit operator T(StateMachine<T> machine)
+        {
+            return machine.State;
+        }
     }   
 }

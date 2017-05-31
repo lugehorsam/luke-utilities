@@ -4,11 +4,10 @@ using System.Collections.Generic;
 
 namespace Utilities
 { 
-    public class EnumeratorQueue : IEnumerator
+    public class EnumeratorQueue : IEnumerator, IEnumeratorQueue
     {
-        public event Action<IEnumerator, IEnumerator> OnNextEnumerator = (oldEnumerator, newEnumerator) => { };
-
-        public int Count {
+        public int Count 
+        {
             get {
                 return nextEnumerators.Count;
             }
@@ -19,10 +18,10 @@ namespace Utilities
             get { return currentEnumerator; }
         }
 
-        readonly LinkedList<IEnumerator> nextEnumerators = new LinkedList<IEnumerator>();
-        readonly Stack<IEnumerator> oldEnumerators = new Stack<IEnumerator>();
+        readonly LinkedList<EnumeratorData> nextEnumerators = new LinkedList<EnumeratorData>();
+        readonly Stack<EnumeratorData> oldEnumerators = new Stack<EnumeratorData>();
 
-        private IEnumerator currentEnumerator;
+        private EnumeratorData currentEnumerator;
 
         public void Dispose()
         {
@@ -35,10 +34,6 @@ namespace Utilities
                 return false;
 
             currentEnumerator = nextEnumerators.First.Value;
-
-            if (currentEnumerator == null) {
-                return false;
-            }
 
             if (!currentEnumerator.MoveNext ()) {
                 MoveEnumeratorToStack (currentEnumerator);
@@ -53,34 +48,39 @@ namespace Utilities
             throw new NotImplementedException ();
         }
 
-        public void Add (IEnumerator enumerator)
+        public void AddSerial (IEnumerator enumerator)
         {
-            nextEnumerators.AddLast (enumerator);
+            nextEnumerators.AddLast (new EnumeratorData(enumerator, CommandMode.Serial));
         }
 
-        public void Add(Action action)
+        public void AddParallel(Action action)
         {
             nextEnumerators.AddLast
             (
-                ActionWrapper(action)
+                new EnumeratorData(ActionWrapper(action),CommandMode.Parallel)
             );
         }
 
-        IEnumerator ActionWrapper(Action action)
+        public void AddParallel(IEnumerator enumerator)
         {
+            nextEnumerators.AddLast(new EnumeratorData(enumerator, CommandMode.Parallel));
+        }
+
+        IEnumerator ActionWrapper(Action action)
+        {            
             action();
             yield return null;
         }
-
+        
         public void AddRange(IEnumerable<IEnumerator> enumerators)
         {
             foreach (IEnumerator enumerator in enumerators)
             {
-                Add(enumerator);
+                AddSerial(enumerator);
             }
         }
 
-        void MoveEnumeratorToStack (IEnumerator enumerator)
+        void MoveEnumeratorToStack (EnumeratorData enumerator)
         {
             nextEnumerators.RemoveFirst ();
             oldEnumerators.Push (enumerator);
@@ -91,21 +91,37 @@ namespace Utilities
             if (nextEnumerators.First != null) {
                 MoveEnumeratorToStack (nextEnumerators.First.Value);
             }
-        }
+        }       
 
-        public EnumeratorQueue(IEnumerable<IEnumerator> collection)
+        private class EnumeratorData : IEnumerator
         {
-            foreach (IEnumerator item in collection)
+            public object Current
             {
-                nextEnumerators.AddLast(item);
+                get
+                {
+                    return _enumerator.Current;
+                }
+            }
+            
+            public CommandMode CommandMode { get; }
+
+            private readonly IEnumerator _enumerator;
+
+            public EnumeratorData(IEnumerator enumerator, CommandMode commandMode)
+            {
+                _enumerator = enumerator;
+                CommandMode = commandMode;
+            }
+            
+            public bool MoveNext()
+            {
+                return _enumerator.MoveNext();
+            }
+
+            public void Reset()
+            {
+                _enumerator.Reset();
             }
         }
-
-        public EnumeratorQueue()
-        {
-
-        }
-    }
-   
-
+    }   
 }
