@@ -49,14 +49,14 @@ namespace Utilities
                 }
                 
                 MoveEnumeratorToStack (_currentEnumerator);
-                Diagnostics.Log("not moving next " + isParallelEnumerator);
-                return isParallelEnumerator;                      
+                return MoveNext() || isParallelEnumerator;
             }
             else
             {
                 _nextEnumerators.RemoveFirst();
                 Diagnostics.Log("adding parallel enuerator");
                 _parallelEnumerators.Add(_currentEnumerator);
+                MoveNext();
                 return true;
             }                        
         }
