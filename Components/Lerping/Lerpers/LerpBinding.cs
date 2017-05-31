@@ -11,13 +11,6 @@ namespace Utilities
 
         public event Action<LerpBinding<TProperty, TComponent>> OnLerp = (binding) => { };
 
-        public EnumeratorQueue LerpQueue
-        {
-            get { return lerpQueue; }
-        }
-
-        readonly EnumeratorQueue lerpQueue = new EnumeratorQueue();
-
         protected LerpBinding(GameObject gameObject, TComponent component) : base(gameObject, component)
         {
         }
@@ -45,34 +38,8 @@ namespace Utilities
 
         protected abstract Func<TProperty, TProperty, float, TProperty> GetLerpDelegate ();
 
-        public void EnqueueFiniteLerp (FiniteLerp<TProperty> lerp, bool stopOtherEnumerators = true)
-        {
-            lerpQueue.AddSerial(ApplyFiniteLerp(lerp));
 
-            if (stopOtherEnumerators) 
-            {
-                StopOtherEnumerators();
-            } 
-        }
-
-        public void EnqueueInfiniteLerp(InfiniteLerp<TProperty> lerp, bool stopOtherEnumerators = true)
-        {
-            lerpQueue.AddSerial(ApplyInfiniteLerp(lerp));
-            if (stopOtherEnumerators)
-            {
-                StopOtherEnumerators();
-            }
-        }
-
-        void StopOtherEnumerators()
-        {
-            while (lerpQueue.Count > 1)
-            {
-                lerpQueue.StopCurrentEnumerator();
-            }
-        }       
-
-        IEnumerator ApplyFiniteLerp (FiniteLerp<TProperty> lerp)
+        public IEnumerator CreateEnumerator (FiniteLerp<TProperty> lerp)
         {
             while (!lerp.HasReachedTargetTime) {
                 TProperty lerpedProperty = lerp.GetLerpedProperty (GetProperty (), GetLerpDelegate());
@@ -91,11 +58,6 @@ namespace Utilities
                 OnLerp(this);
                 yield return null;
             }
-        }
-
-        public void StopAllLerps()
-        {
-            lerpQueue.StopCurrentEnumerator();
-        }
+        }       
     }
 }

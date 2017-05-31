@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Utilities
 { 
@@ -33,25 +34,28 @@ namespace Utilities
         public bool MoveNext ()
         {
             bool isParallelEnumerator = TryUpdateParallelEnumerators();
-            
             if (_nextEnumerators.First == null)
                 return isParallelEnumerator;
 
             _currentEnumerator = _nextEnumerators.First.Value;
-
+            Debug.Log("next enumerators count is " + _nextEnumerators.Count);
             if (_currentEnumerator.CommandMode == CommandMode.Serial)
             {
                 if (_currentEnumerator.MoveNext())
                 {
+                    Diagnostics.Log("blocking on serial enumerator");
+
                     return true;
                 }
                 
                 MoveEnumeratorToStack (_currentEnumerator);
+                Diagnostics.Log("not moving next " + isParallelEnumerator);
                 return isParallelEnumerator;                      
             }
             else
             {
-                _nextEnumerators.Remove(_currentEnumerator);
+                _nextEnumerators.RemoveFirst();
+                Diagnostics.Log("adding parallel enuerator");
                 _parallelEnumerators.Add(_currentEnumerator);
                 return true;
             }                        
@@ -63,13 +67,14 @@ namespace Utilities
             var enumeratorsToUpdate = new List<IEnumerator>(_parallelEnumerators);
             foreach (var enumerator in enumeratorsToUpdate)
             {
-                if (!enumerator.MoveNext())
+                if (enumerator.MoveNext())
                 {
-                    _parallelEnumerators.Remove(enumerator); //TODO move it to the stack directly afterwards
+                    Diagnostics.Log("updated parallel enumerator");
+                    updatedAtLeastOne = true;
                 }
                 else
-                {
-                    updatedAtLeastOne = true;
+                {                    
+                    _parallelEnumerators.Remove(enumerator); //TODO move it to the stack directly afterwards
                 }
             }
 
@@ -83,6 +88,7 @@ namespace Utilities
 
         public void AddSerial (IEnumerator enumerator)
         {
+            Debug.Log("adding serial enumerator ");
             _nextEnumerators.AddLast (new EnumeratorData(enumerator, CommandMode.Serial));
         }
 
