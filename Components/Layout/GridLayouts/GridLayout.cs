@@ -77,8 +77,8 @@ namespace Utilities
         {
             var offsetCombinations = new Vector2
             (
-                Grid.ColumnOfIndex(gridIndex) * CellWidth,
-                Grid.RowOfIndex(gridIndex) * CellHeight
+                Grid.GetColumnOfIndex(gridIndex) * CellWidth,
+                Grid.GetRowOfIndex(gridIndex) * CellHeight
             ).GetOffsetCombinations(CellWidth, CellHeight);
             
             return offsetCombinations;

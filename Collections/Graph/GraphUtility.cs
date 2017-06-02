@@ -38,6 +38,6 @@ namespace Utilities
 			}
 
 			return connectedComponents;
-		}		
+		}				
 	}
 }

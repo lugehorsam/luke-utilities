@@ -64,6 +64,12 @@ namespace Utilities
 			return 0;
 		}
 
+		IEnumerator<T> IEnumerable<T>.GetEnumerator()
+		{
+			yield return Start.Value;
+			yield return End.Value;
+		}
+
 		public override string ToString()
 		{
 			return this.ToString("Start " + Start, "end " + End);
