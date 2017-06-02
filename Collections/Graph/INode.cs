@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace Utilities
-{   
+{    
     public interface INode<T>
     {    
         List<DirectedEdge<T>> Edges { get; }
