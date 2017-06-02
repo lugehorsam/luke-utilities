@@ -38,13 +38,10 @@ namespace Utilities
                 return isParallelEnumerator;
 
             _currentEnumerator = _nextEnumerators.First.Value;
-            Debug.Log("next enumerators count is " + _nextEnumerators.Count);
             if (_currentEnumerator.CommandMode == CommandMode.Serial)
             {
                 if (_currentEnumerator.MoveNext())
                 {
-                    Diagnostics.Log("blocking on serial enumerator");
-
                     return true;
                 }
                 
@@ -54,7 +51,6 @@ namespace Utilities
             else
             {
                 _nextEnumerators.RemoveFirst();
-                Diagnostics.Log("adding parallel enuerator");
                 _parallelEnumerators.Add(_currentEnumerator);
                 MoveNext();
                 return true;
@@ -69,7 +65,6 @@ namespace Utilities
             {
                 if (enumerator.MoveNext())
                 {
-                    Diagnostics.Log("updated parallel enumerator");
                     updatedAtLeastOne = true;
                 }
                 else
@@ -88,7 +83,6 @@ namespace Utilities
 
         public void AddSerial (IEnumerator enumerator)
         {
-            Debug.Log("adding serial enumerator ");
             _nextEnumerators.AddLast (new EnumeratorData(enumerator, CommandMode.Serial));
         }
 

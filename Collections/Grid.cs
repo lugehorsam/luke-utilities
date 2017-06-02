@@ -24,15 +24,20 @@ namespace Utilities
         [SerializeField]
         protected int columns;
 
+        [SerializeField] private T[] _serializedMembers;
+
         public Grid() : base(new List<T>())
         {
-            
+            if (_serializedMembers != null)
+                ((List<T>) Items).AddRange(_serializedMembers);
         }
         
         public Grid(int rows, int columns) : base (new List<T>())
         {           
             this.rows = rows;
             this.columns = columns;
+            if (_serializedMembers != null)
+                ((List<T>) Items).AddRange(_serializedMembers);
         }
 
         public T GetElementWithIndex(int index)
@@ -51,7 +56,7 @@ namespace Utilities
             item.Grid = null;
             ValidateMembers();
         }       
-
+        
         void ValidateMembers()
         {
             var asList = (List<T>) base.Items;
@@ -143,5 +148,11 @@ namespace Utilities
         public int ColumnOfIndex(int index) {
             return index % columns;
         }        
+    }
+
+    [Serializable]
+    public class Grid : Grid<GridMember>
+    {
+        
     }
 }

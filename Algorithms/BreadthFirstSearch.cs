@@ -5,18 +5,18 @@ using System.Linq;
 
 namespace Utilities
 {
-    public class BreadthFirstSearch<T> where T : INode<T>
+    public class BreadthFirstSearch<T>
     {
-        private readonly T _sourceNode;
+        private readonly INode<T> _sourceNode;
         
-        public ReadOnlyCollection<T> SearchedNodes
+        public ReadOnlyCollection<INode<T>> SearchedNodes
         {
-            get { return new ReadOnlyCollection<T>(_searchedNodes.ToList()); }
+            get { return new ReadOnlyCollection<INode<T>>(_searchedNodes.ToList()); }
         }
 
-        private readonly HashSet<T> _searchedNodes = new HashSet<T>();
+        private readonly HashSet<INode<T>> _searchedNodes = new HashSet<INode<T>>();
         
-        public BreadthFirstSearch(T sourceNode)
+        public BreadthFirstSearch(INode<T> sourceNode)
         {
             _sourceNode = sourceNode;
         }
@@ -31,22 +31,23 @@ namespace Utilities
 
         public IEnumerator ExecuteOneLevel()
         {
-            Queue<T> nextNodes = new Queue<T>(); 
+            Queue<INode<T>> nextNodes = new Queue<INode<T>>(); 
             nextNodes.Enqueue(_sourceNode);            
 
             do
             {
-                T nextNode = nextNodes.Dequeue();      
+                INode<T> node = nextNodes.Dequeue();
                 
-                if (nextNode == null)
+                if (node == null)
                     yield break;
                 
-                foreach (T targetNode in nextNode.TargetNodes)
+                foreach (var edge in node.Edges)
                 {
-                     nextNodes.Enqueue(targetNode);
+                     if (edge.Start.Equals(node))
+                         nextNodes.Enqueue(edge.End);
                 }                
                 
-                _searchedNodes.Add(nextNode);
+                _searchedNodes.Add(node);
                 
                 yield return null;
 
