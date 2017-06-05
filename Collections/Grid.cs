@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,34 +9,27 @@ namespace Utilities
     {                
         public int Rows
         {
-            get { return rows; }
+            get { return _rows; }
         }
-    
-        [SerializeField]
-        int rows;
+        
+        readonly int _rows;
 
         public int Columns
         {
-            get { return columns; }
+            get { return _columns; }
         }
 
-        [SerializeField]
-        protected int columns;
-
-        [SerializeField] private T[] _serializedMembers;
+        readonly int _columns;
 
         public Grid() : base(new List<T>())
         {
-            if (_serializedMembers != null)
-                ((List<T>) Items).AddRange(_serializedMembers);
+           
         }
         
         public Grid(int rows, int columns) : base (new List<T>())
         {           
-            this.rows = rows;
-            this.columns = columns;
-            if (_serializedMembers != null)
-                ((List<T>) Items).AddRange(_serializedMembers);
+            _rows = rows;
+            _columns = columns;
         }
 
         public T GetElementWithIndex(int index)
@@ -71,20 +63,20 @@ namespace Utilities
 
         void ValidateMember(T member)
         {
-            if (member.Column >= columns || member.Row >= rows)
+            if (member.Column >= _columns || member.Row >= _rows)
             {
-                throw new Exception(string.Format("Invalid member {0} rows and columns of grid {1}, {2}", member, rows, columns));
+                throw new Exception(string.Format("Invalid member {0} rows and columns of grid {1}, {2}", member, _rows, _columns));
             }
         }
     
         public int GetMaxIndex()
         {
-            return rows * columns - 1;
+            return _rows * _columns - 1;
         }
        
         public int ToIndex(int row, int col) 
         {
-            return row * columns + col;
+            return row * _columns + col;
         }
  
         int[] ToRowCol(int index) {
@@ -142,17 +134,16 @@ namespace Utilities
         }       
         
         public int GetRowOfIndex(int index) {
-            return (int) Mathf.Floor (index / columns);
+            return (int) Mathf.Floor (index / _columns);
         }
         
         public int GetColumnOfIndex(int index) {
-            return index % columns;
-        }        
-    }
+            return index % _columns;
+        }
 
-    [Serializable]
-    public class Grid : Grid<GridMember>
-    {
-        
+        public override string ToString()
+        {
+            return this.ToString(_rows, _columns, this.ToFormattedString());
+        }
     }
 }

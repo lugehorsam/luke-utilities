@@ -1,4 +1,7 @@
-﻿public interface ISliceEffect {
+﻿namespace Utilities
+{
+    public interface ISliceEffect {
 
-    void OnSlice(SliceDatum datum);
+        void OnSlice(SliceDatum datum);
+    }   
 }

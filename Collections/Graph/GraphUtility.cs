@@ -8,11 +8,13 @@ namespace Utilities
 			
 		public static List<List<TEdge>> GetConnectedComponents<TElement, TEdge>(IEnumerable<TEdge> edges) 
 			where TEdge : IDirectedEdge<TElement> 
-		{			
+		{
+			
+			var edgesArray = edges.ToArray();
+			Array.Sort(edgesArray);
+			
 			var visitedNodes = new HashSet<INode<TElement>>();
-			INode<TElement>[] distinctNodes = edges.SelectMany(edge => edge).Distinct().ToArray();
-
-			Array.Sort(distinctNodes);
+			INode<TElement>[] distinctNodes = edgesArray.SelectMany<TEdge, INode<TElement>>(edge => edge).Distinct().ToArray();
 			
 			var connectedComponents = new List<List<TEdge>>();
 			
@@ -25,10 +27,13 @@ namespace Utilities
 					var dfs = new DepthFirstSearch<TElement>(node);
 					INode<TElement> lastNode = default(INode<TElement>);
 					foreach (INode<TElement> searchedNode in dfs)
-					{
-						visitedNodes.Add(node);
-						if (!lastNode.Equals(default(INode<TElement>)))
-							currentComponent.Add(edges.First(edge => edge.Start.Equals(lastNode) && edge.End.Equals(searchedNode)));
+					{						
+						visitedNodes.Add(searchedNode);
+						if (lastNode != null && !lastNode.Equals(default(INode<TElement>)))
+						{
+							var dfsEdge = edgesArray.First(edge => edge.Start.Equals(lastNode) && edge.End.Equals(searchedNode));
+							currentComponent.Add(dfsEdge);
+						}
 						lastNode = searchedNode;
 
 					}					
@@ -36,7 +41,7 @@ namespace Utilities
 					connectedComponents.Add(currentComponent);
 				}
 			}
-
+			
 			return connectedComponents;
 		}				
 	}

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-public struct EdgeDatum
+public struct MeshEdge
 {
     private const float POINT_ON_EDGE_TOLERANCE = .01f;
 
@@ -77,13 +77,13 @@ public struct EdgeDatum
                vertex.Y.ApproximatelyLessThan(MaxY, POINT_ON_EDGE_TOLERANCE);
     }
 
-    public EdgeDatum(VertexDatum vertex1, VertexDatum vertex2)
+    public MeshEdge(VertexDatum vertex1, VertexDatum vertex2)
     {
         Vertex1 = vertex1;
         Vertex2 = vertex2;
     }
 
-    public EdgeDatum(IList<Vector3> vectorList)
+    public MeshEdge(IList<Vector3> vectorList)
     {
         Vertex1 = vectorList.First();
         Vertex2 = vectorList.Last();
@@ -91,20 +91,20 @@ public struct EdgeDatum
 
     /// <summary>
     /// </summary>
-    /// <param name="otherEdge"></param>
+    /// <param name="otherMeshEdge"></param>
     /// <param name="connectionMargin"></param>
     /// <returns></returns>
-    public bool HasIntersectionWithEdge(EdgeDatum otherEdge, bool onThisEdge = true, bool onOtherEdge = true)
+    public bool HasIntersectionWithEdge(MeshEdge otherMeshEdge, bool onThisEdge = true, bool onOtherEdge = true)
     {
-        VertexDatum? intersectionPoint = GetIntersectionWithEdge(otherEdge, onThisEdge, onOtherEdge);
+        VertexDatum? intersectionPoint = GetIntersectionWithEdge(otherMeshEdge, onThisEdge, onOtherEdge);
         return intersectionPoint.HasValue;
     }
 
-    public bool ConnectsToEdge(EdgeDatum otherEdge, float acceptableDifference = 0f)
+    public bool ConnectsToEdge(MeshEdge otherMeshEdge, float acceptableDifference = 0f)
     {
-        EdgeDatum thisEdge = this;
-        bool isConnection = otherEdge.Vertices.Any(
-            (otherVertex) => otherVertex == thisEdge.Vertex1 || otherVertex == thisEdge.Vertex2);
+        MeshEdge thisMeshEdge = this;
+        bool isConnection = otherMeshEdge.Vertices.Any(
+            (otherVertex) => otherVertex == thisMeshEdge.Vertex1 || otherVertex == thisMeshEdge.Vertex2);
         return isConnection;
     }
 
@@ -112,14 +112,14 @@ public struct EdgeDatum
     /// See https://www.topcoder.com/community/array-science/array-science-tutorials/geometry-concepts-line-intersection-and-its-applications
     /// Returns false if edges are connected at the point of intersection.
     /// </summary>
-    /// <param name="otherEdge"></param>
+    /// <param name="otherMeshEdge"></param>
     /// <param name="connectionMargin">Any vertices whose distance from one another
     /// fall under the connection margin will not belong to edges that can intersect one another.
     /// </param>
     /// <returns></returns>
-    public Vector3? GetIntersectionWithEdge(EdgeDatum otherEdge, bool onThisEdge = true, bool onOtherEdge = true)
+    public Vector3? GetIntersectionWithEdge(MeshEdge otherMeshEdge, bool onThisEdge = true, bool onOtherEdge = true)
     {
-        if (otherEdge.ConnectsToEdge(this))
+        if (otherMeshEdge.ConnectsToEdge(this))
         {
             return null;
         }
@@ -128,9 +128,9 @@ public struct EdgeDatum
         float thisXDiff = Vertex1.X - Vertex2.X;
         double thisC = thisYDiff * Vertex1.X + thisXDiff * Vertex1.Y;
 
-        float otherYDiff = otherEdge.Vertex2.Y - otherEdge.Vertex1.Y;
-        float otherXDiff = otherEdge.Vertex1.X - otherEdge.Vertex2.X;
-        double otherC = otherYDiff * otherEdge.Vertex1.X + otherXDiff * otherEdge.Vertex1.Y;
+        float otherYDiff = otherMeshEdge.Vertex2.Y - otherMeshEdge.Vertex1.Y;
+        float otherXDiff = otherMeshEdge.Vertex1.X - otherMeshEdge.Vertex2.X;
+        double otherC = otherYDiff * otherMeshEdge.Vertex1.X + otherXDiff * otherMeshEdge.Vertex1.Y;
 
         double det = thisYDiff * otherXDiff - otherYDiff * thisXDiff;
 
@@ -140,7 +140,7 @@ public struct EdgeDatum
             double y = (thisYDiff * otherC - otherYDiff * thisC) / det;
             Vector3 intersectionPoint = new Vector3((float) x, (float) y, 0f);
             if ((!onThisEdge || VertexLiesOnEdge(intersectionPoint)) &&
-                (!onOtherEdge || otherEdge.VertexLiesOnEdge(intersectionPoint)))
+                (!onOtherEdge || otherMeshEdge.VertexLiesOnEdge(intersectionPoint)))
             {
                 return intersectionPoint;
             }

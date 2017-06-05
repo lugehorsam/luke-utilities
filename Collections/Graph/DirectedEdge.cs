@@ -1,9 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Utilities
 {
-	public class DirectedEdge<T> : IDirectedEdge<T>
+	[Serializable]
+	public class DirectedEdge<T> : IDirectedEdge<T>, ISerializationCallbackReceiver
 	{
 		void UpdateNodeEdgeList(INode<T> element)
 		{
@@ -20,10 +23,13 @@ namespace Utilities
 			return element.Equals(Start.Value) ? End: Start; 
 		}
 		
-		public INode<T> Start { get; }
+		public INode<T> Start { get; private set; }
 		
-		public INode<T> End { get; }
-					
+		public INode<T> End { get; private set; }
+
+		[SerializeField] private T _start;
+		[SerializeField] private T _end;
+							
 		public DirectedEdge(T start, T end)
 		{
 			Start = new Node<T>(start);
@@ -72,7 +78,27 @@ namespace Utilities
 
 		public override string ToString()
 		{
-			return this.ToString("Start " + Start, "end " + End);
+			return this.ToString("Start " + Start, "End " + End);
+		}
+
+		public void OnBeforeSerialize()
+		{
+
+		}
+
+		public void OnAfterDeserialize()
+		{
+			if (_start != null)
+			{
+				Start = new Node<T>(_start);
+				UpdateNodeEdgeList(Start);
+			}
+			
+			if (_end != null)
+			{
+				End = new Node<T>(_end);
+				UpdateNodeEdgeList(End);
+			}
 		}				
 	}
 }

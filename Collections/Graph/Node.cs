@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Utilities
 {
@@ -14,5 +14,9 @@ namespace Utilities
             Edges = new List<DirectedEdge<T>>();
         }
 
+        public override string ToString()
+        {
+            return this.ToString(Value);
+        }
     }
 }

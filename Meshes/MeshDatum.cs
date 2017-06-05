@@ -1,40 +1,43 @@
 ﻿using System;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
-[Serializable]
-public struct MeshDatum
+namespace Utilities
 {
-    public Mesh Mesh
+    [Serializable]
+    public struct MeshDatum
     {
-        get { return useMeshAsset ? meshAsset.ToMesh() : TriangleDatum.ToMesh(triangles); }
-    }
+        public Mesh Mesh
+        {
+            get { return useMeshAsset ? meshAsset.ToMesh() : TriangleDatum.ToMesh(triangles); }
+        }
 
-    [SerializeField]
-    private List<TriangleDatum> triangles;
+        [SerializeField]
+        private List<TriangleDatum> triangles;
 
-    public Color Color
-    {
-        get { return color; }
-    }
+        public Color Color
+        {
+            get { return color; }
+        }
 
-    [SerializeField]
-    private Color color;
+        [SerializeField]
+        private Color color;
 
-    [SerializeField] private MeshAsset meshAsset;
-    [SerializeField] private bool useMeshAsset;
+        [SerializeField] private MeshAsset meshAsset;
+        [SerializeField] private bool useMeshAsset;
 
-    public MeshDatum(List<TriangleDatum> triangles, Color color = default(Color), MeshAsset meshAsset = null, bool useMeshAsset = false)
-    {
-        this.triangles = triangles ?? new List<TriangleDatum>();
-        this.color = color;
-        this.meshAsset = meshAsset;
-        this.useMeshAsset = useMeshAsset;
-    }
+        public MeshDatum(List<TriangleDatum> triangles, Color color = default(Color), MeshAsset meshAsset = null, bool useMeshAsset = false)
+        {
+            this.triangles = triangles ?? new List<TriangleDatum>();
+            this.color = color;
+            this.meshAsset = meshAsset;
+            this.useMeshAsset = useMeshAsset;
+        }
 
-    public void AddTriangle(TriangleDatum triangle)
-    {
-        triangles = triangles ?? new List<TriangleDatum>();
-        triangles.Add(triangle);
+        public void AddTriangle(TriangleDatum triangle)
+        {
+            triangles = triangles ?? new List<TriangleDatum>();
+            triangles.Add(triangle);
+        }
     }
 }
