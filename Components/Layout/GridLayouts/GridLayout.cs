@@ -18,10 +18,7 @@ namespace Utilities
             get { return _grid; }
         }
 
-        public Grid<T> Grid
-        {
-            get { return _grid; }
-        }
+        public Grid<T> Grid { get; }
 
         public float CellHeight
         {
@@ -43,21 +40,16 @@ namespace Utilities
             get { return CellWidth * _grid.Columns; }
         }
 
-        private readonly Grid<T> _grid;
+        private Grid<T> _grid;
         private readonly float _cellWidth;
         private readonly float _cellHeight;        
         private readonly RectTransform _rectTransform;
 
-        public GridLayout(Grid<T> grid, float cellWidth, float cellHeight) : base(grid)
-        {
-            _grid = grid;
+        public GridLayout(float cellWidth, float cellHeight) {
+        
             _rectTransform = GameObject.AddComponent<RectTransform>();
             _cellWidth = cellWidth;
             _cellHeight = cellHeight;
-            foreach (var item in grid)
-            {
-                HandleGridItemAdd(item);
-            }
             _grid.OnAfterItemAdd += HandleGridItemAdd;
             _grid.OnAfterItemRemove += HandleGridItemRemove;
         }

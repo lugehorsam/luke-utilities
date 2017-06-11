@@ -8,7 +8,28 @@ namespace Utilities
         where K : View<T> {
         
         private readonly Func<T, K> _viewConstructor;
-        protected readonly ObservableCollection<T> _data;
+
+        public ObservableCollection<T> Data
+        {
+            get { return _data; }
+            set
+            {
+                foreach (T datum in _data)                
+                    HandleAfterDataRemove(datum);                    
+                
+                _data = value;
+                
+                foreach (var datum in _data) 
+                    HandleAfterDataAdd(datum);
+            }
+        }
+        
+        protected ObservableCollection<T> _data;
+
+        public ViewFactory(Func<T, K> viewConstructor) : base(new ObservableCollection<K>())
+        {
+            _viewConstructor = viewConstructor;
+        }
         
         public ViewFactory(ObservableCollection<T> collection, Func<T, K> viewConstructor) : base(new ObservableCollection<K>())
         {
@@ -46,7 +67,6 @@ namespace Utilities
         protected virtual void HandleAfterViewRemove(T data, K view)
         {            
         }
-        
     }
 }
 
