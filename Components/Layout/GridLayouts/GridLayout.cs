@@ -8,17 +8,15 @@ namespace Utilities
     /// <summary>
     /// Arbitrary grid layout. Bottom left is row 0, col 0
     /// </summary>
-    public class GridLayout<T> : Layout<T>, IGridLayout where T : IGridMember, ILayoutMember
+    public class GridLayout<T> : Layout<T, Grid<T>>, IGridLayout where T : IGridMember, ILayoutMember
     {
         public event Action<int> OnCellTouch = delegate { };
-        protected override string Name { get { return "Grid Layout";  } }
+        public override string Name { get { return "Grid Layout";  } }
 
         IGrid IGridLayout.Grid
         {
-            get { return _grid; }
+            get { return Data; }
         }
-
-        public Grid<T> Grid { get; }
 
         public float CellHeight
         {
@@ -32,15 +30,14 @@ namespace Utilities
 
         public float TotalHeight
         {
-            get { return CellHeight * _grid.Rows; }
+            get { return CellHeight * Data.Rows; }
         }
 
         private float TotalWidth
         {
-            get { return CellWidth * _grid.Columns; }
+            get { return CellWidth * Data.Columns; }
         }
 
-        private Grid<T> _grid;
         private readonly float _cellWidth;
         private readonly float _cellHeight;        
         private readonly RectTransform _rectTransform;
@@ -50,8 +47,6 @@ namespace Utilities
             _rectTransform = GameObject.AddComponent<RectTransform>();
             _cellWidth = cellWidth;
             _cellHeight = cellHeight;
-            _grid.OnAfterItemAdd += HandleGridItemAdd;
-            _grid.OnAfterItemRemove += HandleGridItemRemove;
         }
                
         protected override Vector2 GetIdealLocalPosition(T element)
@@ -69,8 +64,8 @@ namespace Utilities
         {
             var offsetCombinations = new Vector2
             (
-                Grid.GetColumnOfIndex(gridIndex) * CellWidth,
-                Grid.GetRowOfIndex(gridIndex) * CellHeight
+                Data.GetColumnOfIndex(gridIndex) * CellWidth,
+                Data.GetRowOfIndex(gridIndex) * CellHeight
             ).GetOffsetCombinations(CellWidth, CellHeight);
             
             return offsetCombinations;
@@ -79,9 +74,11 @@ namespace Utilities
         void HandleGridItemAdd(T item)
         {
             var dispatcher = item as ITouchDispatcher;
-            
+
             if (dispatcher != null)
+            {
                 dispatcher.TouchDispatcher.OnTouch += TouchDispatcherTouched;
+            }
             
             DoLayout();            
         }
@@ -98,8 +95,35 @@ namespace Utilities
 
         void TouchDispatcherTouched(TouchDispatcher dispatcher, Gesture gesture)
         {
+            Diagnostics.Log("Dispatcher touched");
             var gridMember = dispatcher.GetComponent<ViewBinding>().View as IGridMember;
             OnCellTouch(gridMember.Index);
+        }
+
+        protected sealed override void HandleLayoutDatumChanged(Grid<T> oldData, Grid<T> newData)
+        {
+            if (oldData != null)
+            {                
+                oldData.OnAfterItemAdd -= HandleGridItemAdd;
+                oldData.OnAfterItemRemove -= HandleGridItemRemove;
+                
+                
+                foreach (var item in oldData)
+                {
+                    HandleGridItemRemove(item);
+                }
+            }
+
+            if (newData != null)
+            {                
+                newData.OnAfterItemAdd += HandleGridItemAdd;
+                newData.OnAfterItemRemove += HandleGridItemRemove;
+
+                foreach (var item in newData)
+                {
+                    HandleGridItemAdd(item);
+                }
+            }
         }
     }
 }

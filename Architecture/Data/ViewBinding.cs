@@ -10,7 +10,10 @@ namespace Utilities
 			get;
 			set;
 		}
-	
-	}	
 
+		void Update()
+		{
+			gameObject.name = View.Name;
+		}
+	}	
 }

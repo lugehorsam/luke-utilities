@@ -71,12 +71,12 @@ namespace Utilities
     
         public int GetMaxIndex()
         {
-            return _rows * _columns - 1;
+            return GridUtility.GetMaxIndex(_rows, _columns);
         }
        
         public int ToIndex(int row, int col) 
         {
-            return row * _columns + col;
+            return GridUtility.ToIndex(row, col, _rows, _columns);
         }
  
         int[] ToRowCol(int index) {

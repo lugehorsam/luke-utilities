@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Utilities
 {
@@ -46,7 +43,7 @@ namespace Utilities
 
     public class View
     {
-        protected virtual string Name
+        public virtual string Name
         {
             get { return "GO"; }
         }
@@ -67,6 +64,6 @@ namespace Utilities
             GameObject.name = Name;
             var binding = GameObject.AddComponent<ViewBinding>();
             binding.View = this;
-        }                
+        }
     }
 }

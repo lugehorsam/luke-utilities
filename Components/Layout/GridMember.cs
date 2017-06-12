@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Utilities
 {
-
     [Serializable]
     public class GridMember : IGridMember, IComparable<GridMember>
     {
@@ -51,5 +50,5 @@ namespace Utilities
         public GridMember()
         {
         }        
-    }    
+    }
 }

@@ -2,8 +2,8 @@
 
 namespace Utilities
 {
-    public abstract class Layout<T> : View<ObservableList<T>> where T : ILayoutMember
-    {
+    public abstract class Layout<T, TList> : View<TList> where TList : ObservableCollection<T> where T : ILayoutMember
+    {        
         public void DoLayout()
         {
             for (int i = 0; i < Data.Count; i++)
@@ -19,29 +19,36 @@ namespace Utilities
             }
         }
 
-        protected override void HandleDatumChanged(ObservableList<T> oldData, ObservableList<T> newData)
+        protected sealed override void HandleDatumChanged(TList oldData, TList newData)
         {           
             if (oldData != null)
             {
-                oldData.OnAdd -= HandleOnAdd;
-                oldData.OnRemove -= HandleOnRemove;
+                oldData.OnAfterItemAdd -= HandleOnAdd;
+                oldData.OnAfterItemRemove -= HandleOnRemove;
             }
             
             if (newData != null)
             {
-                newData.OnAdd += HandleOnAdd;
-                newData.OnRemove += HandleOnRemove;
+                newData.OnAfterItemAdd += HandleOnAdd;
+                newData.OnAfterItemRemove += HandleOnRemove;
             }
             
             DoLayout();
+
+            HandleLayoutDatumChanged(oldData, newData);
         }
 
+        protected virtual void HandleLayoutDatumChanged(TList oldData, TList newData)
+        {
+            
+        }
+        
         void HandleOnAdd(T datum)
         {
             DoLayout();
         }
         
-        void HandleOnRemove(T datum, int index)
+        void HandleOnRemove(T datum)
         {
             DoLayout();
         }

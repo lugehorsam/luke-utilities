@@ -14,8 +14,11 @@ namespace Utilities
             get { return _data; }
             set
             {
-                foreach (T datum in _data)                
-                    HandleAfterDataRemove(datum);                    
+                if (_data != null)
+                {
+                    foreach (T datum in _data)
+                        HandleAfterDataRemove(datum);
+                }
                 
                 _data = value;
                 
