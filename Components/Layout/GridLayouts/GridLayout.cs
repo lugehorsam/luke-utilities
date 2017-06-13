@@ -11,7 +11,7 @@ namespace Utilities
     public class GridLayout<T> : Layout<T, Grid<T>>, IGridLayout where T : IGridMember, ILayoutMember
     {
         public event Action<int> OnCellTouch = delegate { };
-        public override string Name { get { return "Grid Layout";  } }
+        public override string GameObjectName { get { return "Grid Layout";  } }
 
         IGrid IGridLayout.Grid
         {
@@ -95,8 +95,9 @@ namespace Utilities
 
         void TouchDispatcherTouched(TouchDispatcher dispatcher, Gesture gesture)
         {
-            Diagnostics.Log("Dispatcher touched");
             var gridMember = dispatcher.GetComponent<ViewBinding>().View as IGridMember;
+            Diagnostics.Log("Dispatcher touched with index " + gridMember.Index);
+
             OnCellTouch(gridMember.Index);
         }
 
@@ -106,8 +107,7 @@ namespace Utilities
             {                
                 oldData.OnAfterItemAdd -= HandleGridItemAdd;
                 oldData.OnAfterItemRemove -= HandleGridItemRemove;
-                
-                
+                                
                 foreach (var item in oldData)
                 {
                     HandleGridItemRemove(item);

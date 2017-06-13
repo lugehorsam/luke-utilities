@@ -51,7 +51,7 @@ namespace Utilities
         
         void ValidateMembers()
         {
-            var asList = (List<T>) base.Items;
+            var asList = (List<T>) Items;
             
             asList.Sort((element1, element2) => element1.Index.CompareTo(element2.Index));
             
@@ -76,7 +76,7 @@ namespace Utilities
        
         public int ToIndex(int row, int col) 
         {
-            return GridUtility.ToIndex(row, col, _rows, _columns);
+            return GridUtility.ToIndex(_rows, _columns, row, col);
         }
  
         int[] ToRowCol(int index) {

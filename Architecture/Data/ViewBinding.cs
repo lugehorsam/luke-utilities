@@ -13,7 +13,7 @@ namespace Utilities
 
 		void Update()
 		{
-			gameObject.name = View.Name;
+			gameObject.name = View.GameObjectName;
 		}
 	}	
 }

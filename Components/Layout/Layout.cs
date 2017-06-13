@@ -12,7 +12,7 @@ namespace Utilities
 
                 if (behavior == null)
                     continue;
-
+                                
                 behavior.GameObject.transform.SetParent(GameObject.transform);
                 behavior.GameObject.transform.SetSiblingIndex(i);
                 behavior.OnLocalLayout(GetIdealLocalPosition(behavior));
@@ -34,7 +34,6 @@ namespace Utilities
             }
             
             DoLayout();
-
             HandleLayoutDatumChanged(oldData, newData);
         }
 
@@ -45,6 +44,7 @@ namespace Utilities
         
         void HandleOnAdd(T datum)
         {
+            datum.RectTransform.SetSiblingIndex(Data.IndexOf(datum));
             DoLayout();
         }
         

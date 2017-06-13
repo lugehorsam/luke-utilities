@@ -1,6 +1,6 @@
 ﻿using System;
 
-public static class ObjectExtensions
+public static class ObjectExt
 {
     public static string ToString(this Object thisObject, params object[] members)
     {

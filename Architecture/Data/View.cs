@@ -31,7 +31,8 @@ namespace Utilities
         
         public override string ToString()
         {
-            return this.ToString("View", stateMachine.State);
+            
+            return this.ToString("View", stateMachine.State != null ? stateMachine.State.ToString() : "");
         }
 
         public void Bind(StateMachine<T> stateMachine)
@@ -43,9 +44,9 @@ namespace Utilities
 
     public class View
     {
-        public virtual string Name
+        public virtual string GameObjectName
         {
-            get { return "GO"; }
+            get { return ToString(); }
         }
         
         public GameObject GameObject
@@ -61,7 +62,7 @@ namespace Utilities
         public View()
         {
             GameObject = new GameObject();
-            GameObject.name = Name;
+            GameObject.name = GameObjectName;
             var binding = GameObject.AddComponent<ViewBinding>();
             binding.View = this;
         }

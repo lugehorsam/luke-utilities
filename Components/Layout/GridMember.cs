@@ -38,7 +38,10 @@ namespace Utilities
 
         public override string ToString()
         {
-            return this.ToString(Row, Column);
+            string str = this.ToString(Row, Column);
+            if (Grid != null)
+                str += " Index " + Index;
+            return str;
         }
 
         public GridMember(int row, int column)
