@@ -36,7 +36,12 @@ namespace Utilities
             }
 
             return newList;
-        }       
+        }
+
+        public static int GetRandomIndex<T>(this IList<T> thisList)
+        {
+            return Randomizer.Randomize(0, thisList.Count - 1);
+        }
     }    
 
 }

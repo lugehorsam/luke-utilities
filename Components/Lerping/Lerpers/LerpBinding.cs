@@ -39,7 +39,7 @@ namespace Utilities
         protected abstract Func<TProperty, TProperty, float, TProperty> GetLerpDelegate ();
 
 
-        public IEnumerator CreateEnumerator (FiniteLerp<TProperty> lerp)
+        public IEnumerator CreateLerpEnumerator (FiniteLerp<TProperty> lerp)
         {
             while (!lerp.HasReachedTargetTime) {
                 TProperty lerpedProperty = lerp.GetLerpedProperty (GetProperty (), GetLerpDelegate());
