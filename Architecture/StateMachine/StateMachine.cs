@@ -27,8 +27,7 @@ namespace Utilities
 
                 IState oldState = oldProperty as IState;
                 IState newState = value as IState;
-        
-                
+                       
                 if (oldState != null)
                     oldState.HandleTransitionFrom();
         
@@ -50,12 +49,37 @@ namespace Utilities
         protected virtual void HandleStateTransition(T oldState, T newState)
         {
         }
-
+        
         public StateMachine() {}
         
         public static implicit operator T(StateMachine<T> machine)
         {
             return machine.State;
+        }
+        
+        public static bool IsMachineChange<K>(T data1, T data2, Func<T, K> getProperty, out K property1, out K property2)
+        {
+            property1 = default(K);
+            property2 = default(K);
+            
+            if (data1 == null && data2 == null)
+            {
+                return false;
+            }
+            
+            if (data1 == null)
+            {
+                property2 = getProperty(data2);
+                return !property2.Equals(default(K));
+            }
+
+            if (data2 == null)
+            {
+                property1 = getProperty(data1);
+                return !property1.Equals(default(K));
+            }
+
+            return !getProperty(data1).Equals(data2);
         }
     }   
 }

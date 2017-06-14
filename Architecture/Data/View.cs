@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Utilities
 {
@@ -28,10 +29,9 @@ namespace Utilities
         {
             stateMachine.OnStateChanged += HandleDatumChanged;
         }
-        
+
         public override string ToString()
-        {
-            
+        {            
             return this.ToString("View", stateMachine.State != null ? stateMachine.State.ToString() : "");
         }
 
@@ -39,7 +39,7 @@ namespace Utilities
         {
             Data = stateMachine.State;
             stateMachine.OnStateChanged += (oldVal, newVal) => Data = newVal;
-        } 
+        }      
     }
 
     public class View
