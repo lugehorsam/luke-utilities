@@ -8,12 +8,11 @@ public class FiniteLerp<TProperty>
     {
         get
         {
-            return targetDuration;
+            return _targetDuration;
         }
     }
 
-    [SerializeField]
-    float targetDuration = 1f;
+    float _targetDuration = 1f;
 
     public float CurrentTime
     {
@@ -33,7 +32,7 @@ public class FiniteLerp<TProperty>
         {
             if (currentDirection == LerpDirection.Forwards)
             {
-                return CurrentTime >= targetDuration;
+                return CurrentTime >= _targetDuration;
             }
             else {
                 return CurrentTime <= 0f;
@@ -41,18 +40,17 @@ public class FiniteLerp<TProperty>
         }
     }
 
-    Func<float, float> easing;
+    Func<float, float> _easing;
 
     public TProperty TargetProperty
     {
         get
         {
-            return targetProperty;
+            return _targetProperty;
         }
     }
 
-    [SerializeField]
-    TProperty targetProperty;
+    TProperty _targetProperty;
 
     LerpDirection currentDirection = LerpDirection.Forwards;
 
@@ -62,7 +60,7 @@ public class FiniteLerp<TProperty>
         {
             if (instant)
             {
-                currentTime = targetDuration;
+                currentTime = _targetDuration;
             }
             else {
                 currentTime += Time.deltaTime;
@@ -82,23 +80,23 @@ public class FiniteLerp<TProperty>
 
     public TProperty GetLerpedProperty(TProperty startProperty, Func<TProperty, TProperty, float, TProperty> lerpDelegate)
     {
-        float scaledTime = easing(CurrentTime / TargetDuration);
+        Debug.Log("Current time " + CurrentTime + "Target " + TargetDuration);
+        float scaledTime = _easing(CurrentTime / TargetDuration);
         TProperty lerpedValue = lerpDelegate(startProperty, TargetProperty, scaledTime);
         return lerpedValue;
     }
 
     public FiniteLerp(TProperty targetProperty, float targetDuration, TweenType tweenType)
     {
-        this.targetProperty = targetProperty;
-        this.targetDuration = targetDuration;
-        this.easing = tweenType.TweenTypeToFunction();
+        _targetProperty = targetProperty;
+        _targetDuration = targetDuration;
+        _easing = tweenType.TweenTypeToFunction();
     }
 
     public FiniteLerp(TProperty targetProperty, float targetDuration, Func<float, float> easing)
     {
-        this.targetProperty = targetProperty;
-        this.targetDuration = targetDuration;
-        this.easing = easing;
+        _targetProperty = targetProperty;
+        _targetDuration = targetDuration;
+        _easing = easing;
     }
-
 }

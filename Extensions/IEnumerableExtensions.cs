@@ -53,5 +53,10 @@ namespace Utilities
         {
             return thisEnumerable.All(otherEnumerable.Contains) && otherEnumerable.All(thisEnumerable.Contains);
         }
+        
+        public static int GetRandomIndex<T>(this IEnumerable<T> thisEnumerable)
+        {
+            return Randomizer.Randomize(0, thisEnumerable.Count() - 1);
+        }
     }  
 }
