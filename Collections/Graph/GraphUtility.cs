@@ -6,7 +6,8 @@ namespace Utilities
 {	
 	public static class GraphUtility {
 			
-		public static List<List<TEdge>> GetConnectedComponents<TElement, TEdge>(IEnumerable<TEdge> edges) 
+		public static List<TComponent> GetComponents<TComponent, TEdge, TElement>(IEnumerable<TEdge> edges) 
+			where TComponent : Component<TEdge>, new()
 			where TEdge : IDirectedEdge<TElement> 
 		{
 			
@@ -16,13 +17,13 @@ namespace Utilities
 			var visitedNodes = new HashSet<INode<TElement>>();
 			INode<TElement>[] distinctNodes = edgesArray.SelectMany<TEdge, INode<TElement>>(edge => edge).Distinct().ToArray();
 			
-			var connectedComponents = new List<List<TEdge>>();
+			var connectedComponents = new List<TComponent>();
 			
 			foreach (var node in distinctNodes)
 			{
 				if (visitedNodes.Add(node))
 				{
-					var currentComponent = new List<TEdge>();
+					var currentComponent = new TComponent();
 
 					var dfs = new DepthFirstSearch<TElement>(node);
 					INode<TElement> lastNode = default(INode<TElement>);
