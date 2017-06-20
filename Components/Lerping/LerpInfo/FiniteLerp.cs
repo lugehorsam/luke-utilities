@@ -80,7 +80,6 @@ public class FiniteLerp<TProperty>
 
     public TProperty GetLerpedProperty(TProperty startProperty, Func<TProperty, TProperty, float, TProperty> lerpDelegate)
     {
-        Debug.Log("Current time " + CurrentTime + "Target " + TargetDuration);
         float scaledTime = _easing(CurrentTime / TargetDuration);
         TProperty lerpedValue = lerpDelegate(startProperty, TargetProperty, scaledTime);
         return lerpedValue;
