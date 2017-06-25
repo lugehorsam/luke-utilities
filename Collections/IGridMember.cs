@@ -1,6 +1,5 @@
 ﻿namespace Utilities
 {
- 
     public interface IGridMember<T> : IGridMember where T : IGridMember<T> {
     
         Grid<T> Grid

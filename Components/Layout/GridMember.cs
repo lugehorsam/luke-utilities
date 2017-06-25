@@ -52,6 +52,13 @@ namespace Utilities
 
         public GridMember()
         {
+                    
+            public GridMember(int index, IGrid grid)
+            {
+                Grid = grid;
+                _row = grid.GetRowOfIndex(index);
+                _column = grid.GetColumnOfIndex(index);
+            }
         }        
     }
 }

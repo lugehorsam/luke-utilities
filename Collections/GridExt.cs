@@ -1,9 +1,10 @@
 ﻿using System;
+using NUnit.Framework.Interfaces;
 using UnityEngine;
 
 namespace Utilities
 {
-    public static class GridUtility {
+    public static class GridExt {
 
         public static int GetManhattanDistanceFrom (IGridMember elementA, IGridMember elementB)
         {
@@ -36,6 +37,23 @@ namespace Utilities
         public static int GetColumnOfIndex(int index, int columns) {
             return index % columns;
         }
-    }
+        
+        public static IGridMember GetProjectedMember(IGrid sourceGrid, IGrid gridToProjectOnto, IGridMember memberToProject)
+        {
+            if (memberToProject.Index > gridToProjectOnto.GetMaxIndex())
+            {
+                throw new ArgumentOutOfRangeException();
+            }            
 
+            var projectedMember = new GridMember(memberToProject.Row, memberToProject.Column);
+            projectedMember.Grid = gridToProjectOnto;
+
+            return projectedMember;
+        }
+
+        public static IGridMember GetProjectedMember(IGrid sourceGrid, IGrid gridtoProjectOnto, int memberIndex)
+        {
+            return GetProjectedMember(sourceGrid, gridtoProjectOnto, new GridMember(memberIndex, gridtoProjectOnto));
+        }
+    }
 }
