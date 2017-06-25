@@ -6,14 +6,17 @@ namespace Utilities
     public static class IEnumerableExtensions {
 
         public static string ToFormattedString<T>(this IEnumerable<T> thisEnumerable) {
-            if (thisEnumerable == null) {
-
+            
+            if (thisEnumerable == null) 
+            {
                 return "";
             }
 
             string formattedString = "";
-            foreach (T item in thisEnumerable) {
-                formattedString += (item);
+            
+            foreach (T item in thisEnumerable) 
+            {
+                formattedString += item.ToString();
 
                 if (!item.Equals(thisEnumerable.LastOrDefault()))
                     formattedString += ", ";
@@ -26,6 +29,7 @@ namespace Utilities
             int randNum = Randomizer.Randomize(0, thisEnumerable.Count() - 1);
 
             int counter = 0;
+            
             foreach (var item in thisEnumerable)
             {
                 if (counter == randNum)
