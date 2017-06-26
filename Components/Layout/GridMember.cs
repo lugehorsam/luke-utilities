@@ -50,15 +50,16 @@ namespace Utilities
             _column = column;
         }
 
+        public GridMember(int index, IGrid grid)
+        {
+            Grid = grid;
+            _row = grid.GetRowOfIndex(index);
+            _column = grid.GetColumnOfIndex(index);
+            Debug.Log("Created grid member " + this.ToString());
+        }
+
         public GridMember()
         {
-                    
-            public GridMember(int index, IGrid grid)
-            {
-                Grid = grid;
-                _row = grid.GetRowOfIndex(index);
-                _column = grid.GetColumnOfIndex(index);
-            }
-        }        
+        }
     }
 }

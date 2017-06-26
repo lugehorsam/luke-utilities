@@ -1,5 +1,4 @@
 ﻿using System;
-using NUnit.Framework.Interfaces;
 using UnityEngine;
 
 namespace Utilities
@@ -30,30 +29,56 @@ namespace Utilities
             return row * columns + col;
         }
         
-        public static int GetRowOfIndex(int index, int columns) {
+        public static int GetRowOfIndex(int index, int columns) 
+        {
             return (int) Mathf.Floor (index / columns);
         }
         
-        public static int GetColumnOfIndex(int index, int columns) {
+        public static int GetColumnOfIndex(int index, int columns) 
+        {
             return index % columns;
         }
         
-        public static IGridMember GetProjectedMember(IGrid sourceGrid, IGrid gridToProjectOnto, IGridMember memberToProject)
+        public static IGridMember GetProjectedMember
+        (
+            IGrid sourceGrid, 
+            IGrid gridToProjectOnto, 
+            IGridMember memberToProject,            
+            int rowOffset = 0,
+            int colOffset = 0
+        )
         {
-            if (memberToProject.Index > gridToProjectOnto.GetMaxIndex())
-            {
-                throw new ArgumentOutOfRangeException();
-            }            
-
-            var projectedMember = new GridMember(memberToProject.Row, memberToProject.Column);
-            projectedMember.Grid = gridToProjectOnto;
-
-            return projectedMember;
+            return GetProjectedMember(sourceGrid, gridToProjectOnto, memberToProject.Index);
         }
 
-        public static IGridMember GetProjectedMember(IGrid sourceGrid, IGrid gridtoProjectOnto, int memberIndex)
+        public static IGridMember GetProjectedMember
+        (
+            IGrid sourceGrid, 
+            IGrid gridToProjectOnto,
+            int indexToProject,
+            int rowOffset = 0,
+            int colOffset = 0
+        )
         {
-            return GetProjectedMember(sourceGrid, gridtoProjectOnto, new GridMember(memberIndex, gridtoProjectOnto));
+            int origRow = sourceGrid.GetRowOfIndex(indexToProject);
+            int origCol = sourceGrid.GetColumnOfIndex(indexToProject);
+
+            int projRow = origRow + rowOffset;
+            int projCol = colOffset + colOffset;
+                        
+            var projectedMember = new GridMember(projRow, projCol);
+
+            projectedMember.Grid = gridToProjectOnto;
+
+            if (projectedMember.Index > gridToProjectOnto.GetMaxIndex())
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            projectedMember.Row += rowOffset;
+            projectedMember.Column += colOffset;
+
+            return projectedMember;
         }
     }
 }
