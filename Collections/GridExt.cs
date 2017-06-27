@@ -64,7 +64,7 @@ namespace Utilities
             int origCol = sourceGrid.GetColumnOfIndex(indexToProject);
 
             int projRow = origRow + rowOffset;
-            int projCol = colOffset + colOffset;
+            int projCol = origCol + colOffset;
                         
             var projectedMember = new GridMember(projRow, projCol);
 
