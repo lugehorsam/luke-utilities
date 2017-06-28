@@ -48,7 +48,7 @@ namespace Utilities
             int colOffset = 0
         )
         {
-            return GetProjectedMember(sourceGrid, gridToProjectOnto, memberToProject.Index);
+            return GetProjectedMember(sourceGrid, gridToProjectOnto, memberToProject.Index, rowOffset, colOffset);
         }
 
         public static IGridMember GetProjectedMember
@@ -62,21 +62,22 @@ namespace Utilities
         {
             int origRow = sourceGrid.GetRowOfIndex(indexToProject);
             int origCol = sourceGrid.GetColumnOfIndex(indexToProject);
-
-            int projRow = origRow + rowOffset;
-            int projCol = origCol + colOffset;
                         
-            var projectedMember = new GridMember(projRow, projCol);
+            var projectedMember = new GridMember(origRow, origCol);
 
             projectedMember.Grid = gridToProjectOnto;
+            
+            Diagnostics.Log("projected member before offset " + projectedMember.Row + " , " + projectedMember.Column + " , " + projectedMember.Index);
+            
+            projectedMember.Row += rowOffset;
+            projectedMember.Column += colOffset;
+            
+            Diagnostics.Log("projected member after offset " + projectedMember.Row + " , " + projectedMember.Column + " , " + projectedMember.Index);
 
             if (projectedMember.Index > gridToProjectOnto.GetMaxIndex())
             {
                 throw new ArgumentOutOfRangeException();
             }
-
-            projectedMember.Row += rowOffset;
-            projectedMember.Column += colOffset;
 
             return projectedMember;
         }
