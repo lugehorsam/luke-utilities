@@ -1,9 +1,24 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using System.Collections.Generic;
+using UnityEngine;
+using Utilities.Input;
 
 namespace Utilities
 {
     public abstract class Layout<T, TList> : View<TList> where TList : ObservableCollection<T> where T : ILayoutMember
-    {        
+    {
+        public IEnumerable<TouchDispatcher> GetTouchDispatchers()
+        {
+            foreach (var datum in Data)
+            {
+                Diagnostics.Log("datum is " + datum);
+                Diagnostics.Log("is it an itouchdispatcher " + (datum is ITouchDispatcher));
+            }
+            var iTouchDispatchers = Data.OfType<ITouchDispatcher>();
+            Debug.Log(iTouchDispatchers.Count());
+            return iTouchDispatchers.Select(dispatcher => dispatcher.TouchDispatcher);
+        }
+        
         public void DoLayout()
         {
             for (int i = 0; i < Data.Count; i++)

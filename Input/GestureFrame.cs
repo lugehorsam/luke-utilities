@@ -1,53 +1,57 @@
 ﻿using UnityEngine;
-using System.Linq;
 
 public struct GestureFrame {
 
+    /// <summary>
+    /// Position of the gesture frame in world space.
+    /// </summary>
     public Vector2 Position
     {
         get
         {
-            return position;
+            return _position;
         }
     }
-    Vector2 position;
+    
+    private readonly Vector2 _position;
 
-    RaycastHit? hitInfo;
+    RaycastHit? _hitInfo;
 
     public float Time
     {
         get
         {
-            return time;
+            return _time;
         }
     }
-    float time;
+    
+    float _time;
 
     public GestureFrame(Vector2 position, RaycastHit? hitInfo = null)
     {
-        this.position = position;
-        this.hitInfo = hitInfo;
-        this.time = UnityEngine.Time.timeSinceLevelLoad;
+        _position = position;
+        _hitInfo = hitInfo;
+        _time = UnityEngine.Time.timeSinceLevelLoad;
     }
 
     public RaycastHit? HitForCollider(Collider otherCollider)
     {
-        return hitInfo.HasValue && 
-                      hitInfo.Value.collider == otherCollider ? 
-                      hitInfo :
+        return _hitInfo.HasValue && 
+                      _hitInfo.Value.collider == otherCollider ? 
+                      _hitInfo :
                       null;
     }
     
     public RaycastHit? HitForCollider(Collider2D otherCollider)
     {
-        return hitInfo.HasValue && 
-               hitInfo.Value.collider == otherCollider ? 
-            hitInfo :
+        return _hitInfo.HasValue && 
+               _hitInfo.Value.collider == otherCollider ? 
+            _hitInfo :
             null;
     }
 
     public override string ToString()
     {
-        return string.Format("[GestureFrame: Position={0}, Time={1}, HitInfo={2}]", Position, Time, hitInfo);
+        return string.Format("[GestureFrame: Position={0}, Time={1}, HitInfo={2}]", Position, Time, _hitInfo);
     }
 }

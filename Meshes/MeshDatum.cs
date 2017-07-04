@@ -9,7 +9,7 @@ namespace Utilities
     {
         public Mesh Mesh
         {
-            get { return useMeshAsset ? meshAsset.ToMesh() : TriangleDatum.ToMesh(triangles); }
+            get { return useMeshAsset ? meshAsset.ToMesh() : TriangleDatum.ToUnityMesh(triangles); }
         }
 
         [SerializeField]

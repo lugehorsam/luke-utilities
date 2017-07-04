@@ -87,6 +87,7 @@ public class Gesture {
             {
                 return null;
             }
+            
             return gestureFrames[gestureFrames.Count - 2];
         }
     }

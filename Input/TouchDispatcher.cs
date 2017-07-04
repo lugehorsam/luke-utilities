@@ -1,7 +1,7 @@
 ﻿namespace Utilities.Input
 {
-    using UnityEngine;
     using System;
+    using UnityEngine;
 
     public class TouchDispatcher : MonoBehaviour
     {
@@ -24,8 +24,20 @@
         protected virtual void HandleOnRelease(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
         protected virtual void HandleOnDrag(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
         protected virtual void HandleOnDragLeave(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
+        
+        
+        /// <summary>
+        /// May be null if there is no touch input.
+        /// </summary>
+        public Gesture CurrentGesture 
+        {
+            get
+            {
+                return currentGesture;
+            }
+        }
 
-        protected Gesture currentGesture;
+        private Gesture currentGesture;
 
         public void Init(Vector3 colliderSize)
         {            

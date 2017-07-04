@@ -16,7 +16,7 @@ namespace Utilities
         {
             List<TriangleDatum> effectiveTriangles = new List<TriangleDatum>(triangles);       
             effectiveTriangles.AddRange(meshAssets.SelectMany(mesh => mesh.triangles));            
-            return TriangleDatum.ToMesh(triangles);
+            return TriangleDatum.ToUnityMesh(triangles);
         }
     }    
 }

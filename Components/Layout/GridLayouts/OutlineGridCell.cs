@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-namespace Utilities
+﻿namespace Utilities
 { 
 	public class OutlineGridCell : View
 	{

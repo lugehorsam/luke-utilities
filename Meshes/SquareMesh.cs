@@ -42,9 +42,9 @@ namespace Utilities.Meshes
             };
         }
 
-        public Mesh ToMesh()
+        public Mesh ToUnityMesh()
         {
-            return TriangleDatum.ToMesh(triangles);
+            return TriangleDatum.ToUnityMesh(triangles);
         }
     }
 }

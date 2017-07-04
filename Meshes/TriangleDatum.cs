@@ -103,7 +103,7 @@ namespace Utilities
             return triangles.ToArray();
         }
 
-        public static Mesh ToMesh(ICollection<TriangleDatum> triangles)
+        public static Mesh ToUnityMesh(ICollection<TriangleDatum> triangles)
         {
             List<int> triangleIndices = new List<int>();
             List<Vector3> vertices = new List<Vector3>();

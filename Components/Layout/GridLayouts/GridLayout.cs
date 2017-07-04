@@ -10,7 +10,6 @@ namespace Utilities
     /// </summary>
     public class GridLayout<T> : Layout<T, Grid<T>>, IGridLayout where T : IGridMember, ILayoutMember
     {
-        public event Action<int> OnCellTouch = delegate { };
         public override string GameObjectName { get { return "Grid Layout";  } }
 
         IGrid IGridLayout.Grid
@@ -37,17 +36,17 @@ namespace Utilities
         {
             get { return CellWidth * Data.Columns; }
         }
-
+        
         private readonly float _cellWidth;
         private readonly float _cellHeight;        
         private readonly RectTransform _rectTransform;
 
-        public GridLayout(float cellWidth, float cellHeight) {
-        
+        public GridLayout(float cellWidth, float cellHeight) 
+        {
             _rectTransform = GameObject.AddComponent<RectTransform>();
             _cellWidth = cellWidth;
             _cellHeight = cellHeight;
-        }
+        }        
                
         protected override Vector2 GetIdealLocalPosition(T element)
         {
@@ -70,35 +69,15 @@ namespace Utilities
             
             return offsetCombinations;
         }
-
+        
         void HandleGridItemAdd(T item)
-        {
-            var dispatcher = item as ITouchDispatcher;
-
-            if (dispatcher != null)
-            {
-                dispatcher.TouchDispatcher.OnTouch += TouchDispatcherTouched;
-            }
-            
+        {            
             DoLayout();            
         }
 
         void HandleGridItemRemove(T item)
         {
-            var dispatcher = item as ITouchDispatcher;
-            
-            if (dispatcher != null)
-                dispatcher.TouchDispatcher.OnTouch -= TouchDispatcherTouched;
-            
-             DoLayout();   
-        }
-
-        void TouchDispatcherTouched(TouchDispatcher dispatcher, Gesture gesture)
-        {
-            var gridMember = dispatcher.GetComponent<ViewBinding>().View as IGridMember;
-            Diagnostics.Log("Dispatcher touched with index " + gridMember.Index);
-
-            OnCellTouch(gridMember.Index);
+            DoLayout();   
         }
 
         protected sealed override void HandleLayoutDatumChanged(Grid<T> oldData, Grid<T> newData)
@@ -125,5 +104,7 @@ namespace Utilities
                 }
             }
         }
+        
+        
     }
 }

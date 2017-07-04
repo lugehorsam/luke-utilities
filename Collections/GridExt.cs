@@ -66,14 +66,10 @@ namespace Utilities
             var projectedMember = new GridMember(origRow, origCol);
 
             projectedMember.Grid = gridToProjectOnto;
-            
-            Diagnostics.Log("projected member before offset " + projectedMember.Row + " , " + projectedMember.Column + " , " + projectedMember.Index);
-            
+                        
             projectedMember.Row += rowOffset;
             projectedMember.Column += colOffset;
             
-            Diagnostics.Log("projected member after offset " + projectedMember.Row + " , " + projectedMember.Column + " , " + projectedMember.Index);
-
             if (projectedMember.Index > gridToProjectOnto.GetMaxIndex())
             {
                 throw new ArgumentOutOfRangeException();
