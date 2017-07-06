@@ -3,7 +3,7 @@
 public struct GestureFrame {
 
     /// <summary>
-    /// Position of the gesture frame in world space.
+    /// Position of the gesture frame in screen space.
     /// </summary>
     public Vector2 Position
     {
