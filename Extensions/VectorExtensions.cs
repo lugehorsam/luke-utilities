@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public static class VectorExtensions {
     
@@ -69,27 +71,30 @@ public static class VectorExtensions {
         return 0f;
     }
 
-    public static Axis DominantAxis(this Vector3 thisVector)
+    public static Axis DominantAxis(this Vector3 thisVector, List<Axis> excludedAxes = null)
     {
+        var axisValues = new List<KeyValuePair<Axis, float>>();
+        
         float xMag = Math.Abs(thisVector.x);
         float yMag = Math.Abs(thisVector.y);
         float zMag = Math.Abs(thisVector.z);
 
-        if (xMag > yMag && xMag > zMag)
-        {
-            return Axis.X;
-        }
+        axisValues.Add(new KeyValuePair<Axis, float>(Axis.X, xMag));
+        axisValues.Add(new KeyValuePair<Axis, float>(Axis.Y, yMag));
+        axisValues.Add(new KeyValuePair<Axis, float>(Axis.Z, zMag));
 
-        if (yMag > xMag && yMag > zMag)
-        {
-            return Axis.Y;
-        }
+        var sortedAxisValues = axisValues.OrderByDescending(keyVal => keyVal.Value);
 
-        if (zMag > yMag && zMag > xMag)
+        foreach (var axisMagnitude in sortedAxisValues)
         {
-            return Axis.Z;
+            if (excludedAxes != null && excludedAxes.Contains(axisMagnitude.Key))
+            {
+                continue;
+            }
+            
+            return axisMagnitude.Key;
         }
-
+        
         return Axis.None;
     }
 
@@ -172,5 +177,10 @@ public static class VectorExtensions {
     public static Vector3 SetZ(this Vector3 thisVector, float z)
     {
         return new Vector3(thisVector.x, thisVector.y, z);
+    }
+
+    public static Vector3 Add(Vector3 vector3, Vector2 vector2)
+    {
+        return new Vector3(vector2.x + vector2.x, vector2.y + vector3.y, vector3.z);        
     }
 }

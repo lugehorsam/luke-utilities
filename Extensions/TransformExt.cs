@@ -35,4 +35,17 @@ public static class TransformExt {
         t.localScale = Vector3.one;
         t.sizeDelta = Vector2.zero;
     }
+    
+    /// <summary>
+    /// In world space
+    /// </summary>
+    /// <param name="t"></param>
+    public static Vector3 CenterWorldSpace( this RectTransform t )
+    {
+        var pos = VectorExtensions.Add(t.position, new Vector3(t.rect.width/2, -t.rect.height/2, 0));
+        Debug.Log("t. position " + t.position + " rect size " + t.rect.size);
+           
+
+        return pos;
+    }
 }

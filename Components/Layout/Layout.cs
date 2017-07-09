@@ -7,13 +7,14 @@ namespace Utilities
 {
     public abstract class Layout<T, TList> : View<TList> where TList : ObservableCollection<T> where T : ILayoutMember
     {
+        public T this[int i]
+        {
+            get { return Data[i]; }
+            set { Data[i] = value; }
+        }
+        
         public IEnumerable<TouchDispatcher> GetTouchDispatchers()
         {
-            foreach (var datum in Data)
-            {
-                Diagnostics.Log("datum is " + datum);
-                Diagnostics.Log("is it an itouchdispatcher " + (datum is ITouchDispatcher));
-            }
             var iTouchDispatchers = Data.OfType<ITouchDispatcher>();
             Debug.Log(iTouchDispatchers.Count());
             return iTouchDispatchers.Select(dispatcher => dispatcher.TouchDispatcher);
