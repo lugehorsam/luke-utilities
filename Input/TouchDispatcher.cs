@@ -76,8 +76,6 @@
 
             if (firstTouch || hold)
             {
-                Diagnostics.Log("hold for " + this.gameObject);
-
                 GestureFrame gestureFrame = new GestureFrame(Input.mousePosition, hitInfo);
                 currentGesture.AddGestureFrame(gestureFrame);
                 HandleOnHold(this, currentGesture);
