@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using UnityEngine;
-
 
 namespace Utilities.Input
 {
@@ -28,7 +26,7 @@ namespace Utilities.Input
 			foreach (var touchDispatcher in gridLayout.GetTouchDispatchers())
 			{
 				touchDispatcher.OnTouch += HandleOnTouch;
-				touchDispatcher.OnHold += HandleOnHold;
+				touchDispatcher.OnDrag += HandleOnDrag;
 				touchDispatcher.OnRelease += HandleOnRelease;
 			}
 		}
@@ -36,15 +34,16 @@ namespace Utilities.Input
 		void HandleOnTouch(TouchDispatcher touchDispatcher, Gesture gesture)
 		{
 			T item = FromTouchDispatcher(touchDispatcher);
+			_lineBinding.SetInitialProperty(touchDispatcher.View.GameObject.GetComponent<RectTransform>().position);
 			_sourceItem = item;
 		}
 
 		T FromTouchDispatcher(TouchDispatcher dispatcher)
 		{
-			return dispatcher.GetComponent<ViewBinding>().View as T;
+			return dispatcher.View as T;
 		}
 
-		void HandleOnHold(TouchDispatcher touchDispatcher, Gesture gesture)
+		void HandleOnDrag(TouchDispatcher touchDispatcher, Gesture gesture)
 		{
 			T item = FromTouchDispatcher(touchDispatcher);
 
@@ -64,9 +63,7 @@ namespace Utilities.Input
 				
 				var originalTile = _gridLayout[StartIndex.Value];
 				Vector3 origCenter = originalTile.RectTransform.position;
-			
-				Diagnostics.Log("orig tile " + originalTile);
-			
+						
 				Vector3 dragOffsetFromTile = origCenter - dragWorldPoint;                
 				Axis dominantAxisFromSource = dragOffsetFromTile.DominantAxis(excludedAxes: new List<Axis>{Axis.Z});
 
@@ -81,7 +78,6 @@ namespace Utilities.Input
 					targetPos = new Vector3(origCenter.x, dragWorldPoint.y, _defaultZ);   
 				}
 											
-				Diagnostics.Log("target pos " + targetPos);
 				_lineBinding.SetProperty(targetPos);
 			}
 		
@@ -89,7 +85,6 @@ namespace Utilities.Input
 
 		void HandleOnRelease(TouchDispatcher touchDispatcher, Gesture gesture)
 		{
-			Diagnostics.Log("Clear");
 			_lineBinding.Clear();
 		}
 	}

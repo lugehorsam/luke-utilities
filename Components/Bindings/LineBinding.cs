@@ -22,7 +22,7 @@ namespace Utilities
 
         public void SetPropertyPermanent(Vector3 position)
         {
-            SetProperty(position);
+            Diagnostics.Log("set property permanent " + position);
             Component.SetPosition(Component.positionCount, position);
         }
 

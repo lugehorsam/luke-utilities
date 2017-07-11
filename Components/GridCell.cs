@@ -22,10 +22,9 @@ namespace Utilities
 
         public override string GameObjectName { get { return "Line Square"; }}
                
-        public GridCell(Vector3 vector1, Vector3 vector2, Vector3 vector3, Vector3 vector4, Vector3 size)
+        public GridCell(LifecycleDispatcher dispatcher, Vector3 vector1, Vector3 vector2, Vector3 vector3, Vector3 vector4, Vector3 size)
         {
-            _touchDispatcher = GameObject.AddComponent<TouchDispatcher>();
-            _touchDispatcher.Init(size);
+            _touchDispatcher = new TouchDispatcher(dispatcher, this, size);
             _touchDispatcher.BoxCollider.center = size / 2;
             
             var initialVectors = new []

@@ -1,10 +1,12 @@
-﻿namespace Utilities.Input
-{
-    using System;
-    using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
-    public class TouchDispatcher : MonoBehaviour
-    {
+namespace Utilities.Input
+{
+    public sealed class TouchDispatcher
+    {               
         public BoxCollider BoxCollider
         {
             get { return _boxCollider; }
@@ -19,13 +21,6 @@
         public event Action<TouchDispatcher, Gesture> OnDrag = (arg1, arg2) => { };
         public event Action<TouchDispatcher, Gesture> OnDragLeave = (arg1, arg2) => { };
 
-        protected virtual void HandleOnTouch(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
-        protected virtual void HandleOnHold(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
-        protected virtual void HandleOnRelease(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
-        protected virtual void HandleOnDrag(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
-        protected virtual void HandleOnDragLeave(TouchDispatcher touchDispatcher, Gesture gestureFrame) { }
-        
-        
         /// <summary>
         /// May be null if there is no touch input.
         /// </summary>
@@ -38,69 +33,65 @@
         }
 
         private Gesture currentGesture;
-
-        public void Init(Vector3 colliderSize)
-        {            
-            _boxCollider = gameObject.AddComponent<BoxCollider>();
-            _boxCollider.size = colliderSize;
-            
-            _rigidbody = gameObject.AddComponent<Rigidbody>();
-            _rigidbody.isKinematic = true;
-            _rigidbody.useGravity = false;           
+        
+        public View View
+        {
+            get { return _view; }
         }
         
-        void Update()
-        {
-            if (_boxCollider == null)
-            {
-                Diagnostics.LogWarning("Touch dispatcher added to " + name + " with no _boxCollider2D");
-                return;
-            }           
-           
-            bool mouseIsDown = Input.GetMouseButton(0);
-            bool mouseWasDown = currentGesture != null;
+        private View _view;
 
-            RaycastHit? hitInfo = GetHitInfo(Input.mousePosition);
+        public TouchDispatcher(LifecycleDispatcher dispatcher, View view, Vector3 colliderSize)
+        {            
+            _boxCollider = view.GameObject.AddComponent<BoxCollider>();
+            _boxCollider.size = colliderSize;
+            
+            _rigidbody = view.GameObject.AddComponent<Rigidbody>();
+            _rigidbody.isKinematic = true;
+            _rigidbody.useGravity = false;
+            _view = view;
+            dispatcher.OnLateUpdate += LateUpdate;
+        }
+        
+        void LateUpdate()
+        {           
+            bool mouseIsDown = UnityEngine.Input.GetMouseButton(0);
+            bool mouseWasDownOverThis = currentGesture != null;            
+            
+            RaycastHit? hitInfo = GetHitInfo(UnityEngine.Input.mousePosition);
 
-            bool firstTouch = !mouseWasDown && mouseIsDown && hitInfo.HasValue;
-            bool hold = mouseWasDown && mouseIsDown;
-            bool release = mouseWasDown && !mouseIsDown;
+            bool firstTouch = UnityEngine.Input.GetMouseButtonDown(0) && hitInfo.HasValue;
+            bool hold = mouseWasDownOverThis && mouseIsDown;
+            bool release = mouseWasDownOverThis && !mouseIsDown;
             bool drag = hold && currentGesture.MousePositionCurrent != currentGesture.MousePositionLast;
             
             if (firstTouch)
             {
                 currentGesture = new Gesture();
-                HandleOnTouch(this, currentGesture);
                 OnTouch(this, currentGesture);
             }
 
             if (firstTouch || hold)
             {
-                GestureFrame gestureFrame = new GestureFrame(Input.mousePosition, hitInfo);
+                GestureFrame gestureFrame = new GestureFrame(UnityEngine.Input.mousePosition, hitInfo);
                 currentGesture.AddGestureFrame(gestureFrame);
-                HandleOnHold(this, currentGesture);
                 OnHold(this, currentGesture);
             }
 
-
             if (drag)
             {
-                HandleOnDrag(this, currentGesture);
                 OnDrag(this, currentGesture);
                 bool collisionLastFrame = currentGesture.LastFrame.Value.HitForCollider(_boxCollider).HasValue;
                 bool collisionThisFrame = currentGesture.CurrentFrame.HitForCollider(_boxCollider).HasValue;
 
                 if (collisionLastFrame && !collisionThisFrame)
                 {
-                    HandleOnDragLeave(this, currentGesture);
                     OnDragLeave(this, currentGesture);
-                    currentGesture = null;
                 }
             }
 
             if (release)
             {
-                HandleOnRelease(this, currentGesture);
                 OnRelease(this, currentGesture);
                 currentGesture = null;
             }    
