@@ -39,43 +39,38 @@ namespace Utilities.Input
             _view = view;
             dispatcher.OnLateUpdate += LateUpdate;
         }
-        
+
         void LateUpdate()
         {
-            Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);            
-            RaycastHit[] hits = Physics.RaycastAll(mouseWorldPosition, Vector3.forward, 100f);
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
+            RaycastHit[] hits = Physics.RaycastAll(worldPosition, Vector3.forward, 100f);
 
-            UpdateTouchLogic(mouseWorldPosition, hits);
-            DispatchTouchEvents(hits);                       
-        }
+            bool isFirstDown = UnityEngine.Input.GetMouseButtonDown(0);
+            bool isDown = UnityEngine.Input.GetMouseButton(0);
+            bool isOver = hits.Any(hit => hit.collider == _boxCollider);
+            bool isRelease = UnityEngine.Input.GetMouseButtonUp(0);
 
-        void DispatchTouchEvents(RaycastHit[] hits)
-        {
+            _touchLogic.UpdateFrame(worldPosition, isDown, !isFirstDown, isRelease, isOver);
+
             TouchEventInfo info = new TouchEventInfo(this, _touchLogic, hits);
-            
+
             if (_touchLogic.IsFirstDown)
             {
+                Diagnostics.Log("first down");
                 OnFirstDown(info);
             }
-            
+
             if (_touchLogic.IsDrag)
             {
+
                 OnDrag(info);
             }
-            
+
             if (_touchLogic.IsRelease)
             {
+                Diagnostics.Log("release");
                 OnRelease(info);
             }
-        }
-
-        void UpdateTouchLogic(Vector3 mouseWorldPosition, RaycastHit[] hits)
-        {
-           
-            bool mouseIsDown = UnityEngine.Input.GetMouseButton(0);
-            bool mouseOver = hits.Any(hit => hit.collider == _boxCollider);      
-            
-            _touchLogic.UpdateFrame(mouseWorldPosition, mouseIsDown, mouseOver);                                              
         }
     }
 }

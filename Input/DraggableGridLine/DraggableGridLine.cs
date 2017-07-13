@@ -34,10 +34,11 @@ namespace Utilities.Input
 		}
 
 		void HandleOnFirstDown(TouchEventInfo eventInfo)
-		{
+		{			
 			var view = eventInfo.TouchDispatcher.View;
 			T tile = view as T;
 			
+			Diagnostics.Log("first down on " + view );
 			Vector3 position = view.GameObject.GetComponent<RectTransform>().position;
 			_lineBinding.Clear();
 			_lineBinding.SetInitialProperty(position.SetZ(_defaultZ));
@@ -57,11 +58,9 @@ namespace Utilities.Input
 
 			Vector3 dragWorldPoint = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
 			
-			Diagnostics.Log("source " + sourceItem + " hit " + hitItem);
-
 			if (hitItem != null && hitItem != sourceItem && hitItem.IsInputWithinConnectBounds(dragWorldPoint))
 			{
-				Diagnostics.Log("sticking");
+				Diagnostics.Log("binding to " + hitItem);
 				_lineBinding.SetPropertyPermanent(hitItem.RectTransform.position.SetZ(_defaultZ));
 				_currentTile = hitItem;
 			}
