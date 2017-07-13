@@ -3,7 +3,7 @@ using System.Collections;
 
 public enum Axis {
     None,
-	X,
+    X,
     Y,
     Z
 }
