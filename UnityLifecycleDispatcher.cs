@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class LifecycleDispatcher : MonoBehaviour
+public class UnityLifecycleDispatcher : MonoBehaviour
 {
     public event Action OnLateUpdate = () => { };
 
@@ -21,5 +21,4 @@ public class LifecycleDispatcher : MonoBehaviour
     protected virtual void HandleUpdate()
     {
     }
-
 }

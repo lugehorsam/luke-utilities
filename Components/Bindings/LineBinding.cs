@@ -22,8 +22,8 @@ namespace Utilities
 
         public void SetPropertyPermanent(Vector3 position)
         {
-            Diagnostics.Log("set property permanent " + position);
-            Component.SetPosition(Component.positionCount, position);
+            SetProperty(position);            
+            Component.positionCount++;
         }
 
         public override Vector3 GetProperty()

@@ -54,7 +54,7 @@ public abstract class InsertableContainer<TDatum, TBehavior> : FlexibleContainer
         if (behavior == null) {
             Diagnostics.Report ("Trying to add handlers to a null behavior");
         }
-        behavior.TouchDispatcher.OnTouch += OnDraggableSelect;
+        behavior.TouchDispatcher.OnFirstDown += OnDraggableSelect;
         behavior.TouchDispatcher.OnRelease += OnDraggableDeselect;
     }
      
@@ -63,7 +63,7 @@ public abstract class InsertableContainer<TDatum, TBehavior> : FlexibleContainer
         if (behavior == null) {
             Diagnostics.Report ("Trying to remove handlers from a null behavior");
         }
-        behavior.TouchDispatcher.OnTouch -= OnDraggableSelect;
+        behavior.TouchDispatcher.OnFirstDown -= OnDraggableSelect;
         behavior.TouchDispatcher.OnRelease -= OnDraggableDeselect;
     }
 

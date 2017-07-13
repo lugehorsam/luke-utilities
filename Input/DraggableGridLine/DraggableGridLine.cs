@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Utilities.Input
 {
 	public class DraggableGridLine<T> : View where T : View, IDraggableGridLineTile
-	{
+	{		
 		private readonly LineBinding _lineBinding;
-		
-		public int? StartIndex
+				
+		public int? CurrentIndex
 		{
-			get { return _sourceItem == null ? null : new int?(_sourceItem.Index); }
-		} 
+			get { return _currentTile == null ? null : new int?(_currentTile.Index); }
+		}
 		
-		private T _sourceItem;
+		private T _currentTile;		
+		
 		private readonly GridLayout<T> _gridLayout;
 		private readonly float _defaultZ;
 
@@ -25,43 +27,48 @@ namespace Utilities.Input
 			
 			foreach (var touchDispatcher in gridLayout.GetTouchDispatchers())
 			{
-				touchDispatcher.OnTouch += HandleOnTouch;
+				touchDispatcher.OnFirstDown += HandleOnFirstDown;
 				touchDispatcher.OnDrag += HandleOnDrag;
 				touchDispatcher.OnRelease += HandleOnRelease;
 			}
 		}
 
-		void HandleOnTouch(TouchDispatcher touchDispatcher, Gesture gesture)
+		void HandleOnFirstDown(TouchEventInfo eventInfo)
 		{
-			T item = FromTouchDispatcher(touchDispatcher);
-			_lineBinding.SetInitialProperty(touchDispatcher.View.GameObject.GetComponent<RectTransform>().position);
-			_sourceItem = item;
-		}
-
-		T FromTouchDispatcher(TouchDispatcher dispatcher)
-		{
-			return dispatcher.View as T;
-		}
-
-		void HandleOnDrag(TouchDispatcher touchDispatcher, Gesture gesture)
-		{
-			T item = FromTouchDispatcher(touchDispatcher);
-
-			if (item == null)
-			{
-				Diagnostics.Report(new InvalidCastException());
-				return;
-			}
+			var view = eventInfo.TouchDispatcher.View;
+			T tile = view as T;
 			
-			if (item.IsInputWithinConnectBounds(UnityEngine.Input.mousePosition))
+			Vector3 position = view.GameObject.GetComponent<RectTransform>().position;
+			_lineBinding.Clear();
+			_lineBinding.SetInitialProperty(position.SetZ(_defaultZ));
+			_lineBinding.SetProperty(position.SetZ(_defaultZ));
+			_currentTile = tile;
+		}
+
+	
+
+		void HandleOnDrag(TouchEventInfo eventInfo)
+		{
+			TouchDispatcher dispatcher = eventInfo.TouchDispatcher;
+			RaycastHit? hit = eventInfo.Hits.FirstOrDefault();
+			
+			T sourceItem = dispatcher.View as T;
+			T hitItem = hit.HasValue ? hit.Value.collider.GetView() as T : null;
+
+			Vector3 dragWorldPoint = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
+			
+			Diagnostics.Log("source " + sourceItem + " hit " + hitItem);
+
+			if (hitItem != null && hitItem != sourceItem && hitItem.IsInputWithinConnectBounds(dragWorldPoint))
 			{
-				_lineBinding.SetPropertyPermanent(item.RectTransform.position.SetZ(_defaultZ));					
+				Diagnostics.Log("sticking");
+				_lineBinding.SetPropertyPermanent(hitItem.RectTransform.position.SetZ(_defaultZ));
+				_currentTile = hitItem;
 			}
 			else
 			{
-				Vector3 dragWorldPoint = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
 				
-				var originalTile = _gridLayout[StartIndex.Value];
+				var originalTile = _gridLayout[CurrentIndex.Value];
 				Vector3 origCenter = originalTile.RectTransform.position;
 						
 				Vector3 dragOffsetFromTile = origCenter - dragWorldPoint;                
@@ -78,14 +85,14 @@ namespace Utilities.Input
 					targetPos = new Vector3(origCenter.x, dragWorldPoint.y, _defaultZ);   
 				}
 											
-				_lineBinding.SetProperty(targetPos);
+				_lineBinding.SetProperty(targetPos.SetZ(_defaultZ));
 			}
-		
 		}
 
-		void HandleOnRelease(TouchDispatcher touchDispatcher, Gesture gesture)
+		void HandleOnRelease(TouchEventInfo eventInfo)
 		{
 			_lineBinding.Clear();
+			_currentTile = null;
 		}
 	}
 }

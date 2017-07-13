@@ -15,6 +15,11 @@ public struct GestureFrame {
     
     private readonly Vector2 _position;
 
+    public RaycastHit? HitInfo
+    {
+        get { return _hitInfo; }
+    }
+
     RaycastHit? _hitInfo;
 
     public float Time

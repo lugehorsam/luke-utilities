@@ -16,7 +16,6 @@ namespace Utilities
         public IEnumerable<TouchDispatcher> GetTouchDispatchers()
         {
             var iTouchDispatchers = Data.OfType<ITouchDispatcher>();
-            Debug.Log(iTouchDispatchers.Count());
             return iTouchDispatchers.Select(dispatcher => dispatcher.TouchDispatcher);
         }
         
