@@ -62,7 +62,6 @@ namespace Utilities.Input
 
             if (_touchLogic.IsDrag)
             {
-
                 OnDrag(info);
             }
 
