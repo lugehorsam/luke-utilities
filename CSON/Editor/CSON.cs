@@ -26,7 +26,7 @@ namespace Utilities
             string csonConfigPath = AssetDatabase.GUIDToAssetPath(config);                                    
             CSONConfig csonConfig = AssetDatabase.LoadAssetAtPath<CSONConfig>(csonConfigPath);
 
-            if (!csonConfig.Enabled)
+            if (csonConfig == null || !csonConfig.Enabled)
                 return;
             
             Debug.Log("Is cson config enabled " + csonConfig.Enabled);
