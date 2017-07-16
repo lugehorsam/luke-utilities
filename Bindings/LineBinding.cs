@@ -30,6 +30,11 @@ namespace Utilities
         {
             return Component.GetPosition(Component.positionCount - 1);
         }
+        
+        public Vector3 GetProperty(int index)
+        {
+            return Component.GetPosition(index);
+        }
 
         public void Clear()
         {

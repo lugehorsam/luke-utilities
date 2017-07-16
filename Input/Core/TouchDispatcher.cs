@@ -44,6 +44,7 @@ namespace Utilities.Input
         {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(worldPosition, Vector3.forward, 100f);
+            Diagnostics.Log("hits " + hits.ToFormattedString());
 
             bool isFirstDown = UnityEngine.Input.GetMouseButtonDown(0);
             bool isDown = UnityEngine.Input.GetMouseButton(0);
@@ -62,6 +63,7 @@ namespace Utilities.Input
 
             if (_touchLogic.IsDrag)
             {
+                Diagnostics.Log("on drag");
                 OnDrag(info);
             }
 
