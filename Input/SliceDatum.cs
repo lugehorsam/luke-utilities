@@ -1,9 +1,9 @@
-﻿using System.Linq;
+﻿/**using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-namespace Utilities
+namespace Utilities.Meshes
 {
 
     /// <summary>
@@ -28,7 +28,7 @@ namespace Utilities
             get { return new ReadOnlyCollection<Vector3>(intersectionVertices); }
         }
 
-        private readonly TriangleDatum[] trianglesToSlice;
+        private readonly TriangleMesh[] trianglesToSlice;
 
         private readonly List<Vector3> intersectionVertices;
 
@@ -39,7 +39,7 @@ namespace Utilities
             intersectionVertices = new List<Vector3>();
             Sliceable = sliceable;
 
-            trianglesToSlice = TriangleDatum.FromMesh(sliceable.Mesh);
+            trianglesToSlice = TriangleMesh.FromMesh(sliceable.Mesh);
 
             List<Vector3> slicePositionsList = new List<Vector3>();
 
@@ -55,7 +55,7 @@ namespace Utilities
 
             this.slicePositions = slicePositionsList.ToArray();
 
-            foreach (TriangleDatum triangle in trianglesToSlice)
+            foreach (TriangleMesh triangle in trianglesToSlice)
             {
                 intersectionVertices = GetIntersectionsWithTriangle(triangle);
             }
@@ -103,12 +103,12 @@ namespace Utilities
             return newMeshes.ToArray();
         }
 
-        MeshDatum[] SliceTriangle(TriangleDatum triangleToSlice)
+        MeshDatum[] SliceTriangle(TriangleMesh triangleToSlice)
         {
             List<MeshDatum> newMeshes = new List<MeshDatum>();
 
-            var singleMesh = new MeshDatum(new List<TriangleDatum>());
-            var combinedMesh = new MeshDatum(new List<TriangleDatum>());
+            var singleMesh = new MeshDatum(new List<TriangleMesh>());
+            var combinedMesh = new MeshDatum(new List<TriangleMesh>());
 
             newMeshes.Add(singleMesh);
             newMeshes.Add(combinedMesh);
@@ -124,7 +124,7 @@ namespace Utilities
             return new []{singleMesh, combinedMesh};
         }
 
-        void AddSubTriangle(TriangleDatum subTriangle, MeshDatum singleMesh, MeshDatum combinedMesh)
+        void AddSubTriangle(TriangleMesh subTriangle, MeshDatum singleMesh, MeshDatum combinedMesh)
         {
             if (SliceWasAlongTriangle(subTriangle))
             {
@@ -136,14 +136,14 @@ namespace Utilities
             }
         }
 
-        TriangleDatum CreateSubTriangle(TriangleDatum originalTriangle,
-            VertexDatum initialVertex,
-            TriangleDatum[] otherNewTriangles = null)
+        TriangleMesh CreateSubTriangle(TriangleMesh originalTriangle,
+            Vertex initialVertex,
+            TriangleMesh[] otherNewTriangles = null)
         {
-            var subTriangle = new TriangleDatum();
+            var subTriangle = new TriangleMesh();
             subTriangle[0] = initialVertex;
 
-            var vertexQueue = new Queue<VertexDatum>();
+            var vertexQueue = new Queue<Vertex>();
             vertexQueue.Enqueue(intersectionVertices[0]);
             vertexQueue.Enqueue(intersectionVertices[1]);
 
@@ -168,7 +168,7 @@ namespace Utilities
         }
 
 
-        public bool SliceWasAlongTriangle(TriangleDatum triangle)
+        public bool SliceWasAlongTriangle(TriangleMesh triangle)
         {
             MeshEdge thisMeshEdge = ToEdge();
 
@@ -183,7 +183,7 @@ namespace Utilities
             return false;
         }
 
-        public List<Vector3> GetIntersectionsWithTriangle(TriangleDatum triangle)
+        public List<Vector3> GetIntersectionsWithTriangle(TriangleMesh triangle)
         {
             var intersectionPoints = new List<Vector3>();
             foreach (MeshEdge edge in triangle.EdgeData)
@@ -203,3 +203,4 @@ namespace Utilities
         }
     }
 }
+**/

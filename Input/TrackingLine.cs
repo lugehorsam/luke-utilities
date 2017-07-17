@@ -5,7 +5,13 @@ namespace Utilities
 {
 	public class TrackingLine : View
 	{
+		public LineBinding LineBinding 
+		{
+			get { return _lineBinding; }
+		}
+
 		private LineBinding _lineBinding;
+		
 		private TouchDispatcher _touchDispatcher;
 		private Camera _camera;
 		private float _z;

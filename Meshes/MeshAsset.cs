@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Utilities
+namespace Utilities.Meshes
 {
     public class MeshAsset : ScriptableObject {
 
         [SerializeField]
-        private TriangleDatum[] triangles;
+        private TriangleMesh[] triangles;
 
         [SerializeField]
         private MeshAsset[] meshAssets;
 
         public Mesh ToMesh()
         {
-            List<TriangleDatum> effectiveTriangles = new List<TriangleDatum>(triangles);       
+            List<TriangleMesh> effectiveTriangles = new List<TriangleMesh>(triangles);       
             effectiveTriangles.AddRange(meshAssets.SelectMany(mesh => mesh.triangles));            
-            return TriangleDatum.ToUnityMesh(triangles);
+            return TriangleMesh.ToUnityMesh(triangles);
         }
     }    
 }

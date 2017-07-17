@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-namespace Utilities
+namespace Utilities.Meshes
 {
-
     [Serializable]
-    public struct TriangleDatum : IComparer<VertexDatum>
+    public class TriangleMesh : IComparer<Vertex>
     {
 
         public CycleDirection CycleDirection
@@ -19,11 +18,11 @@ namespace Utilities
 
         private CycleDirection cycleDirection;
 
-        public ReadOnlyCollection<VertexDatum> Vertices
+        public ReadOnlyCollection<Vertex> Vertices
         {
             get
             {
-                return new ReadOnlyCollection<VertexDatum>(new VertexDatum[]
+                return new ReadOnlyCollection<Vertex>(new Vertex[]
                 {
                     this[0],
                     this[1],
@@ -32,25 +31,11 @@ namespace Utilities
             }
         }
 
-        public ReadOnlyCollection<MeshEdge> EdgeData
-        {
-            get
-            {
-                return new ReadOnlyCollection<MeshEdge>(
-                    new MeshEdge[]
-                    {
-                        new MeshEdge(this[0], this[1]),
-                        new MeshEdge(this[1], this[2]),
-                        new MeshEdge(this[2], this[0])
-                    });
-            }
-        }
+        [SerializeField] Vertex vertex1;
+        [SerializeField] Vertex vertex2;
+        [SerializeField] Vertex vertex3;
 
-        [SerializeField] VertexDatum vertex1;
-        [SerializeField] VertexDatum vertex2;
-        [SerializeField] VertexDatum vertex3;
-
-        public VertexDatum this[int vertexIndex]
+        public Vertex this[int vertexIndex]
         {
             get
             {
@@ -85,65 +70,65 @@ namespace Utilities
             }
         }
 
-        public static TriangleDatum[] FromMesh(Mesh mesh)
+        public static TriangleMesh[] FromMesh(Mesh unityMesh)
         {
-            List<TriangleDatum> triangles = new List<TriangleDatum>();
-            TriangleDatum currTriangle = new TriangleDatum();
-            for (int i = 0; i < mesh.triangles.Length; i++)
+            List<TriangleMesh> triangles = new List<TriangleMesh>();
+            TriangleMesh currTriangle = new TriangleMesh();
+            for (int i = 0; i < unityMesh.vertices.Length; i++)
             {
 
-                Vector3 currVertex = mesh.vertices[mesh.triangles[i]];
-                currTriangle[i % 3] = currVertex;
+                Vector3 currVertex = unityMesh.vertices[unityMesh.triangles[i]];
+                currTriangle[i % 3] = new Vertex(currVertex);
                 if ((i + 1) % 3 == 0)
                 {
                     triangles.Add(currTriangle);
-                    currTriangle = new TriangleDatum();
+                    currTriangle = new TriangleMesh();
                 }
             }
             return triangles.ToArray();
         }
 
-        public static Mesh ToUnityMesh(ICollection<TriangleDatum> triangles)
+        public static Mesh ToUnityMesh(ICollection<TriangleMesh> triangles)
         {
             List<int> triangleIndices = new List<int>();
             List<Vector3> vertices = new List<Vector3>();
 
-            foreach (TriangleDatum triangle in triangles)
+            foreach (TriangleMesh triangle in triangles)
             {
-                foreach (VertexDatum vertex in triangle.Vertices)
+                foreach (Vertex vertex in triangle.Vertices)
                 {
-                    int vertexIndex = vertices.IndexOf(vertex);
+                    int vertexIndex = vertices.IndexOf(vertex.AsVector3);
 
                     if (vertexIndex < 0)
                     {
                         vertexIndex = vertices.Count;
-                        vertices.Add(vertex);
+                        vertices.Add(vertex.AsVector3);
                     }
 
                     triangleIndices.Add(vertexIndex);
                 }
             }
 
-            Mesh newMesh = new Mesh();
-            newMesh.vertices = vertices.ToArray();
-            newMesh.triangles = triangleIndices.ToArray();
-            return newMesh;
+            Mesh newUnityMesh = new Mesh();
+            newUnityMesh.vertices = vertices.ToArray();
+            newUnityMesh.triangles = triangleIndices.ToArray();
+            return newUnityMesh;
         }
 
-        public static Dictionary<VertexDatum, List<TriangleDatum>> GetVertexTriangleMap(TriangleDatum[] triangles)
+        public static Dictionary<Vertex, List<TriangleMesh>> GetVertexTriangleMap(TriangleMesh[] triangles)
         {
 
-            Dictionary<VertexDatum, List<TriangleDatum>> map = new Dictionary<VertexDatum, List<TriangleDatum>>();
+            Dictionary<Vertex, List<TriangleMesh>> map = new Dictionary<Vertex, List<TriangleMesh>>();
             for (int i = 0; i < triangles.Length; i++)
             {
-                TriangleDatum currentTriangle = triangles[i];
-                ReadOnlyCollection<VertexDatum> vertexData = currentTriangle.Vertices;
+                TriangleMesh currentTriangle = triangles[i];
+                ReadOnlyCollection<Vertex> vertexData = currentTriangle.Vertices;
                 for (int j = 0; j < vertexData.Count; i++)
                 {
-                    VertexDatum datum = vertexData[j];
+                    Vertex datum = vertexData[j];
                     if (!map.ContainsKey(datum))
                     {
-                        map[datum] = new List<TriangleDatum>();
+                        map[datum] = new List<TriangleMesh>();
                     }
                     map[datum].Add(currentTriangle);
                 }
@@ -151,7 +136,7 @@ namespace Utilities
             return map;
         }
 
-        public int NumSharedVertices(TriangleDatum otherTriangle)
+        public int NumSharedVertices(TriangleMesh otherTriangle)
         {
             int numShared = 0;
             for (int i = 0; i < 3; i++)
@@ -171,23 +156,18 @@ namespace Utilities
                 (vertex1.Y + vertex2.Y + vertex3.Y) / 3f,
                 (vertex1.Z + vertex2.Z + vertex3.Z) / 3f
             );
-        }
+        }      
 
-        public bool HasEdgeThatIntersects(MeshEdge otherMeshEdge, bool onThisEdge = true, bool onOtherEdge = true)
-        {
-            return EdgeData.Any((edge) => edge.HasIntersectionWithEdge(otherMeshEdge, onThisEdge, onOtherEdge));
-        }
-
-        public int Compare(VertexDatum vertex1, VertexDatum vertex2)
+        public int Compare(Vertex vertex1, Vertex vertex2)
         {
             if (vertex1 == vertex2)
             {
                 return 0;
             }
 
-            VertexDatum anchorVertex = GetCenterPoint();
-            Vector3 vector1 = vertex1 - anchorVertex;
-            Vector3 vector2 = vertex2 - anchorVertex;
+            Vector3 anchorVertex = GetCenterPoint();
+            Vector3 vector1 = vertex1.AsVector3 - anchorVertex;
+            Vector3 vector2 = vertex2.AsVector3 - anchorVertex;
             float angle = MathUtils.GetSignedAngle(vector1, vector2);
             int sign = Math.Sign(angle);
             return cycleDirection == CycleDirection.Clockwise ? sign : -sign;
@@ -195,7 +175,7 @@ namespace Utilities
 
         public void SortVertices()
         {
-            VertexDatum[] newVertices = Vertices.ToArray();
+            Vertex[] newVertices = Vertices.ToArray();
 
             Array.Sort(newVertices, this);
             vertex1 = newVertices[0];
@@ -203,17 +183,17 @@ namespace Utilities
             vertex3 = newVertices[2];
         }
 
-        public bool HasSharedEdge(TriangleDatum otherTriangle)
+        public bool HasSharedEdge(TriangleMesh otherTriangle)
         {
             return NumSharedVertices(otherTriangle) > 1;
         }
 
-        public IEnumerable<MeshEdge> EdgesContaining(VertexDatum vertex)
+        public TriangleMesh()
         {
-            return EdgeData.Where((edge) => edge.Vertices.Contains(vertex));
+            
         }
 
-        public TriangleDatum(Vector3 vertex1, Vector3 vertex2, Vector3 vertex3)
+        public TriangleMesh(Vertex vertex1, Vertex vertex2, Vertex vertex3)
         {
             this.vertex1 = vertex1;
             this.vertex2 = vertex2;

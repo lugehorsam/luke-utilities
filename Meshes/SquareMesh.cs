@@ -5,46 +5,41 @@ namespace Utilities.Meshes
 { 
 
     [Serializable]
-    public class SquareMesh {
+    public class SquareMesh : ProceduralMesh {
 
-        private readonly TriangleDatum[] triangles;
-
-        public SquareMesh(TriangleDatum[] triangles)
+        public SquareMesh(TriangleMesh[] triangles)
         {
             if (triangles.Length != 2 || !triangles[0].HasSharedEdge(triangles[1]))
             {
                 throw new DataMisalignedException();
             }
-            this.triangles = triangles;
+            
+            TriangleMeshes.AddRange(triangles);
         }
 
         public SquareMesh(float width, float height)
         {
-            Vector3 bottomRight = new Vector3(width / 2, -height/2, 0f);
-            Vector3 bottomLeft = new Vector3(-width / 2, -height/2, 0f);
-            Vector3 upperLeft = new Vector3(-width / 2, height / 2, 0f);        
-            Vector3 upperRight = new Vector3(width/2, height/2, 0);
+            Vertex bottomRight = new Vertex(width / 2, -height/2, 0f);
+            Vertex bottomLeft = new Vertex(-width / 2, -height/2, 0f);
+            Vertex upperLeft = new Vertex(-width / 2, height / 2, 0f);        
+            Vertex upperRight = new Vertex(width/2, height/2, 0);
         
-            triangles = new[]
+            TriangleMeshes.AddRange(new[]
             {
-                new TriangleDatum
+                new TriangleMesh
                 (
                     bottomLeft, 
                     upperLeft,
                     bottomRight
                 ),
-                new TriangleDatum
+                new TriangleMesh
                 (
                     upperLeft, 
                     upperRight,
                     bottomRight
                 )
-            };
-        }
-
-        public Mesh ToUnityMesh()
-        {
-            return TriangleDatum.ToUnityMesh(triangles);
+                
+            });
         }
     }
 }
