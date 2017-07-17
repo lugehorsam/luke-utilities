@@ -6,10 +6,6 @@ namespace Utilities.Meshes
 {
 	public static class IMeshExt {
 
-		public static void ModifyVertex(this IMesh thisMesh, Vertex oldVertex, Vertex newVertex)
-		{
-		}
-
 		public static Vertex GetNearestVertex(this IMesh thisMesh, Vector3 worldPoint)
 		{
 			return thisMesh.GetVertices().OrderBy(vertex => Vector3.Distance(vertex.AsVector3, worldPoint)).FirstOrDefault();

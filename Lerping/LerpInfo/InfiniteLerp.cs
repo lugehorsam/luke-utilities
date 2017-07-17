@@ -1,16 +1,15 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class InfiniteLerp<TProperty>
-    where TProperty : struct
+﻿namespace Utilities
 {
-    public TProperty UnitsPerSecond
+    public class InfiniteLerp<TProperty>
     {
-        get;
-        private set;
-    }
-    public InfiniteLerp(TProperty unitsPerSecond)
-    {
-        this.UnitsPerSecond = unitsPerSecond;
-    }
+        public TProperty UnitsPerSecond
+        {
+            get;
+            private set;
+        }
+        public InfiniteLerp(TProperty unitsPerSecond)
+        {
+            UnitsPerSecond = unitsPerSecond;
+        }
+    }    
 }

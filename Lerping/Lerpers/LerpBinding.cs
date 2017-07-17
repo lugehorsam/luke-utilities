@@ -5,7 +5,6 @@ using UnityEngine;
 namespace Utilities
 {
     public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProperty, TComponent>
-        where TProperty : struct
         where TComponent : Component 
     {
 

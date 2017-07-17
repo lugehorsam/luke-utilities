@@ -1,101 +1,103 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using UnityEngine;
 
-public class FiniteLerp<TProperty>
-    where TProperty : struct
+namespace Utilities
 {
-	public float TargetDuration
+    public class FiniteLerp<TProperty>
     {
-        get
+        public float TargetDuration
         {
-            return _targetDuration;
+            get
+            {
+                return _targetDuration;
+            }
         }
-    }
-
-    float _targetDuration = 1f;
-
-    public float CurrentTime
-    {
-        get
+    
+        float _targetDuration = 1f;
+    
+        public float CurrentTime
         {
-            return currentTime;
+            get
+            {
+                return currentTime;
+            }
         }
-    }
-
-    float currentTime;
-
-    bool instant = false;
-
-    public bool HasReachedTargetTime
-    {
-        get
+    
+        float currentTime;
+    
+        bool instant = false;
+    
+        public bool HasReachedTargetTime
+        {
+            get
+            {
+                if (currentDirection == LerpDirection.Forwards)
+                {
+                    return CurrentTime >= _targetDuration;
+                }
+                else {
+                    return CurrentTime <= 0f;
+                }
+            }
+        }
+    
+        Func<float, float> _easing;
+    
+        public TProperty TargetProperty
+        {
+            get
+            {
+                return _targetProperty;
+            }
+        }
+    
+        TProperty _targetProperty;
+    
+        LerpDirection currentDirection = LerpDirection.Forwards;
+    
+        public void UpdateTime()
         {
             if (currentDirection == LerpDirection.Forwards)
             {
-                return CurrentTime >= _targetDuration;
+                if (instant)
+                {
+                    currentTime = _targetDuration;
+                }
+                else {
+                    currentTime += Time.deltaTime;
+                }
             }
-            else {
-                return CurrentTime <= 0f;
-            }
-        }
-    }
-
-    Func<float, float> _easing;
-
-    public TProperty TargetProperty
-    {
-        get
-        {
-            return _targetProperty;
-        }
-    }
-
-    TProperty _targetProperty;
-
-    LerpDirection currentDirection = LerpDirection.Forwards;
-
-    public void UpdateTime()
-    {
-        if (currentDirection == LerpDirection.Forwards)
-        {
-            if (instant)
+            else if (currentDirection == LerpDirection.Backwards)
             {
-                currentTime = _targetDuration;
-            }
-            else {
-                currentTime += Time.deltaTime;
+                if (instant)
+                {
+                    currentTime = 0f;
+                }
+                else {
+                    currentTime -= Time.deltaTime;
+                }
             }
         }
-        else if (currentDirection == LerpDirection.Backwards)
+    
+        public TProperty GetLerpedProperty(TProperty startProperty, Func<TProperty, TProperty, float, TProperty> lerpDelegate)
         {
-            if (instant)
-            {
-                currentTime = 0f;
-            }
-            else {
-                currentTime -= Time.deltaTime;
-            }
+            float scaledTime = _easing(CurrentTime / TargetDuration);
+            TProperty lerpedValue = lerpDelegate(startProperty, TargetProperty, scaledTime);
+            return lerpedValue;
         }
-    }
-
-    public TProperty GetLerpedProperty(TProperty startProperty, Func<TProperty, TProperty, float, TProperty> lerpDelegate)
-    {
-        float scaledTime = _easing(CurrentTime / TargetDuration);
-        TProperty lerpedValue = lerpDelegate(startProperty, TargetProperty, scaledTime);
-        return lerpedValue;
-    }
-
-    public FiniteLerp(TProperty targetProperty, float targetDuration, TweenType tweenType)
-    {
-        _targetProperty = targetProperty;
-        _targetDuration = targetDuration;
-        _easing = tweenType.TweenTypeToFunction();
-    }
-
-    public FiniteLerp(TProperty targetProperty, float targetDuration, Func<float, float> easing)
-    {
-        _targetProperty = targetProperty;
-        _targetDuration = targetDuration;
-        _easing = easing;
+    
+        public FiniteLerp(TProperty targetProperty, float targetDuration, TweenType tweenType)
+        {
+            _targetProperty = targetProperty;
+            _targetDuration = targetDuration;
+            _easing = tweenType.TweenTypeToFunction();
+        }
+    
+        public FiniteLerp(TProperty targetProperty, float targetDuration, Func<float, float> easing)
+        {
+            _targetProperty = targetProperty;
+            _targetDuration = targetDuration;
+            _easing = easing;
+        }
     }
 }

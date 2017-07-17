@@ -68,9 +68,14 @@ namespace Utilities.Meshes
         
         public Vertex(Vector3 vector3)
         {
-            this.x = vector3.x;
-            this.y = vector3.y;
-            this.z = vector3.z;
+            Set(vector3);
+        }
+
+        public void Set(Vector3 vector3)
+        {
+            x = vector3.x;
+            y = vector3.y;
+            z = vector3.z;
         }
     
         public override string ToString()
