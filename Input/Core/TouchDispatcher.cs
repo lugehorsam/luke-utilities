@@ -7,12 +7,12 @@ namespace Utilities.Input
 {
     public sealed class TouchDispatcher
     {               
-        public BoxCollider BoxCollider
+        public BoxCollider MeshCollider
         {
-            get { return _boxCollider; }
+            get { return _meshCollider; }
         }
         
-        private BoxCollider _boxCollider;
+        private BoxCollider _meshCollider;
         private Rigidbody _rigidbody;
 
         public event Action<TouchEventInfo> OnFirstDown = delegate { };
@@ -30,8 +30,8 @@ namespace Utilities.Input
 
         public TouchDispatcher(UnityLifecycleDispatcher dispatcher, View view, Vector3 colliderSize)
         {            
-            _boxCollider = view.GameObject.AddComponent<BoxCollider>();
-            _boxCollider.size = colliderSize;
+            _meshCollider = view.GameObject.AddComponent<BoxCollider>();
+            _meshCollider.size = colliderSize;
             
             _rigidbody = view.GameObject.AddComponent<Rigidbody>();
             _rigidbody.isKinematic = true;
@@ -48,7 +48,7 @@ namespace Utilities.Input
 
             bool isFirstDown = UnityEngine.Input.GetMouseButtonDown(0);
             bool isDown = UnityEngine.Input.GetMouseButton(0);
-            bool isOver = hits.Any(hit => hit.collider == _boxCollider);
+            bool isOver = hits.Any(hit => hit.collider == _meshCollider);
             bool isRelease = UnityEngine.Input.GetMouseButtonUp(0);
 
             _touchLogic.UpdateFrame(worldPosition, isDown, !isFirstDown, isRelease, isOver);

@@ -5,7 +5,7 @@ public enum TweenType
 {
     Linear,
     CubicEaseInOut,
-    CubicEaseOut
+    CubicEaseOut,
 }
 
 public static class TweenTypeExtensions

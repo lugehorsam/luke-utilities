@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿/**using System.Linq;
 using UnityEngine;
 using Utilities.Input;
 
@@ -24,8 +24,8 @@ namespace Utilities
                
         public GridCell(UnityLifecycleDispatcher dispatcher, Vector3 vector1, Vector3 vector2, Vector3 vector3, Vector3 vector4, Vector3 size)
         {
-            _touchDispatcher = new TouchDispatcher(dispatcher, this, size);
-            _touchDispatcher.BoxCollider.center = size / 2;
+            _touchDispatcher = new TouchDispatcher(dispatcher, this);
+            _touchDispatcher.MeshCollider.center = size / 2;
             
             var initialVectors = new []
             {
@@ -48,3 +48,4 @@ namespace Utilities
         }
     }
 }
+**/

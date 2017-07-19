@@ -5,7 +5,7 @@ namespace Utilities
     [System.Serializable]
     public class ScaleBinding : Vector3Binding<Transform> {
   
-        protected ScaleBinding(GameObject gameObject) : base(gameObject, gameObject.transform)
+        public ScaleBinding(GameObject gameObject) : base(gameObject, gameObject.transform)
         {        
         }
     

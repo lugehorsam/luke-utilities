@@ -1,11 +1,10 @@
 ﻿using System;
-using UnityEngine;
 
 namespace Utilities.Meshes
 { 
 
     [Serializable]
-    public class SquareMesh : ProceduralMesh {
+    public class SquareMesh : SimpleMesh {
 
         public SquareMesh(TriangleMesh[] triangles)
         {
@@ -14,7 +13,7 @@ namespace Utilities.Meshes
                 throw new DataMisalignedException();
             }
             
-            TriangleMeshes.AddRange(triangles);
+            _triangles.AddRange(triangles);
         }
 
         public SquareMesh(float width, float height)
@@ -24,7 +23,7 @@ namespace Utilities.Meshes
             Vertex upperLeft = new Vertex(-width / 2, height / 2, 0f);        
             Vertex upperRight = new Vertex(width/2, height/2, 0);
         
-            TriangleMeshes.AddRange(new[]
+            _triangles.AddRange(new[]
             {
                 new TriangleMesh
                 (
@@ -37,8 +36,7 @@ namespace Utilities.Meshes
                     upperLeft, 
                     upperRight,
                     bottomRight
-                )
-                
+                ) 
             });
         }
     }

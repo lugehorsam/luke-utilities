@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Utilities.Meshes
 {
     [Serializable]
-    public class TriangleMesh : IComparer<Vertex>
+    public class TriangleMesh : IComparer<Vertex>, IMesh
     {
 
         public CycleDirection CycleDirection
@@ -88,7 +88,7 @@ namespace Utilities.Meshes
             return triangles.ToArray();
         }
 
-        public static Mesh ToUnityMesh(ICollection<TriangleMesh> triangles)
+        public static Mesh ToUnityMesh(IEnumerable<TriangleMesh> triangles)
         {
             List<int> triangleIndices = new List<int>();
             List<Vector3> vertices = new List<Vector3>();
@@ -133,6 +133,7 @@ namespace Utilities.Meshes
                     map[datum].Add(currentTriangle);
                 }
             }
+            
             return map;
         }
 
@@ -188,9 +189,11 @@ namespace Utilities.Meshes
             return NumSharedVertices(otherTriangle) > 1;
         }
 
-        public TriangleMesh()
+        public TriangleMesh(float meshRadius = 1f)
         {
-            
+            vertex1 = new Vertex(-meshRadius, -meshRadius, 0);
+            vertex2 = new Vertex(0, meshRadius, 0);
+            vertex3 = new Vertex(meshRadius, -meshRadius, 0);
         }
 
         public TriangleMesh(Vertex vertex1, Vertex vertex2, Vertex vertex3)
@@ -204,6 +207,19 @@ namespace Utilities.Meshes
         public override string ToString()
         {
             return Vertices.ToFormattedString();
+        }
+
+        public ReadOnlyCollection<TriangleMesh> TriangleMeshes
+        {
+            get
+            {
+                return new ReadOnlyCollection<TriangleMesh>(new []{this});
+            }
+        }
+
+        public Mesh ToUnityMesh()
+        {
+            return ToUnityMesh(new[] {this});
         }
     }
 }
