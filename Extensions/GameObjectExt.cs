@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Utilities
 {
-    public static class GameObjectExtensions
+    public static class GameObjectExt
     {
         public static void SetMeshColor(this GameObject thisObject, Color color)
         {
