@@ -35,7 +35,7 @@ namespace Utilities.Input
 
 		void HandleOnFirstDown(TouchEventInfo eventInfo)
 		{			
-			var view = eventInfo.TouchDispatcher.View;
+			var view = eventInfo.TouchDispatcher.Collider.GetView();
 			T tile = view as T;
 			
 			Diagnostics.Log("first down on " + view );
@@ -44,16 +44,14 @@ namespace Utilities.Input
 			_lineBinding.SetInitialProperty(position.SetZ(_defaultZ));
 			_lineBinding.SetProperty(position.SetZ(_defaultZ));
 			_currentTile = tile;
-		}
-
-	
+		}	
 
 		void HandleOnDrag(TouchEventInfo eventInfo)
 		{
 			TouchDispatcher dispatcher = eventInfo.TouchDispatcher;
 			RaycastHit? hit = eventInfo.Hits.FirstOrDefault();
 			
-			T sourceItem = dispatcher.View as T;
+			T sourceItem = dispatcher.Collider.GetView() as T;
 			T hitItem = hit.HasValue ? hit.Value.collider.GetView() as T : null;
 
 			Vector3 dragWorldPoint = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);

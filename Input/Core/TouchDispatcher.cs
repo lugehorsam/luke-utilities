@@ -5,38 +5,28 @@ using UnityEngine;
 
 namespace Utilities.Input
 {
-    public sealed class TouchDispatcher
+    public class TouchDispatcher
     {               
-        public BoxCollider MeshCollider
+        public Collider Collider
         {
-            get { return _meshCollider; }
+            get { return _collider; }
         }
         
-        private BoxCollider _meshCollider;
+        private Collider _collider;
         private Rigidbody _rigidbody;
 
         public event Action<TouchEventInfo> OnFirstDown = delegate { };
         public event Action<TouchEventInfo> OnRelease = delegate { };
         public event Action<TouchEventInfo> OnDrag = delegate { };
-        
-        public View View
-        {
-            get { return _view; }
-        }
-        
-        private View _view;
-
+       
         private TouchLogic _touchLogic = new TouchLogic();
 
-        public TouchDispatcher(UnityLifecycleDispatcher dispatcher, View view, Vector3 colliderSize)
-        {            
-            _meshCollider = view.GameObject.AddComponent<BoxCollider>();
-            _meshCollider.size = colliderSize;
-            
-            _rigidbody = view.GameObject.AddComponent<Rigidbody>();
+        public TouchDispatcher(UnityLifecycleDispatcher dispatcher, Collider collider)
+        {
+            _collider = collider;
+            _rigidbody = collider.GetView().GameObject.AddComponent<Rigidbody>();
             _rigidbody.isKinematic = true;
             _rigidbody.useGravity = false;
-            _view = view;
             dispatcher.OnLateUpdate += LateUpdate;
         }
 
@@ -48,7 +38,7 @@ namespace Utilities.Input
 
             bool isFirstDown = UnityEngine.Input.GetMouseButtonDown(0);
             bool isDown = UnityEngine.Input.GetMouseButton(0);
-            bool isOver = hits.Any(hit => hit.collider == _meshCollider);
+            bool isOver = hits.Any(hit => hit.collider == _collider);
             bool isRelease = UnityEngine.Input.GetMouseButtonUp(0);
 
             _touchLogic.UpdateFrame(worldPosition, isDown, !isFirstDown, isRelease, isOver);
@@ -57,19 +47,16 @@ namespace Utilities.Input
 
             if (_touchLogic.IsFirstDown)
             {
-                Diagnostics.Log("first down");
                 OnFirstDown(info);
             }
 
             if (_touchLogic.IsDrag)
             {
-                Diagnostics.Log("on drag");
                 OnDrag(info);
             }
 
             if (_touchLogic.IsRelease)
             {
-                Diagnostics.Log("release");
                 OnRelease(info);
             }
         }

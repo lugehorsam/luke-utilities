@@ -53,10 +53,7 @@ public static class MathUtils
             return true;
         }
 
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
     public static float GetSignedAngle(Vector3 vectorA, Vector3 vectorB)
@@ -90,5 +87,10 @@ public static class MathUtils
         }
 
         return currentValue / vectors.Count();
+    }
+
+    public static float GetCirclePoint(float radius, float xOrY)
+    {
+        return Mathf.Sqrt(radius * radius - xOrY * xOrY);
     }
 }
