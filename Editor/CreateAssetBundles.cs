@@ -13,6 +13,6 @@ public class CreateAssetBundles
 			Directory.CreateDirectory(assetBundleDirectory);
 		}
 		
-		BuildPipeline.BuildAssetBundles(assetBundleDirectory, BuildAssetBundleOptions.None, BuildTarget.iOS);
+		BuildPipeline.BuildAssetBundles(assetBundleDirectory, BuildAssetBundleOptions.None, BuildTarget.StandaloneOSXUniversal);
 	}
 }
