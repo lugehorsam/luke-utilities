@@ -1,33 +1,48 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Utilities.Meshes
 {
 	public class CircleMesh : SimpleMesh
 	{
+		public const int _NUM_VERTEX_ITERATIONS =  _NUM_DEGREES/_ANGLE_PER_ITERATION;
+		private const int _NUM_DEGREES = 360;
 		private const int _ANGLE_PER_ITERATION = 1;
 		
 		public CircleMesh(float radius)
 		{
-			var lastPoint = new Vertex(0f, radius, 0f);
-			var origin = new Vertex(0f, 0f, 0f);
-
-			int numIterations = 360/_ANGLE_PER_ITERATION;
+			var lastVertex = new Vertex(0f, radius, 0f);
+			var originVertex = new Vertex(0f, 0f, 0f);
 			
-			for (int i = 0; i <= numIterations; i++)
+			CreateVertexRing(radius, vertex =>
 			{
-				Vertex point = new Vertex(Quaternion.AngleAxis(i * _ANGLE_PER_ITERATION, Vector3.back) * Vector3.up);
-
-				var triangle = new TriangleMesh
+				_triangles.Add
 				(
-					new Vertex(lastPoint.X, lastPoint.Y, 0f),
-					new Vertex(point.X, point.Y, 0f),
-					origin
+					new TriangleMesh
+					(
+  					 originVertex,
+					 lastVertex,
+					 vertex					
+					)					
 				);
 
-				lastPoint = point;
-				
-				_triangles.Add(triangle);
+				lastVertex = vertex;
+			});			
+		}
+
+		public static List<Vertex> CreateVertexRing(float radius, Action<Vertex> onVertexCreate = null)
+		{
+			var vertices = new List<Vertex>();
+		
+			for (int i = 0; i < _NUM_VERTEX_ITERATIONS; i++)
+			{
+				Vertex point = new Vertex(Quaternion.AngleAxis(i * _ANGLE_PER_ITERATION, Vector3.back) * Vector3.up * radius);
+				vertices.Add(point);
+				onVertexCreate?.Invoke(point);
 			}
+
+			return vertices;
 		}
 	}
 }

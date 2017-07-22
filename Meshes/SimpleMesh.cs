@@ -8,11 +8,8 @@ namespace Utilities.Meshes
     [Serializable]
     public class SimpleMesh : IMesh
     {
-        public ReadOnlyCollection<TriangleMesh> TriangleMeshes
-        {
-            get { return new ReadOnlyCollection<TriangleMesh>(_triangles); }
-        }
-        
+        public ReadOnlyCollection<TriangleMesh> TriangleMeshes => new ReadOnlyCollection<TriangleMesh>(_triangles);
+
         protected readonly List<TriangleMesh> _triangles = new List<TriangleMesh>();
                
         public Mesh ToUnityMesh()

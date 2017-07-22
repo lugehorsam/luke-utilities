@@ -34,7 +34,6 @@ namespace Utilities.Input
         {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(worldPosition, Vector3.forward, 1000f);
-            Diagnostics.Log("hits " + hits.ToFormattedString());
 
             bool isFirstDown = UnityEngine.Input.GetMouseButtonDown(0);
             bool isDown = UnityEngine.Input.GetMouseButton(0);

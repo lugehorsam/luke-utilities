@@ -169,7 +169,7 @@ namespace Utilities.Meshes
             Vector3 anchorVertex = GetCenterPoint();
             Vector3 vector1 = vertex1.AsVector3 - anchorVertex;
             Vector3 vector2 = vertex2.AsVector3 - anchorVertex;
-            float angle = MathUtils.GetSignedAngle(vector1, vector2);
+            float angle = MathExt.GetSignedAngle(vector1, vector2);
             int sign = Math.Sign(angle);
             return cycleDirection == CycleDirection.Clockwise ? sign : -sign;
         }
