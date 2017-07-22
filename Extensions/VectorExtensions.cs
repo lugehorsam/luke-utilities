@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using UnityEngine;
 
 public static class VectorExtensions {
     
@@ -53,22 +53,7 @@ public static class VectorExtensions {
 
     public static float MaxDimension(this Vector3 thisVector)
     {
-        if (thisVector.x > thisVector.y && thisVector.x > thisVector.z)
-        {
-            return thisVector.x;
-        }
-
-        if (thisVector.y > thisVector.x && thisVector.y > thisVector.z)
-        {
-            return thisVector.y;
-        }
-
-        if (thisVector.z > thisVector.y && thisVector.z > thisVector.x)
-        {
-            return thisVector.z;
-        }
-
-        return 0f;
+        return new []{thisVector.x, thisVector.y, thisVector.z}.Max();      
     }
 
     public static Axis DominantAxis(this Vector3 thisVector, List<Axis> excludedAxes = null)

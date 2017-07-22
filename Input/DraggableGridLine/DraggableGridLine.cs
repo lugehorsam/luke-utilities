@@ -38,7 +38,6 @@ namespace Utilities.Input
 			var view = eventInfo.TouchDispatcher.Collider.GetView();
 			T tile = view as T;
 			
-			Diagnostics.Log("first down on " + view );
 			Vector3 position = view.GameObject.GetComponent<RectTransform>().position;
 			_lineBinding.Clear();
 			_lineBinding.SetInitialProperty(position.SetZ(_defaultZ));
@@ -58,7 +57,6 @@ namespace Utilities.Input
 			
 			if (hitItem != null && hitItem != sourceItem && hitItem.IsInputWithinConnectBounds(dragWorldPoint))
 			{
-				Diagnostics.Log("binding to " + hitItem);
 				_lineBinding.SetPropertyPermanent(hitItem.RectTransform.position.SetZ(_defaultZ));
 				_currentTile = hitItem;
 			}

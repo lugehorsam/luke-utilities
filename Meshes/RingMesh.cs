@@ -19,16 +19,13 @@ namespace Utilities.Meshes
 					innerVertices[i]
 				);
 				
-				Diagnostics.Log(triangle1.ToString());
 				var triangle2 = new TriangleMesh
 				(
 					outerVertices[i],
 					outerVertices[i + 1],
 					innerVertices[i + 1]
 				);
-				
-				Diagnostics.Log(innerVertices[i].ToString());
-				
+							
 				_triangles.Add
 				(
 					triangle1	

@@ -5,7 +5,9 @@ namespace Utilities.Input
 	public struct TouchLogic {				
 		
 		public bool IsPositionChange { get; private set; }
-		public bool IsFirstDown { get; private set; }
+		public bool IsFirstDownOn { get; private set; }
+		public bool IsFirstDownOff { get; private set; }
+
 		public bool IsFirstDrag { get; private set; }
 		public bool IsRelease { get; private set; }
 
@@ -35,15 +37,11 @@ namespace Utilities.Input
 
 			IsPositionChange = _lastPosition != _position;
 			IsDownOver = isDown && over;
-			IsFirstDown = !wasDown && IsDownOver;
+			IsFirstDownOn = !wasDown && IsDownOver;
+			IsFirstDownOff = !wasDown && isDown && !over;
 			IsFirstDrag = WasDownOver && isDown && IsPositionChange;
 			IsDrag = !isRelease && (IsFirstDrag || WasDrag);
 			IsRelease = isRelease && (WasDownOver || WasDrag);
-		}
-
-		static void UpdateFrameStatic()
-		{
-			
 		}
 	}	
 }
