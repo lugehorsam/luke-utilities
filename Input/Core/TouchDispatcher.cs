@@ -40,7 +40,7 @@ namespace Utilities.Input
 
             _touchLogic.UpdateFrame(worldPosition, isDown, !isFirstDown, isRelease, isOver);
 
-            TouchEventInfo info = new TouchEventInfo(this, _touchLogic, hits);
+            TouchEventInfo info = new TouchEventInfo(this, _touchLogic, hits, worldPosition);
 
             if (_touchLogic.IsFirstDownOn)
             {
