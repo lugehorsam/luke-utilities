@@ -30,10 +30,7 @@ namespace Utilities.Input
 		)
 		{			
 			_lastPosition = _position;					
-			_position = position;
-			
-			WasDownOver = IsDownOver;
-			WasDrag = !isRelease && IsDrag;
+			_position = position;			
 
 			IsPositionChange = _lastPosition != _position;
 			IsDownOver = isDown && over;
@@ -41,7 +38,11 @@ namespace Utilities.Input
 			IsFirstDownOff = !wasDown && isDown && !over;
 			IsFirstDrag = WasDownOver && isDown && IsPositionChange;
 			IsDrag = !isRelease && (IsFirstDrag || WasDrag);
+			
 			IsRelease = isRelease && (WasDownOver || WasDrag);
+			
+			WasDownOver = IsDownOver;
+			WasDrag = !isRelease && IsDrag;
 		}
 	}	
 }
