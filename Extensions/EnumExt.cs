@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Linq;
 
-public static class EnumExtensions {
+public static class EnumExt {
 
     //cyclic
     public static T GetNextValue<T>(this Enum currentValue)
@@ -23,5 +24,10 @@ public static class EnumExtensions {
         
         throw new Exception("Could not find value " + currentValue + " in enum type " + typeof(T));
     }
-	
+
+    public static T[] GetValues<T>()
+    {
+        Array values = Enum.GetValues(typeof(T));
+        return values.Cast<T>().ToArray();
+    }	
 }

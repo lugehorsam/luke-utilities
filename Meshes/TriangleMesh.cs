@@ -7,9 +7,8 @@ using UnityEngine;
 namespace Utilities.Meshes
 {
     [Serializable]
-    public class TriangleMesh : IComparer<Vertex>, IMesh
+    public class TriangleMesh : SimpleMesh, IComparer<Vertex>
     {
-
         public CycleDirection CycleDirection
         {
             get { return cycleDirection; }
@@ -22,7 +21,7 @@ namespace Utilities.Meshes
         {
             get
             {
-                return new ReadOnlyCollection<Vertex>(new Vertex[]
+                return new ReadOnlyCollection<Vertex>(new []
                 {
                     this[0],
                     this[1],
@@ -30,6 +29,13 @@ namespace Utilities.Meshes
                 });
             }
         }
+        
+        public DirectedEdge<int>[] AsEdges => new[]
+        {
+            new DirectedEdge<int>(0, 1),
+            new DirectedEdge<int>(1, 2),
+            new DirectedEdge<int>(0, 2),
+        };
 
         [SerializeField] Vertex vertex1;
         [SerializeField] Vertex vertex2;
@@ -194,6 +200,7 @@ namespace Utilities.Meshes
             vertex1 = new Vertex(-meshRadius, -meshRadius, 0);
             vertex2 = new Vertex(0, meshRadius, 0);
             vertex3 = new Vertex(meshRadius, -meshRadius, 0);
+            _triangles.Add(this);
         }
 
         public TriangleMesh(Vertex vertex1, Vertex vertex2, Vertex vertex3)
@@ -202,6 +209,7 @@ namespace Utilities.Meshes
             this.vertex2 = vertex2;
             this.vertex3 = vertex3;
             cycleDirection = CycleDirection.Clockwise;
+            _triangles.Add(this);
         }
 
         public override string ToString()
@@ -209,17 +217,14 @@ namespace Utilities.Meshes
             return Vertices.ToFormattedString();
         }
 
-        public ReadOnlyCollection<TriangleMesh> TriangleMeshes
+        public TriangleMesh CreateCopy(Func<Vertex, Vertex> vertexProcessor)
         {
-            get
-            {
-                return new ReadOnlyCollection<TriangleMesh>(new []{this});
-            }
-        }
-
-        public Mesh ToUnityMesh()
-        {
-            return ToUnityMesh(new[] {this});
+            return new TriangleMesh
+            (
+                vertexProcessor(vertex1),
+                vertexProcessor(vertex2),
+                vertexProcessor(vertex3)
+            );
         }
     }
 }

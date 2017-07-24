@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Utilities.Meshes
@@ -7,13 +8,8 @@ namespace Utilities.Meshes
     [Serializable]
     public class Vertex {
 
-        public Vector3 AsVector3
-        {
-            get
-            {
-                return new Vector3(x, y, z);
-            }
-        }
+        public Vector3 AsVector3 => new Vector3(x, y, z);
+
         public float X
         {
             get
@@ -50,14 +46,7 @@ namespace Utilities.Meshes
             }
         }
     
-        [SerializeField]
-        float x;
-    
-        [SerializeField]
-        float y;
-    
-        [SerializeField]
-        float z;
+        float x, y, z;
     
         public Vertex(float x, float y, float z)
         {
@@ -80,7 +69,7 @@ namespace Utilities.Meshes
     
         public override string ToString()
         {
-            return string.Format("[VertexDatum: X={0}, Y={1}, Z={2}]", X, Y, Z);
-        }        
+            return $"[VertexDatum: X={X}, Y={Y}, Z={Z}]";
+        }       
     }   
 }

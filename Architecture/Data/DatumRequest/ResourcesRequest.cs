@@ -28,7 +28,7 @@ namespace Datum
             {
                 return textAsset.text;
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
                Diagnostics.Report("Could not found text asset at path " + pathFromResources);
                return "";

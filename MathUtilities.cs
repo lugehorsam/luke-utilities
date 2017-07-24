@@ -19,8 +19,7 @@ namespace Utilities
             float angle = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
             Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
             return q;
-        }
-    
+        }    
     
         //Two non-parallel lines which may or may not touch each other have a point on each line which are closest
         //to each other. This function finds those two points. If the lines are not parallel, the function 
@@ -60,7 +59,7 @@ namespace Utilities
     
         public static float GetSignedAngle(Vector3 vectorA, Vector3 vectorB)
         {
-            float angle = Vector2.Angle(vectorA, vectorB);
+            float angle = Vector3.Angle(vectorA, vectorB);
             Vector3 cross = Vector3.Cross(vectorA, vectorB);
             if (cross.z < 0) angle = -angle;
             return angle;

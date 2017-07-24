@@ -2,7 +2,7 @@
 {
     public interface IGridMember<T> : IGridMember where T : IGridMember<T> {
     
-        Grid<T> Grid
+        new Grid<T> Grid
         {
             get;
             set;
