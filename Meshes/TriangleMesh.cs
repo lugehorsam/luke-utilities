@@ -17,25 +17,40 @@ namespace Utilities.Meshes
 
         private CycleDirection cycleDirection;
 
-        public ReadOnlyCollection<Vertex> Vertices
+        public ReadOnlyCollection<Vertex> Vertices => new ReadOnlyCollection<Vertex>(new []
         {
-            get
-            {
-                return new ReadOnlyCollection<Vertex>(new []
-                {
-                    this[0],
-                    this[1],
-                    this[2]
-                });
-            }
-        }
-        
+            this[0],
+            this[1],
+            this[2]
+        });
+
         public DirectedEdge<int>[] AsEdges => new[]
         {
             new DirectedEdge<int>(0, 1),
             new DirectedEdge<int>(1, 2),
             new DirectedEdge<int>(0, 2),
         };
+
+        public Vertex Vertex1
+        {
+            get { return vertex1; }
+
+            set { vertex1 = value; }
+        }
+        
+        public Vertex Vertex2
+        {
+            get { return vertex2; }
+
+            set { vertex2 = value; }
+        }
+        
+        public Vertex Vertex3
+        {
+            get { return vertex3; }
+
+            set { vertex3 = value; }
+        }
 
         [SerializeField] Vertex vertex1;
         [SerializeField] Vertex vertex2;

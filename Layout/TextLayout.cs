@@ -6,11 +6,7 @@ using System;
 
 public class TextLayout : MonoBehaviour {
 
-    public int Count {
-        get {
-            return words.Count;
-        }
-    }
+    public int Count => words.Count;
 
     [SerializeField]
     private List<GameObject> words = new List<GameObject>();

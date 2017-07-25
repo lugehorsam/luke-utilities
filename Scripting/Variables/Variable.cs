@@ -9,10 +9,7 @@ namespace Scripting
     {
         const char VARIABLE_IDENTIFIER = '$';
 
-        public string Identifier
-        {
-            get { return identifier; }
-        }
+        public string Identifier => identifier;
 
         [SerializeField]
         private string identifier;

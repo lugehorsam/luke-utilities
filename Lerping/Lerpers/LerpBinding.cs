@@ -8,7 +8,7 @@ namespace Utilities
         where TComponent : Component 
     {
 
-        public event Action<LerpBinding<TProperty, TComponent>> OnLerp = (binding) => { };
+        public event Action<LerpBinding<TProperty, TComponent>> OnLerp = binding => { };
 
         protected LerpBinding(GameObject gameObject, TComponent component) : base(gameObject, component)
         {
@@ -38,23 +38,27 @@ namespace Utilities
         protected abstract Func<TProperty, TProperty, float, TProperty> GetLerpDelegate ();
 
 
-        public IEnumerator CreateLerpEnumerator (FiniteLerp<TProperty> lerp)
+        public IEnumerator CreateLerpEnumerator (FiniteLerp<TProperty> lerp, Action beforeLerp = null, Action afterLerp = null)
         {
             while (!lerp.HasReachedTargetTime) {
+                beforeLerp?.Invoke();
                 TProperty lerpedProperty = lerp.GetLerpedProperty (GetProperty (), GetLerpDelegate());
                 SetProperty (lerpedProperty);
                 lerp.UpdateTime ();
                 OnLerp (this);
+                afterLerp?.Invoke();
                 yield return null;
             }
         }
 
-        IEnumerator ApplyInfiniteLerp(InfiniteLerp<TProperty> lerp)
+        public IEnumerator CreateLerpEnumerator(InfiniteLerp<TProperty> lerp, Action beforeLerp = null, Action afterLerp = null)
         {
             while (true)
             {
+                beforeLerp?.Invoke();
                 IncrementProperty(lerp.UnitsPerSecond);
                 OnLerp(this);
+                afterLerp?.Invoke();
                 yield return null;
             }
         }       

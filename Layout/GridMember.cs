@@ -8,10 +8,7 @@ namespace Utilities
     {
         public IGrid Grid { get; set; }
 
-        public int Index
-        {
-            get { return Grid.ToIndex(_row, _column); }
-        }
+        public int Index => Grid.ToIndex(_row, _column);
 
         public int Row
         {

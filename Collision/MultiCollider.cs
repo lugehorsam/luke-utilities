@@ -9,10 +9,7 @@ namespace Utilities
     public class MultiCollider : MonoBehaviour
     {
 
-        public Collider[] OtherColliders
-        {
-            get { return otherColliders.ToArray(); }
-        }
+        public Collider[] OtherColliders => otherColliders.ToArray();
 
         List<Collider> otherColliders = new List<Collider>();
         Collider colliderComponent;

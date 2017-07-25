@@ -81,5 +81,16 @@ namespace Utilities.Meshes
         {
             return _triangles.Count(triangle => triangle.Vertices.Contains(vertex)) == 1;
         }
+
+        public void SetUniqueTriangles()
+        {
+            foreach (var triangle in _triangles)
+            {
+                triangle.Vertex1 = new Vertex(triangle.Vertex1.AsVector3);
+                triangle.Vertex2 = new Vertex(triangle.Vertex2.AsVector3);
+                triangle.Vertex3 = new Vertex(triangle.Vertex3.AsVector3);
+
+            }
+        }
     }
 }

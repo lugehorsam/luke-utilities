@@ -9,10 +9,7 @@ namespace Utilities
     {
         private readonly INode<T> _sourceNode;
         
-        public ReadOnlyCollection<INode<T>> SearchedNodes
-        {
-            get { return new ReadOnlyCollection<INode<T>>(_searchedNodes.ToList()); }
-        }
+        public ReadOnlyCollection<INode<T>> SearchedNodes => new ReadOnlyCollection<INode<T>>(_searchedNodes.ToList());
 
         private readonly HashSet<INode<T>> _searchedNodes = new HashSet<INode<T>>();
         

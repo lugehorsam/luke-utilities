@@ -5,17 +5,11 @@ using NUnit.Framework.Constraints;
 
 public class BashScript
 {
-    public string StdOut
-    {
-        get { return stdOut; }
-    }
+    public string StdOut => stdOut;
 
     string stdOut;
 
-    public string StdError
-    {
-        get { return stdError; }
-    }
+    public string StdError => stdError;
 
     private string stdError;
 

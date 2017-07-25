@@ -5,10 +5,7 @@ namespace Utilities
 {
 	public class TrackingLine : View
 	{
-		public LineBinding LineBinding 
-		{
-			get { return _lineBinding; }
-		}
+		public LineBinding LineBinding => _lineBinding;
 
 		private LineBinding _lineBinding;
 		

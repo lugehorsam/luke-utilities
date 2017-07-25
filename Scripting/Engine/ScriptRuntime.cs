@@ -6,13 +6,7 @@ using Datum;
 
 public class ScriptRuntime 
 {
-    Dictionary<string, List<ScriptObject>> ScriptObjects
-    {
-        get
-        {
-            return scriptObjects;
-        }
-    }
+    Dictionary<string, List<ScriptObject>> ScriptObjects => scriptObjects;
 
     private readonly Dictionary<string, List<ScriptObject>> scriptObjects = new Dictionary<string, List<ScriptObject>>();    
     private readonly HashSet<Variable> variables = new HashSet<Variable>();

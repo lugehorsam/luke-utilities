@@ -5,31 +5,16 @@ public struct GestureFrame {
     /// <summary>
     /// Position of the gesture frame in screen space.
     /// </summary>
-    public Vector2 Position
-    {
-        get
-        {
-            return _position;
-        }
-    }
-    
+    public Vector2 Position => _position;
+
     private readonly Vector2 _position;
 
-    public RaycastHit? HitInfo
-    {
-        get { return _hitInfo; }
-    }
+    public RaycastHit? HitInfo => _hitInfo;
 
     RaycastHit? _hitInfo;
 
-    public float Time
-    {
-        get
-        {
-            return _time;
-        }
-    }
-    
+    public float Time => _time;
+
     float _time;
 
     public GestureFrame(Vector2 position, RaycastHit? hitInfo = null)

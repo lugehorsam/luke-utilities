@@ -2,27 +2,15 @@
 using UnityEngine;
 
 public struct DiagnosticsData {
-    public string DisplayName {
-        get {
-            return displayName;
-        }
-    }
+    public string DisplayName => displayName;
 
     string displayName;
 
-    public KeyCode? Key {
-        get {
-            return key;
-        }
-    }
+    public KeyCode? Key => key;
 
     KeyCode? key;
 
-    public Action Action {
-        get {
-            return action;
-        }
-    }
+    public Action Action => action;
 
     Action action;
 

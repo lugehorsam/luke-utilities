@@ -3,11 +3,8 @@
 [System.Serializable]
 public class JsonArray<T>
 {
-    public T [] Array {
-        get {
-            return array;
-        }
-    }
+    public T [] Array => array;
+
     [SerializeField]
     T[] array;
 

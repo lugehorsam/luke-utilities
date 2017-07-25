@@ -6,20 +6,12 @@ using System;
 public class Lerp<TProperty>
     where TProperty : struct {
 
-    public float TargetDuration {
-        get {
-            return targetDuration;
-        } 
-    }
+    public float TargetDuration => targetDuration;
 
     [SerializeField]
     float targetDuration = 1f;
 
-    public float CurrentTime {
-        get {
-            return currentTime;
-        }
-    }
+    public float CurrentTime => currentTime;
 
     float currentTime;
 
@@ -36,20 +28,12 @@ public class Lerp<TProperty>
         }
     }
 
-    public TweenType TweenType {
-        get {
-            return tweenType;
-        }
-    }
+    public TweenType TweenType => tweenType;
 
     [SerializeField]
     TweenType tweenType;
 
-    public TProperty TargetProperty {
-        get {
-            return targetProperty;
-        }
-    }
+    public TProperty TargetProperty => targetProperty;
 
     [SerializeField]
     TProperty targetProperty;

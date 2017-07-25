@@ -371,32 +371,32 @@ namespace DigitalRuby.Tween
         /// <summary>
         /// Gets the current time of the tween.
         /// </summary>
-        public float CurrentTime { get { return currentTime; } }
+        public float CurrentTime => currentTime;
 
         /// <summary>
         /// Gets the duration of the tween.
         /// </summary>
-        public float Duration { get { return duration; } }
+        public float Duration => duration;
 
         /// <summary>
         /// Gets the current state of the tween.
         /// </summary>
-        public TweenState State { get { return state; } }
+        public TweenState State => state;
 
         /// <summary>
         /// Gets the starting value of the tween.
         /// </summary>
-        public T StartValue { get { return start; } }
+        public T StartValue => start;
 
         /// <summary>
         /// Gets the ending value of the tween.
         /// </summary>
-        public T EndValue { get { return end; } }
+        public T EndValue => end;
 
         /// <summary>
         /// Gets the current value of the tween.
         /// </summary>
-        public T CurrentValue { get { return value; } }
+        public T CurrentValue => value;
 
         /// <summary>
         /// Gets the current progress of the tween (0 - 1).

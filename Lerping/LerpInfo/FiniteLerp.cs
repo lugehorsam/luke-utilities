@@ -5,24 +5,12 @@ namespace Utilities
 {
     public class FiniteLerp<TProperty>
     {
-        public float TargetDuration
-        {
-            get
-            {
-                return _targetDuration;
-            }
-        }
-    
+        public float TargetDuration => _targetDuration;
+
         float _targetDuration = 1f;
     
-        public float CurrentTime
-        {
-            get
-            {
-                return currentTime;
-            }
-        }
-    
+        public float CurrentTime => currentTime;
+
         float currentTime;
     
         bool instant = false;
@@ -43,17 +31,18 @@ namespace Utilities
     
         Func<float, float> _easing;
     
-        public TProperty TargetProperty
-        {
-            get
-            {
-                return _targetProperty;
-            }
-        }
-    
+        public TProperty TargetProperty => _targetProperty;
+
         TProperty _targetProperty;
     
         LerpDirection currentDirection = LerpDirection.Forwards;
+        
+        public FiniteLerp(TProperty targetProperty, float targetDuration, TweenType tweenType)
+        {
+            _targetProperty = targetProperty;
+            _targetDuration = targetDuration;
+            _easing = tweenType.TweenTypeToFunction();
+        }
     
         public void UpdateTime()
         {
@@ -84,13 +73,6 @@ namespace Utilities
             float scaledTime = _easing(CurrentTime / TargetDuration);
             TProperty lerpedValue = lerpDelegate(startProperty, TargetProperty, scaledTime);
             return lerpedValue;
-        }
-    
-        public FiniteLerp(TProperty targetProperty, float targetDuration, TweenType tweenType)
-        {
-            _targetProperty = targetProperty;
-            _targetDuration = targetDuration;
-            _easing = tweenType.TweenTypeToFunction();
         }
     
         public FiniteLerp(TProperty targetProperty, float targetDuration, Func<float, float> easing)

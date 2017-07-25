@@ -10,6 +10,8 @@ namespace Utilities.Meshes
 			get;
 			set;
 		}
+
+		public bool AutoWrite { get; set; }
 		
 		private readonly IMesh _proceduralMesh;
 		private MeshFilter _meshFilter;
@@ -23,12 +25,20 @@ namespace Utilities.Meshes
 		public override void SetProperty(Vector3 property)
 		{
 			VertexToLerp.Set(property);
-			_meshFilter.mesh = _proceduralMesh.ToUnityMesh();
+			if (AutoWrite)
+			{
+				WriteToMesh();
+			}
 		}
 
 		public override Vector3 GetProperty()
 		{
 			return VertexToLerp.AsVector3;
+		}
+
+		public void WriteToMesh()
+		{
+			_meshFilter.mesh = _proceduralMesh.ToUnityMesh();
 		}
 	}
 }

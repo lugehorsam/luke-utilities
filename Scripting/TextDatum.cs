@@ -6,10 +6,7 @@ namespace Scripting
     [Serializable]
     public abstract class TextDatum : ScriptObject
     {
-        public string Text
-        {
-            get { return resolvedQueries == null ? text : string.Format(text, resolvedQueries); }
-        }
+        public string Text => resolvedQueries == null ? text : string.Format(text, resolvedQueries);
 
         [SerializeField] private string text;
         [SerializeField] private string[] args;

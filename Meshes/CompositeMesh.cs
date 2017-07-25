@@ -12,11 +12,8 @@ namespace Utilities.Meshes
 			get { return new ReadOnlyCollection<TriangleMesh>(Meshes.SelectMany(mesh => mesh.TriangleMeshes).ToList()); }
 		}
 
-		public List<IMesh> Meshes
-		{
-			get { return _meshes; }
-		}
-		
+		public List<IMesh> Meshes => _meshes;
+
 		private readonly List<IMesh> _meshes = new List<IMesh>();
 
 		public void AddMesh(IMesh mesh)

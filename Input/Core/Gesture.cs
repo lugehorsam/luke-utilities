@@ -6,21 +6,9 @@ using System.Linq;
 
 public class Gesture {
 
-    public Vector2 MousePositionStart
-    {
-        get
-        {
-            return FirstFrame.Position;
-        }
-    }
+    public Vector2 MousePositionStart => FirstFrame.Position;
 
-    public Vector2 MousePositionCurrent
-    {
-        get
-        {
-            return CurrentFrame.Position;
-        }
-    }
+    public Vector2 MousePositionCurrent => CurrentFrame.Position;
 
     public Vector2? MousePositionLast
     {
@@ -34,50 +22,20 @@ public class Gesture {
         }
     }
 
-    public float ElapsedTime
-    {
-        get
-        {
-            return FirstFrame.Time - CurrentFrame.Time;
-        }
-    }
+    public float ElapsedTime => FirstFrame.Time - CurrentFrame.Time;
 
-    public ReadOnlyCollection<GestureFrame> GestureFrames
-    {
-        get
-        {
-            return new ReadOnlyCollection<GestureFrame>(gestureFrames);
-        }
-    }
+    public ReadOnlyCollection<GestureFrame> GestureFrames => new ReadOnlyCollection<GestureFrame>(gestureFrames);
 
-    public Vector2 Velocity
-    {
-        get
-        {
-            return ElapsedTime > 0f ? (MousePositionCurrent - MousePositionStart) / ElapsedTime : Vector2.zero;
-        }
-    }
+    public Vector2 Velocity => ElapsedTime > 0f ? (MousePositionCurrent - MousePositionStart) / ElapsedTime : Vector2.zero;
 
     public void AddGestureFrame(GestureFrame frame)
     {
         gestureFrames.Add(frame);
     }
 
-    public GestureFrame FirstFrame
-    {
-        get
-        {
-            return gestureFrames[0];
-        }
-    }
+    public GestureFrame FirstFrame => gestureFrames[0];
 
-    public GestureFrame CurrentFrame
-    {
-        get
-        {
-            return gestureFrames[gestureFrames.Count - 1];
-        }
-    }
+    public GestureFrame CurrentFrame => gestureFrames[gestureFrames.Count - 1];
 
     public GestureFrame? LastFrame
     {

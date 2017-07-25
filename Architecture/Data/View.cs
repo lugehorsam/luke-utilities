@@ -44,20 +44,14 @@ namespace Utilities
 
     public class View
     {
-        public virtual string GameObjectName
-        {
-            get { return ToString(); }
-        }
-        
+        public virtual string GameObjectName => ToString();
+
         public GameObject GameObject
         {
             get;
         }
 
-        public Transform Transform
-        {
-            get { return GameObject.GetComponent<Transform>() ?? GameObject.GetComponent<RectTransform>(); }
-        }
+        public Transform Transform => GameObject.GetComponent<Transform>() ?? GameObject.GetComponent<RectTransform>();
 
         public View()
         {

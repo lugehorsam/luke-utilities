@@ -16,7 +16,7 @@ namespace Utilities
             }
         }
 
-        public ReadOnlyCollection<T> Items { get { return new ReadOnlyCollection<T>(_observableCollection); } }
+        public ReadOnlyCollection<T> Items => new ReadOnlyCollection<T>(_observableCollection);
 
         public event Action<T> OnAfterItemAdd
         {
@@ -72,14 +72,8 @@ namespace Utilities
             throw new NotSupportedException();
         }
 
-        public int Count
-        {
-            get { return _observableCollection.Count; }
-        }
+        public int Count => _observableCollection.Count;
 
-        public bool IsReadOnly
-        {
-            get { return true; }
-        }
+        public bool IsReadOnly => true;
     }
 }

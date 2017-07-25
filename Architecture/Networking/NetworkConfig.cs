@@ -3,11 +3,7 @@ using System.Linq;
 
 public class NetworkConfig : ScriptableObject {
 
-    public string UrlBase {
-        get {
-            return urlBase;
-        }
-    }
+    public string UrlBase => urlBase;
 
     [SerializeField]
     string urlBase;

@@ -9,21 +9,22 @@ namespace Utilities.Meshes
 			List<Vertex> innerVertices = CircleMesh.CreateVertexRing(originRadius);
 			List<Vertex> outerVertices = CircleMesh.CreateVertexRing(radius);
 			
-			for (int i = 0; i < CircleMesh._NUM_VERTEX_ITERATIONS - 1; i++)
-			{			
-				
+			for (int i = 0; i < CircleMesh._NUM_VERTEX_ITERATIONS; i++)
+			{
+
+				int modulatedIteration = (i + 1) % CircleMesh._NUM_VERTEX_ITERATIONS;
 				var triangle1 = new TriangleMesh
 				(
 					outerVertices[i],
-					innerVertices[i + 1],
+					innerVertices[modulatedIteration],
 					innerVertices[i]
 				);
 				
 				var triangle2 = new TriangleMesh
 				(
 					outerVertices[i],
-					outerVertices[i + 1],
-					innerVertices[i + 1]
+					outerVertices[modulatedIteration],
+					innerVertices[modulatedIteration]
 				);
 							
 				_triangles.Add

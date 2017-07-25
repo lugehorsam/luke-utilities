@@ -9,11 +9,7 @@ public class ObjectPool<T>  {
     public event Action<T> OnPool = (obj) => { };
 
     readonly Queue<T> pooledObjects = new Queue<T>();
-    public ReadOnlyCollection<T> ReleasedObjects {
-        get {
-            return new ReadOnlyCollection<T> (releasedObjects);
-        }
-    }
+    public ReadOnlyCollection<T> ReleasedObjects => new ReadOnlyCollection<T> (releasedObjects);
 
     readonly List<T> releasedObjects = new List<T>();
 

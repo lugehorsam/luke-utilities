@@ -7,11 +7,7 @@ namespace Theming
     {
         private const string THEMES_DIRECTORY = "Themes";
 
-        static TTheme CurrentTheme {
-            get {
-                return themes [currentThemeIndex];
-            }
-        }
+        static TTheme CurrentTheme => themes [currentThemeIndex];
 
         private static readonly TTheme[] themes;
 

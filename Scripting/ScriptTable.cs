@@ -8,17 +8,11 @@ namespace Scripting
     [Serializable]
     public class ScriptTable<TDatum> : JsonArray<TDatum>
     {        
-        public string Id
-        {
-            get { return id; }
-        }
-        
+        public string Id => id;
+
         [SerializeField] private string id;
 
-        public Variable[] Globals
-        {
-            get { return globals; }
-        }
+        public Variable[] Globals => globals;
 
         [SerializeField] private Variable[] globals;                
     }

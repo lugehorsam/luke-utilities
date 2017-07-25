@@ -12,24 +12,15 @@ namespace Scripting
             private set;
         }
 
-        public string Id
-        {
-            get { return id; }
-        }
+        public string Id => id;
 
         [SerializeField] private string id;
 
-        public Condition ShouldAppear
-        {
-            get { return shouldAppear; }
-        }
+        public Condition ShouldAppear => shouldAppear;
 
         [SerializeField] private Condition shouldAppear;
 
-        public string Display
-        {
-            get { return display ?? id.ToUpper(); }
-        }
+        public string Display => display ?? id.ToUpper();
 
         [SerializeField] private string display;
 

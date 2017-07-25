@@ -10,33 +10,18 @@ namespace Utilities
     /// </summary>
     public class GridLayout<T> : Layout<T, Grid<T>>, IGridLayout where T : IGridMember, ILayoutMember
     {
-        public override string GameObjectName { get { return "Grid Layout";  } }
+        public override string GameObjectName => "Grid Layout";
 
-        IGrid IGridLayout.Grid
-        {
-            get { return Data; }
-        }
+        IGrid IGridLayout.Grid => Data;
 
-        public float CellHeight
-        {
-            get { return _cellHeight; }
-        }
+        public float CellHeight => _cellHeight;
 
-        public float CellWidth
-        {
-            get { return _cellWidth; }
-        }
+        public float CellWidth => _cellWidth;
 
-        public float TotalHeight
-        {
-            get { return CellHeight * Data.Rows; }
-        }
+        public float TotalHeight => CellHeight * Data.Rows;
 
-        private float TotalWidth
-        {
-            get { return CellWidth * Data.Columns; }
-        }
-        
+        private float TotalWidth => CellWidth * Data.Columns;
+
         private readonly float _cellWidth;
         private readonly float _cellHeight;        
         private readonly RectTransform _rectTransform;

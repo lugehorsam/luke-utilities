@@ -7,17 +7,11 @@ namespace Utilities
 {
     public class Grid<T> : ObservableCollection<T>, IGrid where T : IGridMember
     {                
-        public int Rows
-        {
-            get { return _rows; }
-        }
-        
+        public int Rows => _rows;
+
         readonly int _rows;
 
-        public int Columns
-        {
-            get { return _columns; }
-        }
+        public int Columns => _columns;
 
         readonly int _columns;
 

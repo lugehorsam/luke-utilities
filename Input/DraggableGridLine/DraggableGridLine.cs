@@ -9,11 +9,8 @@ namespace Utilities.Input
 	{		
 		private readonly LineBinding _lineBinding;
 				
-		public int? CurrentIndex
-		{
-			get { return _currentTile == null ? null : new int?(_currentTile.Index); }
-		}
-		
+		public int? CurrentIndex => _currentTile == null ? null : new int?(_currentTile.Index);
+
 		private T _currentTile;		
 		
 		private readonly GridLayout<T> _gridLayout;

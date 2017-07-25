@@ -4,10 +4,7 @@ namespace Datum
 {
     public abstract class DatumRequest<TDatum> : CustomYieldInstruction
     {
-        public TDatum Datum
-        {
-            get { return _datum; }
-        }
+        public TDatum Datum => _datum;
 
         private TDatum _datum;
 

@@ -174,12 +174,9 @@ public class PriorityQueue<TPriority, TValue> : ICollection<TValue>
         return Peek().Value;
     }
 
-    public bool IsEmpty
-    {
-        get { return _baseHeap.Count == 0; }
-    }
+    public bool IsEmpty => _baseHeap.Count == 0;
 
-    public int Count { get { return _baseHeap.Count; } }
+    public int Count => _baseHeap.Count;
 
     #region ICollection<TValue> Members
 
@@ -207,10 +204,7 @@ public class PriorityQueue<TPriority, TValue> : ICollection<TValue>
         }
     }
 
-    public bool IsReadOnly
-    {
-        get { return false; }
-    }
+    public bool IsReadOnly => false;
 
     public bool Remove( TValue item )
     {

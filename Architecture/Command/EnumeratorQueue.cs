@@ -7,17 +7,8 @@ namespace Utilities
 { 
     public class EnumeratorQueue : IEnumerator, IEnumeratorQueue
     {
-        public int Count 
-        {
-            get {
-                return _nextEnumerators.Count;
-            }
-        }
-
-        public object Current
-        {
-            get { return _currentEnumerator; }
-        }
+        public int Count => _nextEnumerators.Count + _parallelEnumerators.Count;
+        public object Current => _currentEnumerator;
 
         private readonly LinkedList<EnumeratorData> _nextEnumerators = new LinkedList<EnumeratorData>();
         private readonly Stack<EnumeratorData> _oldEnumerators = new Stack<EnumeratorData>();
@@ -34,10 +25,12 @@ namespace Utilities
         public bool MoveNext ()
         {
             bool isParallelEnumerator = TryUpdateParallelEnumerators();
+            
             if (_nextEnumerators.First == null)
                 return isParallelEnumerator;
 
             _currentEnumerator = _nextEnumerators.First.Value;
+            
             if (_currentEnumerator.CommandMode == CommandMode.Serial)
             {
                 if (_currentEnumerator.MoveNext())
@@ -51,6 +44,7 @@ namespace Utilities
             else
             {
                 _nextEnumerators.RemoveFirst();
+                
                 _parallelEnumerators.Add(_currentEnumerator);
                 MoveNext();
                 return true;
@@ -60,7 +54,9 @@ namespace Utilities
         bool TryUpdateParallelEnumerators()
         {
             bool updatedAtLeastOne = false;
+            
             var enumeratorsToUpdate = new List<IEnumerator>(_parallelEnumerators);
+            
             foreach (var enumerator in enumeratorsToUpdate)
             {
                 if (enumerator.MoveNext())
@@ -72,7 +68,7 @@ namespace Utilities
                     _parallelEnumerators.Remove(enumerator); //TODO move it to the stack directly afterwards
                 }
             }
-
+            
             return updatedAtLeastOne;
         }
         
@@ -90,7 +86,7 @@ namespace Utilities
         {
             _nextEnumerators.AddLast
             (
-                new EnumeratorData(ActionWrapper(action),CommandMode.Parallel)
+                new EnumeratorData(ActionWrapper(action), CommandMode.Parallel)
             );
         }
 
@@ -128,14 +124,8 @@ namespace Utilities
 
         private class EnumeratorData : IEnumerator
         {
-            public object Current
-            {
-                get
-                {
-                    return _enumerator.Current;
-                }
-            }
-            
+            public object Current => _enumerator.Current;
+
             public CommandMode CommandMode { get; }
 
             private readonly IEnumerator _enumerator;
