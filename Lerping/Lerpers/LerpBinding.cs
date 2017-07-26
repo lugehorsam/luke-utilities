@@ -38,29 +38,26 @@ namespace Utilities
         protected abstract Func<TProperty, TProperty, float, TProperty> GetLerpDelegate ();
 
 
-        public IEnumerator CreateLerpEnumerator (FiniteLerp<TProperty> lerp, Action beforeLerp = null, Action afterLerp = null)
+        public IEnumerator CreateLerpEnumerator 
+        (
+            FiniteLerp<TProperty> lerp, 
+            Action setupLerp = null, 
+            Action beforeLerp = null, 
+            Action afterLerp = null
+        )
         {
+            setupLerp?.Invoke();
+            TProperty initialProperty = GetProperty();
+            
             while (!lerp.HasReachedTargetTime) {
                 beforeLerp?.Invoke();
-                TProperty lerpedProperty = lerp.GetLerpedProperty (GetProperty (), GetLerpDelegate());
+                TProperty lerpedProperty = lerp.GetLerpedProperty (initialProperty, GetLerpDelegate());
                 SetProperty (lerpedProperty);
                 lerp.UpdateTime ();
                 OnLerp (this);
                 afterLerp?.Invoke();
                 yield return null;
             }
-        }
-
-        public IEnumerator CreateLerpEnumerator(InfiniteLerp<TProperty> lerp, Action beforeLerp = null, Action afterLerp = null)
-        {
-            while (true)
-            {
-                beforeLerp?.Invoke();
-                IncrementProperty(lerp.UnitsPerSecond);
-                OnLerp(this);
-                afterLerp?.Invoke();
-                yield return null;
-            }
-        }       
+        }         
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace Utilities.Meshes
 {
-	public interface IMesh {
+	public interface IProceduralMesh {
 		ReadOnlyCollection<TriangleMesh> TriangleMeshes { get; }
 		Mesh ToUnityMesh();
 	}	

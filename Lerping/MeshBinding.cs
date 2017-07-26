@@ -11,12 +11,12 @@ namespace Utilities.Meshes
 			set;
 		}
 
-		public bool AutoWrite { get; set; }
+		public bool AutoWrite { get; set; } = true;
 		
-		private readonly IMesh _proceduralMesh;
+		private readonly IProceduralMesh _proceduralMesh;
 		private MeshFilter _meshFilter;
 		
-		public MeshBinding(IMesh proceduralMesh, GameObject gameObject, MeshFilter meshFilter) : base(gameObject, meshFilter)
+		public MeshBinding(IProceduralMesh proceduralMesh, GameObject gameObject, MeshFilter meshFilter) : base(gameObject, meshFilter)
 		{
 			_proceduralMesh = proceduralMesh;
 			_meshFilter = meshFilter;

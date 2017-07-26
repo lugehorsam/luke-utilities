@@ -2,7 +2,7 @@
 
 namespace Utilities.Meshes
 {
-	public class RingMesh : SimpleMesh
+	public class RingMesh : SimpleProceduralMesh
 	{		
 		public RingMesh(float originRadius, float radius)
 		{

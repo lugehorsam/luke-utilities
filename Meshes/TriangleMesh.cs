@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Utilities.Meshes
 {
     [Serializable]
-    public class TriangleMesh : SimpleMesh, IComparer<Vertex>
+    public class TriangleMesh : SimpleProceduralMesh, IComparer<Vertex>
     {
         public CycleDirection CycleDirection
         {

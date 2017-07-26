@@ -4,7 +4,7 @@ namespace Utilities.Meshes
 { 
 
     [Serializable]
-    public class SquareMesh : SimpleMesh {
+    public class SquareMesh : SimpleProceduralMesh {
 
         public SquareMesh(TriangleMesh tri1, TriangleMesh tri2)
         {

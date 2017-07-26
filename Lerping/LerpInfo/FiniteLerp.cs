@@ -71,6 +71,9 @@ namespace Utilities
         public TProperty GetLerpedProperty(TProperty startProperty, Func<TProperty, TProperty, float, TProperty> lerpDelegate)
         {
             float scaledTime = _easing(CurrentTime / TargetDuration);
+            Diagnostics.Log("scaled time " + scaledTime);
+            Diagnostics.Log("start property time " + scaledTime);
+
             TProperty lerpedValue = lerpDelegate(startProperty, TargetProperty, scaledTime);
             return lerpedValue;
         }

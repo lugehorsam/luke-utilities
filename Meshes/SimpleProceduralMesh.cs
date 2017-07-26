@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Utilities.Meshes
 {
     [Serializable]
-    public class SimpleMesh : IMesh
+    public class SimpleProceduralMesh : IProceduralMesh
     {
         public ReadOnlyCollection<TriangleMesh> TriangleMeshes => new ReadOnlyCollection<TriangleMesh>(_triangles);
         
@@ -70,7 +70,6 @@ namespace Utilities.Meshes
             _triangles.AddRange(endCopy);            
             _triangles.AddRange(connections.SelectMany(connection => connection._triangles));
         }
-
 
         bool AnyUnsharedVertices(Vertex vertex1, Vertex vertex2)
         {

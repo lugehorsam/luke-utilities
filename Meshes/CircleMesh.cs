@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Utilities.Meshes
 {
-	public class CircleMesh : SimpleMesh
+	public class CircleMesh : SimpleProceduralMesh
 	{
 		public const int _NUM_VERTEX_ITERATIONS =  _NUM_DEGREES/_ANGLE_PER_ITERATION;
 		private const int _NUM_DEGREES = 360;

@@ -5,18 +5,18 @@ using UnityEngine;
 
 namespace Utilities.Meshes
 {
-	public class CompositeMesh : IMesh {
+	public class CompositeMesh : IProceduralMesh {
 
 		public ReadOnlyCollection<TriangleMesh> TriangleMeshes
 		{
 			get { return new ReadOnlyCollection<TriangleMesh>(Meshes.SelectMany(mesh => mesh.TriangleMeshes).ToList()); }
 		}
 
-		public List<IMesh> Meshes => _meshes;
+		public List<IProceduralMesh> Meshes => _meshes;
 
-		private readonly List<IMesh> _meshes = new List<IMesh>();
+		private readonly List<IProceduralMesh> _meshes = new List<IProceduralMesh>();
 
-		public void AddMesh(IMesh mesh)
+		public void AddMesh(IProceduralMesh mesh)
 		{
 			_meshes.Add(mesh);
 		}
