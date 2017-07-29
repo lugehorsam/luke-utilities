@@ -77,6 +77,14 @@ namespace Utilities
             throw new NotImplementedException ();
         }
 
+        public void AddSerial(Action action)
+        {
+            _nextEnumerators.AddLast
+            (
+                new EnumeratorData(ActionWrapper(action), CommandMode.Serial)
+            );
+        }
+
         public void AddSerial (IEnumerator enumerator)
         {
             _nextEnumerators.AddLast (new EnumeratorData(enumerator, CommandMode.Serial));

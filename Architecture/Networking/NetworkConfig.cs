@@ -10,8 +10,6 @@ public class NetworkConfig : ScriptableObject {
 
     public string BuildEndpoint (string [] restOfUrl)
     {
-
-
         string endpoint = urlBase;
         foreach (string domain in restOfUrl) {
             endpoint += string.Format("/{0}", domain);

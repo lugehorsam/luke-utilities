@@ -1,26 +1,27 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class ColliderResizer : MonoBehaviour {
-    private BoxCollider2D boxCollider;
-    private MeshRenderer meshRenderer;
+namespace Utilities
+{ 
+    public class ColliderResizer 
+    {  
+        private readonly BoxCollider boxCollider;
+        private readonly MeshRenderer meshRenderer;
+    
+        private readonly Vector3 _padding;
 
-    [SerializeField]
-    private float xPadding;
-    [SerializeField]
-    private float yPadding;
+        public ColliderResizer(GameObject gameObject, Mesh mesh, Vector3 padding = default(Vector3))
+        {
+            boxCollider = gameObject.GetComponent<BoxCollider>();
+         
+        }     
 
-    void Awake()
-    {
-        boxCollider = GetComponent<BoxCollider2D>();
-        meshRenderer = GetComponent<MeshRenderer>();
-    }     
-
-    public void Resize () {
-        Vector2 paddedSize = meshRenderer.GetScaledSize();
-        paddedSize.x += xPadding;
-        paddedSize.y += yPadding;
-        boxCollider.size = paddedSize;
-        boxCollider.offset = new Vector2(boxCollider.size.x/2, -boxCollider.size.y/2);
-    }
+        public void Resize () 
+        {
+            Vector3 paddedSize = meshRenderer.GetScaledSize();
+            paddedSize.x += _padding.x;
+            paddedSize.y += _padding.y;
+            paddedSize.z += _padding.z;
+            boxCollider.size = paddedSize;            
+        }
+    }   
 }

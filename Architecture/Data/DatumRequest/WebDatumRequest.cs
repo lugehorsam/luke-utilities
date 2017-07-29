@@ -20,9 +20,9 @@ namespace Datum
 
         public WebDatumRequest ()
         {
-            this.request = UnityWebRequest.Post(Url, PostData);
-            this.request.downloadHandler = new DownloadHandlerBuffer ();
-            this.request.Send ();
+            request = UnityWebRequest.Post(Url, PostData);
+            request.downloadHandler = new DownloadHandlerBuffer ();
+            request.Send ();
             WWWForm form = new WWWForm ();
             if (PostData != null) {
                 foreach (KeyValuePair<string, string> postDatum in PostData) {

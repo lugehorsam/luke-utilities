@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Utilities
 {
@@ -51,14 +50,21 @@ namespace Utilities
             get;
         }
 
-        public Transform Transform => GameObject.GetComponent<Transform>() ?? GameObject.GetComponent<RectTransform>();
+        public Transform Transform => GameObject.GetComponent<Transform>();
+        public RectTransform RectTransform => GameObject.GetComponent<RectTransform>();
 
         public View()
         {
-            GameObject = new GameObject();
+            GameObject = GetPrefab() ?? new GameObject();
             GameObject.name = GameObjectName;
             var binding = GameObject.AddComponent<ViewBinding>();
             binding.View = this;
         }
+
+        protected virtual GameObject GetPrefab()
+        {
+            return null;
+        }
+
     }
 }

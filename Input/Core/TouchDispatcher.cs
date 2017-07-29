@@ -19,6 +19,8 @@ namespace Utilities.Input
        
         private TouchLogic _touchLogic = new TouchLogic();
 
+        private Transform _Transform => Collider.transform;
+        
         public TouchDispatcher(UnityLifecycleDispatcher dispatcher, Collider collider)
         {
             Collider = collider;
@@ -30,17 +32,21 @@ namespace Utilities.Input
 
         void LateUpdate()
         {
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
-            RaycastHit[] hits = Physics.RaycastAll(worldPosition, Vector3.forward, 1000f);
+            Vector3 cameraPosition = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
+            RaycastHit[] hits = Physics.RaycastAll(cameraPosition, Vector3.forward, 1000f);
 
+            RaycastHit thisHit = hits.FirstOrDefault(hit => hit.collider == Collider);
             bool isFirstDown = UnityEngine.Input.GetMouseButtonDown(0);
             bool isDown = UnityEngine.Input.GetMouseButton(0);
-            bool isOver = hits.Any(hit => hit.collider == Collider);
+            bool isOver = !thisHit.Equals(default(RaycastHit));
             bool isRelease = UnityEngine.Input.GetMouseButtonUp(0);
 
-            _touchLogic.UpdateFrame(worldPosition, isDown, !isFirstDown, isRelease, isOver);
+            cameraPosition.z = _Transform.position.z;
+            _touchLogic.UpdateFrame(cameraPosition, isDown, !isFirstDown, isRelease, isOver);
 
-            TouchEventInfo info = new TouchEventInfo(this, _touchLogic, hits, worldPosition);
+            Diagnostics.Log("is over " + isOver);
+
+            TouchEventInfo info = new TouchEventInfo(this, _touchLogic, hits, cameraPosition);
 
             if (_touchLogic.IsFirstDownOn)
             {
