@@ -22,6 +22,7 @@ namespace Utilities.Meshes
 			_meshFilter = GameObject.AddComponent<MeshFilter>();
 			_meshBinding = new MeshBinding(proceduralMesh, GameObject, _meshFilter);
 			_proceduralMesh = proceduralMesh;
+			_meshFilter.mesh = _proceduralMesh.ToUnityMesh();
 		}
 	}	
 }

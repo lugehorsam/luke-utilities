@@ -12,6 +12,11 @@ namespace Utilities
             get { return Data[i]; }
             set { Data[i] = value; }
         }
+
+        protected Layout(TList list)
+        {
+            Data = list;
+        }
         
         public IEnumerable<TouchDispatcher> GetTouchDispatchers()
         {

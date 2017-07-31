@@ -44,7 +44,6 @@ namespace Utilities.Input
             cameraPosition.z = _Transform.position.z;
             _touchLogic.UpdateFrame(cameraPosition, isDown, !isFirstDown, isRelease, isOver);
 
-            Diagnostics.Log("is over " + isOver);
 
             TouchEventInfo info = new TouchEventInfo(this, _touchLogic, hits, cameraPosition);
 

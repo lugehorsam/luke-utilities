@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Utilities
 {
@@ -38,7 +39,21 @@ namespace Utilities
         {
             Data = stateMachine.State;
             stateMachine.OnStateChanged += (oldVal, newVal) => Data = newVal;
-        }      
+        }
+
+        public static IEnumerable<View<T>> FromData(IEnumerable<T> data)
+        {
+            var views = new List<View<T>>();
+            
+            foreach (var datum in data)
+            {
+                var newView = new View<T>();
+                newView.Data = datum;
+                views.Add(newView);   
+            }
+            
+            return views;
+        }
     }
 
     public class View

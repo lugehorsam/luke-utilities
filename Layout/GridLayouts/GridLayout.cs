@@ -26,7 +26,7 @@ namespace Utilities
         private readonly float _cellHeight;        
         private readonly RectTransform _rectTransform;
 
-        public GridLayout(float cellWidth, float cellHeight) 
+        public GridLayout(float cellWidth, float cellHeight)  : base(new Grid<T>())
         {
             _rectTransform = GameObject.AddComponent<RectTransform>();
             _cellWidth = cellWidth;

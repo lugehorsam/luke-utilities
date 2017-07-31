@@ -7,16 +7,8 @@ using UnityEngine;
 namespace Utilities.Meshes
 {
     [Serializable]
-    public class TriangleMesh : SimpleProceduralMesh, IComparer<Vertex>
+    public class TriangleMesh : SimpleProceduralMesh
     {
-        public CycleDirection CycleDirection
-        {
-            get { return cycleDirection; }
-            set { cycleDirection = value; }
-        }
-
-        private CycleDirection cycleDirection;
-
         public ReadOnlyCollection<Vertex> Vertices => new ReadOnlyCollection<Vertex>(new []
         {
             this[0],
@@ -170,31 +162,7 @@ namespace Utilities.Meshes
             }
             return numShared;
         }
-
-        public Vector3 GetCenterPoint()
-        {
-            return new Vector3(
-                (vertex1.X + vertex2.X + vertex3.X) / 3f,
-                (vertex1.Y + vertex2.Y + vertex3.Y) / 3f,
-                (vertex1.Z + vertex2.Z + vertex3.Z) / 3f
-            );
-        }      
-
-        public int Compare(Vertex vertex1, Vertex vertex2)
-        {
-            if (vertex1 == vertex2)
-            {
-                return 0;
-            }
-
-            Vector3 anchorVertex = GetCenterPoint();
-            Vector3 vector1 = vertex1.AsVector3 - anchorVertex;
-            Vector3 vector2 = vertex2.AsVector3 - anchorVertex;
-            float angle = MathExt.GetSignedAngle(vector1, vector2);
-            int sign = Math.Sign(angle);
-            return cycleDirection == CycleDirection.Clockwise ? sign : -sign;
-        }
-
+       
         public void SortVertices()
         {
             Vertex[] newVertices = Vertices.ToArray();
@@ -223,7 +191,6 @@ namespace Utilities.Meshes
             this.vertex1 = vertex1;
             this.vertex2 = vertex2;
             this.vertex3 = vertex3;
-            cycleDirection = CycleDirection.Clockwise;
             _triangles.Add(this);
         }
 
