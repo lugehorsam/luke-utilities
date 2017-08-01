@@ -11,8 +11,29 @@ namespace Utilities
 
 			return rect1.Overlaps(rect2);
 		}
+
+		public static bool OverlapsToRightOf(this RectTransform rectTrans1, RectTransform rectTrans2, Canvas canvas)
+		{			
+			Rect rect1 = rectTrans1.GetScreenRect(canvas);
+			Rect rect2 = rectTrans2.GetScreenRect(canvas);
+			
+			bool isOverlap = rect1.Overlaps(rect2);
+
+			return isOverlap && rect1.center.x > rect2.center.x;
+		}
 		
-		public static void ResetLocalValues( this RectTransform t ) {
+		public static bool OverlapsToLeftOf(this RectTransform rectTrans1, RectTransform rectTrans2, Canvas canvas)
+		{
+			Rect rect1 = rectTrans1.GetScreenRect(canvas);
+			Rect rect2 = rectTrans2.GetScreenRect(canvas);
+			
+			bool isOverlap = rect1.Overlaps(rect2);
+			return isOverlap && rect1.center.x < rect2.center.x;
+		}
+		
+		
+		public static void ResetLocalValues( this RectTransform t ) 
+		{
 			t.anchoredPosition = Vector2.zero;
 			t.localRotation = Quaternion.identity;
 			t.localScale = Vector3.one;

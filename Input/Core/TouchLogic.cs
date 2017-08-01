@@ -17,6 +17,9 @@ namespace Utilities.Input
 
 		public bool IsDrag { get; private set; }
 		public bool WasDrag { get; private set; }
+		
+		public bool IsHold { get; private set; }
+		public bool WasHold { get; private set; }
 			
 		private Vector3 _position;
 		private Vector3 _lastPosition;	
@@ -37,14 +40,16 @@ namespace Utilities.Input
 			IsDownOn = isDown && over;
 			IsFirstDownOn = !wasDown && IsDownOn;
 			IsFirstDownOff = !wasDown && isDown && !over;
-			IsFirstDrag = WasDownOn && isDown && IsPositionChange;
+			IsHold = (IsFirstDownOn || WasHold) && !isRelease;
+			IsFirstDrag = IsHold && IsPositionChange;
 			IsDrag = !isRelease && (IsFirstDrag || WasDrag);
 			
 			IsRelease = isRelease && WasDrag;
 			
 			WasDownOn = IsDownOn;
-			WasDrag = !isRelease && IsDrag;
 			WasFirstDownOn = IsFirstDownOn;
+			WasHold = IsHold;
+			WasDrag = !isRelease && IsDrag;
 		}
 	}	
 }
