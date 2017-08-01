@@ -212,7 +212,11 @@
             return EnumExt.GetValues<Axis>().Except(thisVector.UnusedDimensions());
         }
         
-        
+        public static bool IsOver(this Vector3 thisPos, Collider collider)
+        {
+            RaycastHit[] hits = Physics.RaycastAll(thisPos, Vector3.forward, 1000f);
+            return hits.Any(hit => hit.collider == collider);
+        }
     }
 
 }

@@ -35,10 +35,9 @@ namespace Utilities.Input
             Vector3 cameraPosition = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(cameraPosition, Vector3.forward, 1000f);
 
-            RaycastHit thisHit = hits.FirstOrDefault(hit => hit.collider == Collider);
             bool isFirstDown = UnityEngine.Input.GetMouseButtonDown(0);
             bool isDown = UnityEngine.Input.GetMouseButton(0);
-            bool isOver = !thisHit.Equals(default(RaycastHit));
+            bool isOver = cameraPosition.IsOver(Collider);
             bool isRelease = UnityEngine.Input.GetMouseButtonUp(0);
 
             cameraPosition.z = _Transform.position.z;

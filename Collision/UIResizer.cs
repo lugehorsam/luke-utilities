@@ -17,9 +17,14 @@ namespace Utilities
         private RectTransform _rectTransform;
         private LayoutElement _layoutElement;
         private MeshFilter _meshFilter;
-        private readonly MeshRenderer _meshRenderer;
-        private readonly Vector3 _padding;
+        private MeshRenderer _meshRenderer;
+        private Vector3 _padding;
 
+        void Awake()
+        {
+            Resize();
+        }
+        
         protected override void OnRectTransformDimensionsChange()
         {
             Resize();
@@ -29,10 +34,12 @@ namespace Utilities
         {
             float width = _RectTransform.rect.width;
             float height = _RectTransform.rect.height;
-            
+
             if (_BoxCollider != null)
+            {
                 _BoxCollider.size = new Vector2(width, height);
-    
+            }
+
             if (SquareMesh != null)
             {
                 if (_MeshFilter == null)

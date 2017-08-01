@@ -7,12 +7,13 @@ namespace Utilities.Input
 		public bool IsPositionChange { get; private set; }
 		public bool IsFirstDownOn { get; private set; }
 		public bool IsFirstDownOff { get; private set; }
+		public bool WasFirstDownOn { get; private set; }
 
 		public bool IsFirstDrag { get; private set; }
 		public bool IsRelease { get; private set; }
 
-		public bool IsDownOver { get; private set; }
-		public bool WasDownOver { get; private set; }
+		public bool IsDownOn { get; private set; }
+		public bool WasDownOn { get; private set; }
 
 		public bool IsDrag { get; private set; }
 		public bool WasDrag { get; private set; }
@@ -33,16 +34,17 @@ namespace Utilities.Input
 			_position = position;			
 
 			IsPositionChange = _lastPosition != _position;
-			IsDownOver = isDown && over;
-			IsFirstDownOn = !wasDown && IsDownOver;
+			IsDownOn = isDown && over;
+			IsFirstDownOn = !wasDown && IsDownOn;
 			IsFirstDownOff = !wasDown && isDown && !over;
-			IsFirstDrag = WasDownOver && isDown && IsPositionChange;
+			IsFirstDrag = WasDownOn && isDown && IsPositionChange;
 			IsDrag = !isRelease && (IsFirstDrag || WasDrag);
 			
-			IsRelease = isRelease && (WasDownOver || WasDrag);
+			IsRelease = isRelease && WasDrag;
 			
-			WasDownOver = IsDownOver;
+			WasDownOn = IsDownOn;
 			WasDrag = !isRelease && IsDrag;
+			WasFirstDownOn = IsFirstDownOn;
 		}
 	}	
 }
