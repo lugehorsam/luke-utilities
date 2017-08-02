@@ -5,14 +5,14 @@ namespace Utilities.Input
 	public class TouchEventInfo {
 
 		public TouchDispatcher TouchDispatcher { get; }
-		public TouchLogic Logic { get; }
+		public ITouchState TouchState { get; }
 		public RaycastHit[] Hits { get; }
 		public Vector3 WorldPosition { get; }
 
-		public TouchEventInfo(TouchDispatcher dispatcher, TouchLogic logic, RaycastHit[] hits, Vector3 worldPosition)
+		public TouchEventInfo(TouchDispatcher dispatcher, TouchLogic touchState, RaycastHit[] hits, Vector3 worldPosition)
 		{
 			TouchDispatcher = dispatcher;
-			Logic = logic;
+			TouchState = touchState;
 			Hits = hits;
 			WorldPosition = worldPosition;
 		}

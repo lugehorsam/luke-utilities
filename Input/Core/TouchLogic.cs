@@ -2,7 +2,7 @@
 
 namespace Utilities.Input
 {
-	public struct TouchLogic {				
+	public struct TouchLogic : ITouchState {				
 		
 		public bool IsPositionChange { get; private set; }
 		public bool IsFirstDownOn { get; private set; }

@@ -16,6 +16,8 @@ namespace Utilities.Input
         public event Action<TouchEventInfo> OnRelease = delegate { };
         public event Action<TouchEventInfo> OnDrag = delegate { };
         public event Action<TouchEventInfo> OnDownOff = delegate { };
+
+        public ITouchState TouchState => _touchLogic;
        
         private TouchLogic _touchLogic = new TouchLogic();
 
@@ -27,10 +29,10 @@ namespace Utilities.Input
             _rigidbody = collider.GetView().GameObject.AddComponent<Rigidbody>();
             _rigidbody.isKinematic = true;
             _rigidbody.useGravity = false;
-            dispatcher.OnLateUpdate += LateUpdate;
+            dispatcher.OnUpdate += OnUpdate;
         }
 
-        void LateUpdate()
+        void OnUpdate()
         {
             Vector3 cameraPosition = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(cameraPosition, Vector3.forward, 1000f);
