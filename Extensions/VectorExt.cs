@@ -165,6 +165,16 @@
         {
             return new Vector3(thisVector.x, thisVector.y, z);
         }
+        
+        public static Vector2 SetX(this Vector2 thisVector, float x)
+        {
+            return new Vector3(x, thisVector.y);
+        }
+        
+        public static Vector2 SetY(this Vector2 thisVector, float y)
+        {
+            return new Vector3(thisVector.x, y);
+        }        
     
         public static Vector3 Add(Vector3 vector3, Vector2 vector2)
         {

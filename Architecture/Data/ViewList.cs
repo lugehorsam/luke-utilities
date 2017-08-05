@@ -1,10 +1,16 @@
-﻿using Utilities;
+﻿using UnityEngine;
+using Utilities;
 
 namespace Luke
 {
 	public class ViewList<T> : View<ObservableCollection<T>> {
 
 		public ViewList()
+		{
+			Data = new ObservableCollection<T>();
+		}
+
+		public ViewList(Transform parent) : base(parent)
 		{
 			Data = new ObservableCollection<T>();
 		}

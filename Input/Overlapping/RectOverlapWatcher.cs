@@ -23,6 +23,12 @@ namespace Utilities.Input
 
 		public void Unwatch(IRectOverlapper rectOverlapper)
 		{
+			if (rectOverlapper == null)
+			{
+				Diagnostics.Report("Trying to unwatch a null rect overlapper");
+				return;
+			}
+			
 			if (!_observedOverlappers.Contains(rectOverlapper))
 			{
 				Diagnostics.LogWarning("Trying to unwatch an already unwatched overlapper.");

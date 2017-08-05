@@ -24,6 +24,11 @@ namespace Utilities
         private readonly StateMachine<T> stateMachine = new StateMachine<T>();
     
         protected virtual void HandleDatumChanged (T oldData, T newData) {}
+        
+        public View(Transform parent) : base(parent)
+        {
+            stateMachine.OnStateChanged += HandleDatumChanged;
+        }
 
         public View()
         {
@@ -74,6 +79,11 @@ namespace Utilities
             GameObject.name = GameObjectName;
             var binding = GameObject.AddComponent<ViewBinding>();
             binding.View = this;
+        }
+
+        public View(Transform parent) : this()
+        {
+            Transform.SetParent(parent);
         }
 
         protected virtual GameObject GetPrefab()
