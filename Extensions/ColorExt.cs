@@ -10,6 +10,11 @@ namespace Utilities
 		{
 			return new Color(red/_RGB_BASE, green/_RGB_BASE, blue/_RGB_BASE);
 		}
+
+		public static Color SetAlpha(this Color thisColor, float alpha)
+		{
+			return new Color (thisColor.r, thisColor.g, thisColor.b, alpha);
+		}
 	}
 	
 
