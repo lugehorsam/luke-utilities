@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Scripting
+namespace Utilities.Scripting
 {
     public abstract class ScriptObject
     {

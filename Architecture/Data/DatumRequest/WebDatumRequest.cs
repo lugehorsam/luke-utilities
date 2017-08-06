@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+/**
 
 namespace Datum
 {
-
     public abstract class WebDatumRequest<TDatum> : DatumRequest<TDatum> where TDatum : struct {
 
         [SerializeField] protected NetworkConfig networkConfig;
@@ -48,3 +48,4 @@ namespace Datum
     }
 
 }
+**/

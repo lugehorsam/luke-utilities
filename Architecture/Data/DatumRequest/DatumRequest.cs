@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Datum
+namespace Utilities.Datum
 {
     public abstract class DatumRequest<TDatum> : CustomYieldInstruction
     {
@@ -16,9 +16,7 @@ namespace Datum
                 if (requestIsDone)
                 {
                     string requestContent = GetRawContent();
-                    Diagnostics.Log("Request {0} got raw content {1}", ToString(), requestContent);
                     _datum = DeserializeJson(requestContent);
-                    Diagnostics.Log("{0} Data deserialzied to {1}", ToString(), _datum);
                     HandleAfterDeserialize();
                 }
                 return !requestIsDone;

@@ -2,7 +2,7 @@
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Datum
+namespace Utilities.Datum
 {
     public class ResourcesRequest<TDatum> : DatumRequest<TDatum>
     {
@@ -30,7 +30,7 @@ namespace Datum
             }
             catch (NullReferenceException)
             {
-               Diagnostics.Report("Could not found text asset at path " + pathFromResources);
+               Diag.Report("Could not found text asset at path " + pathFromResources);
                return "";
             }
         }

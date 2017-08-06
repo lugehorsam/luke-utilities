@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-namespace Scripting
+namespace Utilities.Scripting
 {
     [Serializable]
     public class ScriptTable<TDatum> : JsonArray<TDatum>

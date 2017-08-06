@@ -30,7 +30,7 @@ namespace Utilities
             }
             catch (System.Exception excpt) 
             {
-                Diagnostics.Report(excpt.Message);
+                Diag.Report(excpt.Message);
             }
         }
 

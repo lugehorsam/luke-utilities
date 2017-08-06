@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace Scripting
+namespace Utilities.Scripting
 {   
     [Serializable]
     public class Query : IRuntimeResolvable

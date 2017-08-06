@@ -2,11 +2,15 @@
 using UnityEngine;
 using Scripting;
 
-[Serializable]
-public class PromptDatum : TextDatum
+namespace Utilities.Scripting
 {
-    public override string ResourcesPath
+    [Serializable]
+    public class PromptDatum : TextDatum
     {
-        get;
-    }
+        public override string ResourcesPath
+        {
+            get;
+        }
+    }    
+
 }

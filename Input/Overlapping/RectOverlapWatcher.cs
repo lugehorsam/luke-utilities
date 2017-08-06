@@ -25,13 +25,13 @@ namespace Utilities.Input
 		{
 			if (rectOverlapper == null)
 			{
-				Diagnostics.Report("Trying to unwatch a null rect overlapper");
+				Diag.Report("Trying to unwatch a null rect overlapper");
 				return;
 			}
 			
 			if (!_observedOverlappers.Contains(rectOverlapper))
 			{
-				Diagnostics.LogWarning("Trying to unwatch an already unwatched overlapper.");
+				Diag.Warn("Trying to unwatch an already unwatched overlapper.");
 				return;
 			}
 
@@ -44,18 +44,23 @@ namespace Utilities.Input
 			foreach (IRectOverlappee overlapee in Overlapees)
 			{
 				bool isOverlap = overlapee.Rect.Overlaps(overlapper.Rect);
-				if (isOverlap && !IsTrackedOverlap(overlapper, overlapee))
+				bool hasBegunOverlapping = isOverlap && !IsTrackedOverlap(overlapper, overlapee);
+				bool hasStoppedOverlapping = !isOverlap && IsTrackedOverlap(overlapper, overlapee);
+					
+				if (hasBegunOverlapping)
 				{
+					Diag.Log(UtilitiesFeature.Overlap, "Has begun overlapping " + overlapper + " ,  " + overlapee);
 					OnOverlap(overlapper, overlapee);
 					_currentOverlaps.Add(new OverlapData(overlapper, overlapee));
 				}
-				else if (!isOverlap && IsTrackedOverlap(overlapper, overlapee))
+				else if (hasStoppedOverlapping)
 				{
+					Diag.Log(UtilitiesFeature.Overlap, "Has stopped overlapping " + overlapper + " ,  " + overlapee);
 					OnOverlapLeave(overlapper, overlapee);
 					_currentOverlaps.Remove(GetTrackedOverlap(overlapper, overlapee));
 				}
 			}
-		}
+		}	
 
 		bool IsTrackedOverlap(IRectOverlapper overlapper, IRectOverlappee overlapee)
 		{

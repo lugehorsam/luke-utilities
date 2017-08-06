@@ -1,4 +1,4 @@
-﻿namespace Datum
+﻿namespace Utilities.Datum
 {
     public enum DatumRequestType {
         Local,
@@ -15,7 +15,7 @@
                     return new ResourcesRequest<TDatum>(path);
             }
             
-            Diagnostics.LogWarning("Unrecognized request type of {0}", path);
+            Diag.Warn($"Unrecognized request type of {path}");
             return null;
         }
     }

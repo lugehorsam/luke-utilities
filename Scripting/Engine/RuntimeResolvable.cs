@@ -1,4 +1,4 @@
-﻿namespace Scripting
+﻿namespace Utilities.Scripting
 {
     public interface IRuntimeResolvable
     {

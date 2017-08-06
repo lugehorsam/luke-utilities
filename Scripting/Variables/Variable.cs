@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace Scripting
+namespace Utilities.Scripting
 {
     [Serializable]
     public class Variable : IRuntimeResolvable

@@ -44,7 +44,7 @@ namespace Utilities
             {
                 if (_MeshFilter == null)
                 {
-                    Diagnostics.LogWarning("Square mesh assigned to UI Resizer without a mesh filter.");
+                    Diag.Warn("Square mesh assigned to UI Resizer without a mesh filter.");
                     return;
                 }
 

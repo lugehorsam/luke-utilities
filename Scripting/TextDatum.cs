@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Scripting
+namespace Utilities.Scripting
 {
     [Serializable]
     public abstract class TextDatum : ScriptObject

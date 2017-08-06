@@ -4,66 +4,70 @@ using Scripting;
 using System.Linq;
 using Datum;
 
-public class ScriptRuntime 
+namespace Utilities.Scripting
 {
-    Dictionary<string, List<ScriptObject>> ScriptObjects => scriptObjects;
 
-    private readonly Dictionary<string, List<ScriptObject>> scriptObjects = new Dictionary<string, List<ScriptObject>>();    
-    private readonly HashSet<Variable> variables = new HashSet<Variable>();
-
-    public ScriptObject GetScriptObject(IRuntimeResolvable resolvable)
+    public class ScriptRuntime 
     {
-        return resolvable.GetResolvedValue(this);
-    }
+        Dictionary<string, List<ScriptObject>> ScriptObjects => scriptObjects;
 
-    public ScriptObject[] GetScriptObjects(string tableId)
-    {
-        return scriptObjects[tableId].ToArray();
-    }
+        private readonly Dictionary<string, List<ScriptObject>> scriptObjects = new Dictionary<string, List<ScriptObject>>();    
+        private readonly HashSet<Variable> variables = new HashSet<Variable>();
 
-    public ScriptObject GetScriptObject(string id)
-    {
-        foreach (var list in scriptObjects.Values)
+        public ScriptObject GetScriptObject(IRuntimeResolvable resolvable)
         {
-            ScriptObject scriptObject = list.FirstOrDefault((obj) => obj.Id == id);
-
-            if (scriptObject != null)
-                return scriptObject;
+            return resolvable.GetResolvedValue(this);
         }
 
-        return null;
-    }
+        public ScriptObject[] GetScriptObjects(string tableId)
+        {
+            return scriptObjects[tableId].ToArray();
+        }
+
+        public ScriptObject GetScriptObject(string id)
+        {
+            foreach (var list in scriptObjects.Values)
+            {
+                ScriptObject scriptObject = list.FirstOrDefault((obj) => obj.Id == id);
+
+                if (scriptObject != null)
+                    return scriptObject;
+            }
+
+            return null;
+        }
  
-    public void AddVariable(Variable variable)
-    {
-        if (!Variable.IsValidIdentifier(variable.Identifier))
+        public void AddVariable(Variable variable)
         {
-            throw new InvalidIdentifierException(variable.Identifier);
+            if (!Variable.IsValidIdentifier(variable.Identifier))
+            {
+                throw new InvalidIdentifierException(variable.Identifier);
+            }
+
+            variables.Add(variable);
         }
 
-        variables.Add(variable);
-    }
-
-    public void AddScriptObject(string contentId, ScriptObject scriptObject)
-    {
-        if (!scriptObjects.ContainsKey(contentId))
+        public void AddScriptObject(string contentId, ScriptObject scriptObject)
         {
-            scriptObjects[contentId] = new List<ScriptObject>();
-        }
+            if (!scriptObjects.ContainsKey(contentId))
+            {
+                scriptObjects[contentId] = new List<ScriptObject>();
+            }
         
-        Diagnostics.Log("Adding script object {0}", scriptObject.Id);
-        scriptObject.RegisterRuntime(this);
-        scriptObjects[contentId].Add(scriptObject);
-    }
-
-    public Variable GetVariableWithIdentifier(string identifier)
-    {
-        Diagnostics.Log("Trying to get variable with identifier: {0}", identifier);
-        if (!Variable.IsValidIdentifier(identifier))
-        {
-            throw new InvalidIdentifierException(identifier);
+            scriptObject.RegisterRuntime(this);
+            scriptObjects[contentId].Add(scriptObject);
         }
 
-        return variables.FirstOrDefault((variable) => variable.Identifier == identifier);
+        public Variable GetVariableWithIdentifier(string identifier)
+        {
+            if (!Variable.IsValidIdentifier(identifier))
+            {
+                throw new InvalidIdentifierException(identifier);
+            }
+
+            return variables.FirstOrDefault((variable) => variable.Identifier == identifier);
+        }
     }
+    
+
 }

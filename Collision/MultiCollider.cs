@@ -22,7 +22,7 @@ namespace Utilities
             if (!colliderComponent.isTrigger)
             {
                 colliderComponent.isTrigger = true;
-                Diagnostics.LogWarning("Multicollider on " + gameObject.name +
+                Diag.Warn("Multicollider on " + gameObject.name +
                                        " not attached to a trigger collider. Force setting collider to trigger.");
             }
         }

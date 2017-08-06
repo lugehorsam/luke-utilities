@@ -1,11 +1,17 @@
 ﻿using System;
 using Scripting;
 
-[Serializable]
-public class ResponseDatum : TextDatum
+namespace Utilities.Scripting
 {
-    public override string ResourcesPath
+ 
+    [Serializable]
+    public class ResponseDatum : TextDatum
     {
-        get;
+        public override string ResourcesPath
+        {
+            get;
+        }
     }
+   
+
 }

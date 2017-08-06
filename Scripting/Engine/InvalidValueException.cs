@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Scripting
+namespace Utilities.Scripting
 {
     public class InvalidValueException : Exception
     {

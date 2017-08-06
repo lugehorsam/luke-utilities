@@ -19,18 +19,18 @@ namespace Utilities
 
 		IEnumerator<INode<T>> Execute(INode<T> node)
 		{		
-			Diagnostics.Log("Returning " + node);
+			Diag.Log("Returning " + node);
 			yield return node;
 			foreach (var edge in node.Edges)
 			{
 				var end = edge.End;
 				if (end == null)
 				{
-					Diagnostics.LogWarning("Incomplete edge " + edge);
+					Diag.Warn("Incomplete edge " + edge);
 				}
 				else
 				{
-					Diagnostics.Log("returning end " + end);
+					Diag.Log("returning end " + end);
 					yield return end;
 				}
 				

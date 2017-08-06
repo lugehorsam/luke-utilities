@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace Theming
+namespace Utilities.Theming
 {
     public static class ThemeManager<TTheme> where TTheme : ScriptableObject
     {
@@ -29,7 +29,7 @@ namespace Theming
         public static void RegisterThemeable(IThemeable<TTheme> themeable)
         {
             if (!themeables.Add (themeable)) {
-                Diagnostics.Report ("trying to add a duplicate theamble");
+                Diag.Report ("trying to add a duplicate theamble");
             } else {
                 themeable.HandleNewTheme (CurrentTheme);
             }
@@ -38,7 +38,7 @@ namespace Theming
         public static void DeregisterThemeable(IThemeable<TTheme> themeable)
         {
             if (!themeables.Remove (themeable)) {
-                Diagnostics.Report ("trying to remove a nonexistant theamble");
+                Diag.Report("trying to remove a nonexistant theamble");
             }
         }
 

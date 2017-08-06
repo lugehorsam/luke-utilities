@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Datum;
-
+/**
 namespace Scripting
 {
     public class LocalScriptRequest<TDatum> : ResourcesRequest<ScriptTable<TDatum>>
@@ -43,3 +43,4 @@ namespace Scripting
         }
     }
 }
+**/

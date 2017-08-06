@@ -17,7 +17,7 @@ namespace Utilities
             
             if (start != end)
             {
-                Diagnostics.LogWarning("Trying to interpolate widths of line renderer that are not equal.");
+                Diag.Warn("Trying to interpolate widths of line renderer that are not equal.");
             }
 
             return (start + end) / 2;
