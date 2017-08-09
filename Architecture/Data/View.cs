@@ -76,7 +76,6 @@ namespace Utilities
         public View()
         {
             GameObject = GetPrefab() ?? new GameObject();
-            GameObject.name = GameObjectName;
             var binding = GameObject.AddComponent<ViewBinding>();
             binding.View = this;
         }

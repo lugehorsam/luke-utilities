@@ -5,25 +5,28 @@
 
 	public class RectOverlapInfo<T, K> where T : IRectOverlapper where K : IRectOverlapper
 	{
-		public T OverlappingRect { get; }
-		public K OverlapeeRect { get; }
+		public T Overlapper { get; }
+		public K Overlapee { get; }
 		public IEnumerable<Quadrant> Quadrants { get; }
 		
-		public RectOverlapInfo(T overlappingRect, K overlapeeRect, IEnumerable<Quadrant> quadrants)
+		public RectOverlapInfo(T overlapper, K overlapee, IEnumerable<Quadrant> quadrants)
 		{
-			OverlappingRect = overlappingRect;
-			OverlapeeRect = overlapeeRect;
+			Overlapper = overlapper;
+			Overlapee = overlapee;
 			Quadrants = quadrants;
 		}		
 		
 		public bool IsEnteringFromBelow()
 		{
-			return Quadrants.Any(quadrant => quadrant.HasFlag(Quadrant.Lower));
+			Diag.Log("quads " +  Quadrants.ToFormattedString());
+
+			Diag.Log("returning " +  Quadrants.All(quadrant => Quadrant.Upper.HasFlag(quadrant)));
+			return Quadrants.All(quadrant => Quadrant.Upper.HasFlag(quadrant));
 		}
 
 		public bool IsEnteringFromAbove()
 		{
-			return Quadrants.Any(quadrant => quadrant.HasFlag(Quadrant.Upper));
+			return Quadrants.All(quadrant => Quadrant.Lower.HasFlag(quadrant));
 		}
 	}
 }

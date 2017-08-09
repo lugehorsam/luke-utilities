@@ -21,45 +21,49 @@ namespace Utilities
 
         public static IEnumerable<Tuple<Quadrant, Rect>> DivideIntoQuadrants(this Rect thisRect)
         {
-            float width = thisRect.width;
-            float height = thisRect.height;
-            float halfWidth = width / 2;
-            float halfHeight = height / 2;
+            float xMin = thisRect.xMin;
+            float yMin = thisRect.yMin;
+
+            float xMax = thisRect.xMax;
+            float yMax = thisRect.yMax;
+
+            float xHalf = (xMin + xMax) / 2;
+            float yHalf = (yMin + yMax) / 2;
             
             return new List<Tuple<Quadrant, Rect>>
             {
                 Tuple.Create
                 (
-                    Quadrant.UpperLeft, new Rect(0, 0, halfWidth, halfHeight)
+                    Quadrant.UpperLeft, new Rect(xMin, yMin, xHalf, yHalf)
                 ),
                 Tuple.Create
                 (
-                    Quadrant.UpperRight, new Rect(halfWidth, 0, halfWidth, halfHeight)
+                    Quadrant.UpperRight, new Rect(xHalf, yMin, xMax, yHalf)
                 ),
                 Tuple.Create
                 (
-                    Quadrant.LowerRight, new Rect(0, halfHeight, halfWidth, halfHeight)
+                    Quadrant.LowerRight, new Rect(xHalf, yHalf, xMax, yMax)
                 ),
                 Tuple.Create
                 (
-                    Quadrant.LowerLeft, new Rect(halfWidth, halfHeight, halfWidth, halfHeight)
+                    Quadrant.LowerLeft, new Rect(xMin, xHalf, yHalf, yMax)
                 )
             };
         }
         
-        public static bool Overlaps<T, K>(this T rect1, K rect2, out RectOverlapInfo<T, K> overlapInfo) where T : IRectOverlapper where K : IRectOverlapper
+        public static bool Overlaps<T, K>(this T overlapper, K overlapee, out RectOverlapInfo<T, K> overlapInfo) where T : IRectOverlapper where K : IRectOverlapper
         {
-            bool isOverlap = rect1.Rect.Overlaps(rect2.Rect);
+            bool isOverlap = overlapper.Rect.Overlaps(overlapee.Rect);
 
             if (isOverlap)
             {
-                IEnumerable<Tuple<Quadrant, Rect>> quadrantInfo = rect1.Rect.DivideIntoQuadrants();
+                IEnumerable<Tuple<Quadrant, Rect>> quadrantInfo = overlapper.Rect.DivideIntoQuadrants();
 
                 var overlappingQuadrants = quadrantInfo
-                        .Where(info => info.Item2.Overlaps(rect2.Rect))
+                        .Where(info => info.Item2.Overlaps(overlapee.Rect))
                         .Select(info => info.Item1);
                         
-                overlapInfo = new RectOverlapInfo<T, K>(rect1, rect2, overlappingQuadrants);
+                overlapInfo = new RectOverlapInfo<T, K>(overlapper, overlapee, overlappingQuadrants);
 
                 return true;
 

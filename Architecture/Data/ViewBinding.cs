@@ -12,7 +12,9 @@ namespace Utilities
 
 		void Update()
 		{
+#if UNITY_EDITOR
 			gameObject.name = View.GameObjectName;
+#endif
 		}
 	}	
 }
