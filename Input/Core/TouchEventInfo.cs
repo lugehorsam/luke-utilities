@@ -2,20 +2,19 @@
 
 namespace Utilities.Input
 {
-	public class TouchEventInfo {
-
-		public TouchDispatcher TouchDispatcher { get; }
+	public class TouchEventInfo<T> : ITouchEventInfo
+	{
+		public T Owner { get; }
 		public ITouchState TouchState { get; }
 		public RaycastHit[] Hits { get; }
 		public Vector3 WorldPosition { get; }
 
-		public TouchEventInfo(TouchDispatcher dispatcher, TouchLogic touchState, RaycastHit[] hits, Vector3 worldPosition)
+		public TouchEventInfo(TouchDispatcher<T> dispatcher, TouchLogic touchState, RaycastHit[] hits, Vector3 worldPosition)
 		{
-			TouchDispatcher = dispatcher;
+			Owner = dispatcher.Owner;
 			TouchState = touchState;
 			Hits = hits;
 			WorldPosition = worldPosition;
 		}
 	}
 }
-

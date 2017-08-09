@@ -9,11 +9,11 @@ namespace Utilities
 
 		private LineBinding _lineBinding;
 		
-		private TouchDispatcher _touchDispatcher;
+		private TouchDispatcher<TrackingLine> _touchDispatcher;
 		private Camera _camera;
 		private float _z;
 		
-		public TrackingLine(Camera camera, TouchDispatcher dispatcher, float z)
+		public TrackingLine(Camera camera, TouchDispatcher<TrackingLine> dispatcher, float z)
 		{
 			_camera = camera;
 			_lineBinding = new LineBinding(GameObject, GameObject.AddComponent<LineRenderer>());
@@ -24,12 +24,12 @@ namespace Utilities
 
 		}
 
-		void HandleDrag(TouchEventInfo eventInfo)
+		void HandleDrag(TouchEventInfo<TrackingLine> eventInfo)
 		{
 			_lineBinding.SetProperty(_camera.ScreenToWorldPoint(UnityEngine.Input.mousePosition).SetZ(_z));
 		}
 
-		void HandleRelease(TouchEventInfo eventInfo)
+		void HandleRelease(TouchEventInfo<TrackingLine> eventInfo)
 		{
 			_lineBinding.SetProperty(_lineBinding.GetProperty(0));
 		}

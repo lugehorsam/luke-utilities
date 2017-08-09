@@ -18,12 +18,6 @@ namespace Utilities
             Data = list;
         }
         
-        public IEnumerable<TouchDispatcher> GetTouchDispatchers()
-        {
-            var iTouchDispatchers = Data.OfType<ITouchDispatcher>();
-            return iTouchDispatchers.Select(dispatcher => dispatcher.TouchDispatcher);
-        }
-        
         public void DoLayout()
         {
             for (int i = 0; i < Data.Count; i++)

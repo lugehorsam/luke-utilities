@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Utilities;
 
-namespace Luke
+namespace Utilities
 {
 	public class ViewList<T> : View<ObservableCollection<T>> {
 

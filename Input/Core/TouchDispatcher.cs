@@ -5,17 +5,19 @@ using UnityEngine;
 
 namespace Utilities.Input
 {
-    public class TouchDispatcher
-    {               
+    public class TouchDispatcher<T>
+    {                       
+        public T Owner { get; }
+
         public Collider Collider { get; }
 
         private readonly Rigidbody _rigidbody;
 
         public event Action<TouchLogic> OnEndFrame = delegate { };
-        public event Action<TouchEventInfo> OnFirstDown = delegate { };
-        public event Action<TouchEventInfo> OnRelease = delegate { };
-        public event Action<TouchEventInfo> OnDrag = delegate { };
-        public event Action<TouchEventInfo> OnDownOff = delegate { };
+        public event Action<TouchEventInfo<T>> OnFirstDown = delegate { };
+        public event Action<TouchEventInfo<T>> OnRelease = delegate { };
+        public event Action<TouchEventInfo<T>> OnDrag = delegate { };
+        public event Action<TouchEventInfo<T>> OnDownOff = delegate { };
 
         public ITouchState TouchState => _touchLogic;
        
@@ -23,8 +25,9 @@ namespace Utilities.Input
 
         private Transform _Transform => Collider.transform;
         
-        public TouchDispatcher(UnityLifecycleDispatcher dispatcher, Collider collider)
+        public TouchDispatcher( T owner, UnityLifecycleDispatcher dispatcher, Collider collider)
         {
+            Owner = owner;
             Collider = collider;
             _rigidbody = collider.GetView().GameObject.AddComponent<Rigidbody>();
             _rigidbody.isKinematic = true;
@@ -46,7 +49,7 @@ namespace Utilities.Input
             _touchLogic.UpdateFrame(cameraPosition, isDown, !isFirstDown, isRelease, isOver);
 
 
-            TouchEventInfo info = new TouchEventInfo(this, _touchLogic, hits, cameraPosition);
+            var info = new TouchEventInfo<T>(this, _touchLogic, hits, cameraPosition);
 
             if (_touchLogic.IsFirstDownOn)
             {
@@ -70,5 +73,5 @@ namespace Utilities.Input
             
             OnEndFrame(_touchLogic);
         }
-    }
+    }    
 }

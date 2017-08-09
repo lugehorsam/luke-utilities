@@ -15,7 +15,7 @@ namespace Utilities
             get { return _state; }
             set
             {
-                if (value.Equals(_state))
+                if (value != null && value.Equals(_state))
                 {
                     return;
                 }

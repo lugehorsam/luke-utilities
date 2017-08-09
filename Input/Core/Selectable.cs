@@ -10,9 +10,9 @@ namespace Utilities.Input
 
 		private bool _selected;
 		
-		private readonly TouchDispatcher _touchDispatcher;
+		private readonly TouchDispatcher<Selectable> _touchDispatcher;
 
-		public Selectable(TouchDispatcher touchDispatcher)
+		public Selectable(TouchDispatcher<Selectable> touchDispatcher)
 		{
 			_touchDispatcher = touchDispatcher;
 			_touchDispatcher.OnEndFrame += HandleEndFrame;
