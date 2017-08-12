@@ -18,9 +18,6 @@
 		
 		public bool IsEnteringFromBelow()
 		{
-			Diag.Log("quads " +  Quadrants.ToFormattedString());
-
-			Diag.Log("returning " +  Quadrants.All(quadrant => Quadrant.Upper.HasFlag(quadrant)));
 			return Quadrants.All(quadrant => Quadrant.Upper.HasFlag(quadrant));
 		}
 

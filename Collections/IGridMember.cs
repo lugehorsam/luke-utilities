@@ -26,7 +26,5 @@
         {
             get;
         }
-
-        int Index { get; }
     }  
 }

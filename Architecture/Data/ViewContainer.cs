@@ -3,14 +3,14 @@ using Utilities;
 
 namespace Utilities
 {
-	public class ViewList<T> : View<ObservableCollection<T>> {
+	public class ViewContainer<T> : View<ObservableCollection<T>> {
 
-		public ViewList()
+		public ViewContainer()
 		{
 			Data = new ObservableCollection<T>();
 		}
 
-		public ViewList(Transform parent) : base(parent)
+		public ViewContainer(Transform parent) : base(parent)
 		{
 			Data = new ObservableCollection<T>();
 		}

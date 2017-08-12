@@ -26,9 +26,14 @@ namespace Utilities
             _columns = columns;
         }
 
-        public T GetElementWithIndex(int index)
+        public T GetElement(int index)
         {
             return Items.FirstOrDefault(member => ToIndex(member.Row, member.Column) == index);
+        }
+
+        public T GetElement(int row, int column)
+        {
+            return Items.FirstOrDefault(member => member.Row == row && member.Column == column);
         }
 
         protected sealed override void HandleAfterItemAdd(T item)
@@ -47,12 +52,17 @@ namespace Utilities
         {
             var asList = (List<T>) Items;
             
-            asList.Sort((element1, element2) => element1.Index.CompareTo(element2.Index));
+            asList.Sort((element1, element2) => ToIndex(element1).CompareTo(ToIndex(element2)));
             
             foreach (var member in this)
             {
                 ValidateMember(member);
             }            
+        }
+
+        int ToIndex(T element)
+        {
+            return ToIndex(element.Row, element.Column);
         }
 
         void ValidateMember(T member)
@@ -79,7 +89,7 @@ namespace Utilities
 
         int[] RowColOf(T startElement)
         {
-            int index = startElement.Index;
+            int index = ToIndex(startElement);
             if (index < 0)
             {
                 throw new Exception("RuneLevel does not contain element " + startElement + " , grid " + this.ToFormattedString());

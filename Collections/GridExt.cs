@@ -48,7 +48,7 @@ namespace Utilities
             int colOffset = 0
         )
         {
-            return GetProjectedMember(sourceGrid, gridToProjectOnto, memberToProject.Index, rowOffset, colOffset);
+            return GetProjectedMember(sourceGrid, gridToProjectOnto, sourceGrid.ToIndex(memberToProject.Row, memberToProject.Column), rowOffset, colOffset);
         }
 
         public static IGridMember GetProjectedMember

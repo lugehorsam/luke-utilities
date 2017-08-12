@@ -2,6 +2,7 @@
 namespace Utilities
 {
     using UnityEngine;
+    using System.Collections.Generic;
  
     public static class TransformExt {
 
@@ -25,10 +26,30 @@ namespace Utilities
             thisTransform.localPosition = new Vector3 (thisTransform.localPosition.x, thisTransform.localPosition.y, z);
         }
     
-        public static void ResetLocalValues( this Transform t ) {
+        public static void ResetLocalValues(this Transform t) {
             t.localPosition = Vector3.zero;
             t.localRotation = Quaternion.identity;
             t.localScale = Vector3.one;
-        }    
+        }
+
+        public static void DestroyChildren(this Transform transform)
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                GameObject.Destroy(transform.GetChild(i));
+            }
+        }
+
+        public static List<Transform> GetChildren(this Transform transform)
+        {
+            var children = new List<Transform>();
+            
+            for (int i = 0; i < transform.childCount; i++)
+            {
+               children.Add(transform.GetChild(i));
+            }
+            
+            return children;
+        }
     }
 }
