@@ -40,13 +40,13 @@ namespace Utilities
             }
         }
 
-        public static List<Transform> GetChildren(this Transform transform)
+        public static List<T> GetChildren<T>(this T transform) where T : Transform
         {
-            var children = new List<Transform>();
+            var children = new List<T>();
             
             for (int i = 0; i < transform.childCount; i++)
             {
-               children.Add(transform.GetChild(i));
+               children.Add(transform.GetChild(i) as T);
             }
             
             return children;

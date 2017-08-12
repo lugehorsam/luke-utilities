@@ -18,9 +18,9 @@ namespace Utilities.Meshes
 		
 		public MeshView(T proceduralMesh)
 		{
-			_meshRenderer = GameObject.AddComponent<MeshRenderer>();
-			_meshFilter = GameObject.AddComponent<MeshFilter>();
-			_meshBinding = new MeshBinding(proceduralMesh, GameObject, _meshFilter);
+			_meshRenderer = _GameObject.AddComponent<MeshRenderer>();
+			_meshFilter = _GameObject.AddComponent<MeshFilter>();
+			_meshBinding = new MeshBinding(proceduralMesh, _GameObject, _meshFilter);
 			_proceduralMesh = proceduralMesh;
 			_meshFilter.mesh = _proceduralMesh.ToUnityMesh();
 		}

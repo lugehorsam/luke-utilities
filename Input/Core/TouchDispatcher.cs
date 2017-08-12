@@ -25,11 +25,11 @@ namespace Utilities.Input
 
         private Transform _Transform => Collider.transform;
         
-        public TouchDispatcher( T owner, UnityLifecycleDispatcher dispatcher, Collider collider)
+        public TouchDispatcher(T owner, UnityLifecycleDispatcher dispatcher, Collider collider)
         {
             Owner = owner;
             Collider = collider;
-            _rigidbody = collider.GetView().GameObject.AddComponent<Rigidbody>();
+            _rigidbody = collider.GetView().AddComponent<Rigidbody>();
             _rigidbody.isKinematic = true;
             _rigidbody.useGravity = false;
             dispatcher.OnUpdate += OnUpdate;

@@ -16,7 +16,7 @@ namespace Utilities
 		public TrackingLine(Camera camera, TouchDispatcher<TrackingLine> dispatcher, float z)
 		{
 			_camera = camera;
-			_lineBinding = new LineBinding(GameObject, GameObject.AddComponent<LineRenderer>());
+			_lineBinding = new LineBinding(_GameObject, _GameObject.AddComponent<LineRenderer>());
 			_z = z;
 			_touchDispatcher = dispatcher;
 			_touchDispatcher.OnDrag += HandleDrag;

@@ -58,7 +58,7 @@ namespace Utilities
         void HandleAfterDataRemove(T data)
         {
             var oldView = this.First(view => view.Data.Equals(data));
-            GameObject.Destroy(oldView.GameObject);
+            oldView.Destroy();
             _observableCollection.Remove(oldView);
             HandleAfterViewRemove(data, oldView);
         }

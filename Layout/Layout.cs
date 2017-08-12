@@ -27,7 +27,7 @@ namespace Utilities
                 if (behavior == null)
                     continue;
                                 
-                behavior.GameObject.transform.SetParent(GameObject.transform);
+                behavior.GameObject.transform.SetParent(_GameObject.transform);
                 behavior.GameObject.transform.SetSiblingIndex(i);
                 behavior.OnLocalLayout(GetIdealLocalPosition(behavior));
             }

@@ -65,18 +65,18 @@ namespace Utilities
     {
         public virtual string GameObjectName => ToString();
 
-        public GameObject GameObject
+        protected GameObject _GameObject
         {
             get;
         }
 
-        public Transform Transform => GameObject.GetComponent<Transform>();
-        public RectTransform RectTransform => GameObject.GetComponent<RectTransform>();
+        public Transform Transform => _GameObject.GetComponent<Transform>();
+        public RectTransform RectTransform => _GameObject.GetComponent<RectTransform>();
 
         public View()
         {
-            GameObject = GetPrefab() ?? new GameObject();
-            var binding = GameObject.AddComponent<ViewBinding>();
+            _GameObject = GetPrefab() ?? new GameObject();
+            var binding = _GameObject.AddComponent<ViewBinding>();
             binding.View = this;
         }
 
@@ -90,5 +90,14 @@ namespace Utilities
             return null;
         }
 
+        public void Destroy()
+        {
+            GameObject.Destroy(_GameObject);
+        }
+
+        public T AddComponent<T>() where T : Component
+        {
+            return _GameObject.AddComponent<T>();
+        }
     }
 }

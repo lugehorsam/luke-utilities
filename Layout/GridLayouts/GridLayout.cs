@@ -28,7 +28,7 @@ namespace Utilities
 
         public GridLayout(float cellWidth, float cellHeight)  : base(new Grid<T>())
         {
-            _rectTransform = GameObject.AddComponent<RectTransform>();
+            _rectTransform = _GameObject.AddComponent<RectTransform>();
             _cellWidth = cellWidth;
             _cellHeight = cellHeight;
         }        

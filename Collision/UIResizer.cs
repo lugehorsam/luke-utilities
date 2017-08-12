@@ -8,7 +8,7 @@ namespace Utilities
     public sealed class UIResizer : UIBehaviour
     {
         public SquareMesh SquareMesh { get; set; }
-        public bool SizeToMesh { get; set; } = false;
+        public bool SizeRectTransformToMesh { get; set; } = false;
         
         private RectTransform _RectTransform => _rectTransform ?? (_rectTransform = gameObject.GetComponent<RectTransform>());
         private BoxCollider _BoxCollider => _boxCollider ?? (_boxCollider = gameObject.GetComponent<BoxCollider>());
@@ -28,6 +28,7 @@ namespace Utilities
         
         protected override void OnRectTransformDimensionsChange()
         {
+            base.OnRectTransformDimensionsChange();
             Resize();
         }
 
@@ -35,6 +36,8 @@ namespace Utilities
         {
             float width = _RectTransform.rect.width;
             float height = _RectTransform.rect.height;
+                      
+            
 
             if (_BoxCollider != null)
             {
@@ -52,10 +55,6 @@ namespace Utilities
                 SquareMesh.Width = width;
                 SquareMesh.Height = height;
                 _MeshFilter.mesh = SquareMesh.ToUnityMesh();
-            }
-
-            if (SizeToMesh)
-            {
             }
         }
     }
