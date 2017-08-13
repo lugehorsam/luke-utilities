@@ -5,18 +5,18 @@ namespace Utilities
     [System.Serializable]
     public class ScaleBinding : Vector3Binding<Transform> {
   
-        public ScaleBinding(GameObject gameObject) : base(gameObject, gameObject.transform)
+        public ScaleBinding(Transform transform) : base(transform)
         {        
         }
     
         public override Vector3 GetProperty ()
         {
-            return GameObject.transform.localScale;
+            return Component.localScale;
         }
 
         public override void SetProperty (Vector3 property)
         {
-            GameObject.transform.localScale = property;
+            Component.localScale = property;
         }
     }   
 }

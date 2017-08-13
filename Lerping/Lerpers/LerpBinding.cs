@@ -10,7 +10,7 @@ namespace Utilities
 
         public event Action<LerpBinding<TProperty, TComponent>> OnLerp = binding => { };
 
-        protected LerpBinding(GameObject gameObject, TComponent component) : base(gameObject, component)
+        protected LerpBinding(TComponent component) : base(component)
         {
         }
 

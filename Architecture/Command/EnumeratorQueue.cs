@@ -41,14 +41,14 @@ namespace Utilities
                 MoveEnumeratorToStack (_currentEnumerator);
                 return MoveNext() || isParallelEnumerator;
             }
-            else
-            {
-                _nextEnumerators.RemoveFirst();
-                
-                _parallelEnumerators.Add(_currentEnumerator);
-                MoveNext();
-                return true;
-            }                        
+            
+            
+            _nextEnumerators.RemoveFirst();
+            
+            _parallelEnumerators.Add(_currentEnumerator);
+            MoveNext();
+            return true;
+                 
         }
 
         bool TryUpdateParallelEnumerators()

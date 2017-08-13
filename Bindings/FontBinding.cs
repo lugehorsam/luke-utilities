@@ -2,7 +2,7 @@
 
 public class FontBinding : PropertyBinding<Font, TextMesh> {
 
-    public FontBinding(GameObject gameObject, TextMesh textMesh) : base(gameObject, textMesh)
+    public FontBinding(TextMesh textMesh) : base(textMesh)
     {
     }
     

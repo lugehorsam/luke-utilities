@@ -6,14 +6,17 @@ namespace Utilities
     [Serializable]
     public class ColorBinding : LerpBinding<Color, Renderer> {
     
-        public ColorBinding(GameObject gameObject, Renderer renderer) : base(gameObject, renderer)
+        public ColorBinding(Renderer renderer) : base(renderer)
         {
         }   
-        public override void SetProperty(Color color) {
+        
+        public override void SetProperty(Color color) 
+        {
             Component.material.color = color;
         }
 
-        public override Color GetProperty() {
+        public override Color GetProperty()
+        {
             return Component.material.color;
         }
 

@@ -6,17 +6,19 @@ namespace Utilities
 
         Vector3? trackedRotation; //single rotation representation for conversion to quaternions
 
-        protected RotationBinding(GameObject gameObject) : base(gameObject, gameObject.transform)
+        protected RotationBinding(Transform transform) : base(transform)
         {        
-            trackedRotation = GameObject.transform.localEulerAngles;
+            trackedRotation = Component.localEulerAngles;
         }
 
-        public sealed override void SetProperty(Vector3 rot) {
+        public sealed override void SetProperty(Vector3 rot) 
+        {
             trackedRotation = rot;
-            GameObject.transform.localEulerAngles = trackedRotation.Value;
+            Component.localEulerAngles = trackedRotation.Value;
         }
 
-        public sealed override Vector3 GetProperty() {
+        public sealed override Vector3 GetProperty() 
+        {
             return trackedRotation.Value;
         }
 

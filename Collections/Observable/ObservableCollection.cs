@@ -11,7 +11,7 @@ namespace Utilities
 
         protected sealed override void ClearItems()
         {
-            var oldItems = Items;            
+            var oldItems = new List<T>(Items);            
             base.ClearItems();
             foreach (var oldItem in oldItems)
             {

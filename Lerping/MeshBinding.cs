@@ -16,7 +16,7 @@ namespace Utilities.Meshes
 		private readonly IProceduralMesh _proceduralMesh;
 		private MeshFilter _meshFilter;
 		
-		public MeshBinding(IProceduralMesh proceduralMesh, GameObject gameObject, MeshFilter meshFilter) : base(gameObject, meshFilter)
+		public MeshBinding(IProceduralMesh proceduralMesh, MeshFilter meshFilter) : base(meshFilter)
 		{
 			_proceduralMesh = proceduralMesh;
 			_meshFilter = meshFilter;

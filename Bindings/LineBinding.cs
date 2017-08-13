@@ -4,9 +4,8 @@ namespace Utilities
 {
     public class LineBinding : Vector3Binding<LineRenderer>
     {       
-        public LineBinding(
-            GameObject gameObject, LineRenderer lineRenderer
-        ) : base(gameObject, lineRenderer)
+        public LineBinding(LineRenderer lineRenderer
+        ) : base(lineRenderer)
         {
         }
 

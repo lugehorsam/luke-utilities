@@ -24,11 +24,14 @@ namespace Utilities.Input
         private TouchLogic _touchLogic = new TouchLogic();
 
         private Transform _Transform => Collider.transform;
+
+        private UnityLifecycleDispatcher _dispatcher;
         
         public TouchDispatcher(T owner, UnityLifecycleDispatcher dispatcher, Collider collider)
         {
             Owner = owner;
             Collider = collider;
+            _dispatcher = dispatcher;
             _rigidbody = collider.GetView().AddComponent<Rigidbody>();
             _rigidbody.isKinematic = true;
             _rigidbody.useGravity = false;
@@ -37,6 +40,12 @@ namespace Utilities.Input
 
         void OnUpdate()
         {
+            if (Collider == null)
+            {
+                _dispatcher.OnUpdate -= OnUpdate;
+                return;
+            }
+            
             Vector3 cameraPosition = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(cameraPosition, Vector3.forward, 1000f);
 

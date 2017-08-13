@@ -65,7 +65,7 @@ namespace Utilities
     {
         public virtual string GameObjectName => ToString();
 
-        protected GameObject _GameObject
+        private GameObject _GameObject
         {
             get;
         }

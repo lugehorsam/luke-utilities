@@ -4,10 +4,11 @@ using UnityEngine;
 
 namespace Utilities
 {
-    public class ViewFactory<T, K> : ReadOnlyObservableCollection<K>
+    public sealed class ViewFactory<T, K> : ReadOnlyObservableCollection<K>
         where K : View<T> {
         
         private readonly Func<T, K> _viewConstructor;
+        private readonly Action<K> _viewDestructor;
 
         public ObservableCollection<T> Data
         {
@@ -28,18 +29,15 @@ namespace Utilities
         }
         
         protected ObservableCollection<T> _data;
-
-        public ViewFactory(Func<T, K> viewConstructor) : base(new ObservableCollection<K>())
-        {
-            _viewConstructor = viewConstructor;
-        }
         
-        public ViewFactory(ObservableCollection<T> collection, Func<T, K> viewConstructor) : base(new ObservableCollection<K>())
+        public ViewFactory(ObservableCollection<T> collection, Func<T, K> viewConstructor,  Action<K> viewDestructor) : base(new ObservableCollection<K>())
         {
             _viewConstructor = viewConstructor;
+            _viewDestructor = viewDestructor;
             _data = collection;
-            collection.OnAfterItemAdd += HandleAfterDataAdd;
-            collection.OnAfterItemRemove += HandleAfterDataRemove;
+
+            _data.OnAfterItemAdd += HandleAfterDataAdd;
+            _data.OnAfterItemRemove += HandleAfterDataRemove;
 
             foreach (var item in collection)
             {
@@ -52,24 +50,14 @@ namespace Utilities
             var newView = _viewConstructor(data);
             newView.Data = data;
             _observableCollection.Add(newView);
-            HandleAfterViewAdd(data, newView);
         }
         
         void HandleAfterDataRemove(T data)
         {
             var oldView = this.First(view => view.Data.Equals(data));
-            oldView.Destroy();
             _observableCollection.Remove(oldView);
-            HandleAfterViewRemove(data, oldView);
-        }
-        
-        protected virtual void HandleAfterViewAdd(T data, K view)
-        {            
-        }
-
-        protected virtual void HandleAfterViewRemove(T data, K view)
-        {            
-        }
+            _viewDestructor(oldView);
+        }        
     }
 }
 
