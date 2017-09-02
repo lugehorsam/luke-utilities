@@ -140,7 +140,7 @@ namespace Utilities.Meshes
         {
             var verts = GetVertices().ToArray();
             Array.Sort(verts, this);
-            Diag.Log("sorted verts " + verts.ToFormattedString());
+            Diag.Log("sorted verts " + IEnumerableExtensions.Pretty(verts));
 
             return verts;
         }

@@ -92,7 +92,7 @@ namespace Utilities
             int index = ToIndex(startElement);
             if (index < 0)
             {
-                throw new Exception("RuneLevel does not contain element " + startElement + " , grid " + this.ToFormattedString());
+                throw new Exception("RuneLevel does not contain element " + startElement + " , grid " + IEnumerableExtensions.Pretty(this));
             }
             return ToRowCol (index);
         }
@@ -147,7 +147,7 @@ namespace Utilities
 
         public override string ToString()
         {
-            return this.ToString(_rows, _columns, this.ToFormattedString());
+            return this.ToString(_rows, _columns, IEnumerableExtensions.Pretty(this));
         }
     }
 }

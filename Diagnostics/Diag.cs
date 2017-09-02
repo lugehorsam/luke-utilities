@@ -1,8 +1,11 @@
 ﻿#define DEBUG_LOG
 
+using System.Text;
+
 namespace Utilities
 {
     using System;
+    using System.Reflection;
     using UnityEngine;
     
     public static class Diag {
@@ -26,24 +29,48 @@ namespace Utilities
         }
     
         static Enum currentLogType = UtilitiesFeature.All; //override here
+
+        public static string Reflect(object obj)
+        {
+            Type objType = obj.GetType();
+                       
+            var stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendLine($"Type Name: {objType.Name}");
+
+            foreach (var field in objType.GetFields())
+            {
+                stringBuilder.AppendLine($"Field Name: {field.Name}, Field Value: {field.GetValue(obj)}");
+            }
+            
+            foreach (var prop in objType.GetProperties())
+            {
+                stringBuilder.AppendLine($"Property Name: {prop.Name}, Property Value: {prop.GetValue(obj)}");
+            }
+            
+            return stringBuilder.ToString();
+        }
     
         public static void Report(string message)
         {
-            #if LOCAL_LOGS
-                Debug.LogError(message);
-            #endif
+            Debug.LogError(message);            
         }
     
         public static void Report (Exception e)
         {
             Report(e.Message);
         }
+
+        public static void Crumb(object obj, string crumb)
+        {
+            string typeName = obj.GetType().Name;
+            
+            Debug.Log($"[{typeName}] {crumb}");
+        }
     
         public static void Log(string log)
         {
-#if DEBUG_LOG
-                Debug.Log(log);
-#endif
+            Debug.Log(log);
         }
         
         public static void Log (Enum feature, string log)
@@ -61,9 +88,7 @@ namespace Utilities
        
         public static void Warn (string log)
         {
-#if DEBUG_LOG
             Debug.LogWarning (log);
-#endif
         }
         
         public static void DrawGesture(Gesture gesture)

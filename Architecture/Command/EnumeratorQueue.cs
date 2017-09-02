@@ -1,26 +1,24 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Utilities
 { 
     public class EnumeratorQueue : IEnumerator, IEnumeratorQueue
     {
-        public int Count => _nextEnumerators.Count + _parallelEnumerators.Count;
-        public object Current => _currentEnumerator;
-
         private readonly LinkedList<EnumeratorData> _nextEnumerators = new LinkedList<EnumeratorData>();
         private readonly Stack<EnumeratorData> _oldEnumerators = new Stack<EnumeratorData>();
+        private readonly List<IEnumerator> _parallelEnumerators = new List<IEnumerator>();
 
         private EnumeratorData _currentEnumerator;
+        
+        public int Count => _nextEnumerators.Count + _parallelEnumerators.Count;
+        public object Current => _currentEnumerator;
 
         public void Dispose()
         {
             throw new NotImplementedException();
         }
-
-        private readonly List<IEnumerator> _parallelEnumerators = new List<IEnumerator>();
 
         public bool MoveNext ()
         {
@@ -42,13 +40,11 @@ namespace Utilities
                 return MoveNext() || isParallelEnumerator;
             }
             
-            
             _nextEnumerators.RemoveFirst();
             
             _parallelEnumerators.Add(_currentEnumerator);
             MoveNext();
-            return true;
-                 
+            return true;                 
         }
 
         bool TryUpdateParallelEnumerators()
@@ -128,7 +124,7 @@ namespace Utilities
             if (_nextEnumerators.First != null) {
                 MoveEnumeratorToStack (_nextEnumerators.First.Value);
             }
-        }       
+        }
 
         private class EnumeratorData : IEnumerator
         {

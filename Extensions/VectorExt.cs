@@ -60,15 +60,15 @@
     
         public static Axis DominantAxis(this Vector3 thisVector, List<Axis> excludedAxes = null)
         {
-            var axisValues = new List<KeyValuePair<Axis, float>>();
+            var axisValues = new List<System.Collections.Generic.KeyValuePair<Axis, float>>();
             
             float xMag = Math.Abs(thisVector.x);
             float yMag = Math.Abs(thisVector.y);
             float zMag = Math.Abs(thisVector.z);
     
-            axisValues.Add(new KeyValuePair<Axis, float>(Axis.X, xMag));
-            axisValues.Add(new KeyValuePair<Axis, float>(Axis.Y, yMag));
-            axisValues.Add(new KeyValuePair<Axis, float>(Axis.Z, zMag));
+            axisValues.Add(new System.Collections.Generic.KeyValuePair<Axis, float>(Axis.X, xMag));
+            axisValues.Add(new System.Collections.Generic.KeyValuePair<Axis, float>(Axis.Y, yMag));
+            axisValues.Add(new System.Collections.Generic.KeyValuePair<Axis, float>(Axis.Z, zMag));
     
             var sortedAxisValues = axisValues.OrderByDescending(keyVal => keyVal.Value);
     

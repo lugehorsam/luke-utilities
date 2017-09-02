@@ -196,7 +196,7 @@ namespace Utilities.Meshes
 
         public override string ToString()
         {
-            return Vertices.ToFormattedString();
+            return IEnumerableExtensions.Pretty(Vertices);
         }
 
         public TriangleMesh CreateCopy(Func<Vertex, Vertex> vertexProcessor)

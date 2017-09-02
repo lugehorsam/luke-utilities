@@ -5,7 +5,7 @@ namespace Utilities
 { 
     public static class IEnumerableExtensions {
 
-        public static string ToFormattedString<T>(this IEnumerable<T> thisEnumerable) {
+        public static string Pretty<T>(this IEnumerable<T> thisEnumerable) {
             
             if (thisEnumerable == null) 
             {
@@ -19,7 +19,16 @@ namespace Utilities
                 formattedString += item.ToString();
 
                 if (!item.Equals(thisEnumerable.LastOrDefault()))
-                    formattedString += ", ";
+                {
+                    string formatter = ", ";
+
+                    if (item is System.Collections.Generic.KeyValuePair<object, object>)
+                    {
+                        formatter = ": ";
+                    }
+                    
+                    formattedString += formatter;
+                }
             }
             return formattedString;
         }
@@ -36,6 +45,7 @@ namespace Utilities
                 {
                     return item;
                 }
+                
                 counter++;
             }
 

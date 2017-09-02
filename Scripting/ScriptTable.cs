@@ -1,4 +1,5 @@
-﻿using System;
+﻿/**
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine;
 namespace Utilities.Scripting
 {
     [Serializable]
-    public class ScriptTable<TDatum> : JsonArray<TDatum>
+    public class ScriptTable<TDatum> : Array<TDatum>
     {        
         public string Id => id;
 
@@ -17,3 +18,4 @@ namespace Utilities.Scripting
         [SerializeField] private Variable[] globals;                
     }
 }
+**/
