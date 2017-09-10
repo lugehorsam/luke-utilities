@@ -29,7 +29,6 @@ namespace Utilities.Serializable
 
         public void OnAfterDeserialize()
         {
-            Diag.Log("after desrialize");
             if (array == null) return;
             
             foreach (var item in array)

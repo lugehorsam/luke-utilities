@@ -43,8 +43,6 @@ namespace Utilities.Observable
         {
             base.InsertItem(index, item);
             HandleAfterItemAdd(item);
-            Diag.Log("adding item " + item);
-
             OnAfterItemAdd(item);
         }    
 
