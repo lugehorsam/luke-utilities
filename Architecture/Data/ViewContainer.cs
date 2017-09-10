@@ -1,21 +1,21 @@
 ﻿using UnityEngine;
-using Utilities;
+using Utilities.Observable;
 
 namespace Utilities
 {
-	public class ViewContainer<T> : View<ObservableCollection<T>> {
+	public class ViewContainer<T> : View<Observables<T>> {
 
 		public ViewContainer()
 		{
-			Data = new ObservableCollection<T>();
+			Data = new Observables<T>();
 		}
 
 		public ViewContainer(Transform parent) : base(parent)
 		{
-			Data = new ObservableCollection<T>();
+			Data = new Observables<T>();
 		}
 
-		protected sealed override void HandleDatumChanged(ObservableCollection<T> oldData, ObservableCollection<T> newData)
+		protected sealed override void HandleDatumChanged(Observables<T> oldData, Observables<T> newData)
 		{
 			if (oldData != null)
 			{

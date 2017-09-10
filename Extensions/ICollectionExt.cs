@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Utilities
-{
+﻿namespace Utilities
+{    
+    using System;
+    using System.Collections.Generic;
+    using Observable;
     
-
-    public static class ICollectionExt {
-        
-                
+    public static class ICollectionExt 
+    {
         public static void Observe<T, K>(this ICollection<T> thisCollection, IObservableCollection<K> observableCollection, Func<K, T> transform)
         {
             observableCollection.OnAfterItemAdd += k => thisCollection.Add(transform(k));

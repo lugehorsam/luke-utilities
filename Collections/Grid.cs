@@ -1,11 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Utilities
+﻿namespace Utilities
 {
-    public class Grid<T> : ObservableCollection<T>, IGrid where T : IGridMember
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using Observable;
+    
+    public class Grid<T> : Observables<T>, IGrid where T : IGridMember
     {                
         public int Rows => _rows;
 

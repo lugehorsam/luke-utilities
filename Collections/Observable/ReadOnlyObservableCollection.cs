@@ -1,50 +1,50 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-
-namespace Utilities
+﻿namespace Utilities.Observable
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    
     public class ReadOnlyObservableCollection<T> : IObservableCollection<T>
     {
         public event Action<T> OnAfterItemRemove
         {
-            add { _observableCollection.OnAfterItemRemove += value; }
+            add { Observables.OnAfterItemRemove += value; }
             remove
             {
-                _observableCollection.OnAfterItemRemove -= value;
+                Observables.OnAfterItemRemove -= value;
             }
         }
 
-        public ReadOnlyCollection<T> Items => new ReadOnlyCollection<T>(_observableCollection);
+        public ReadOnlyCollection<T> Items => new ReadOnlyCollection<T>(Observables);
 
         public event Action<T> OnAfterItemAdd
         {
             add
             {
-                _observableCollection.OnAfterItemAdd += value;
+                Observables.OnAfterItemAdd += value;
             }
             remove
             {
-                _observableCollection.OnAfterItemAdd -= value;
+                Observables.OnAfterItemAdd -= value;
             }
         }
 
-        protected readonly ObservableCollection<T> _observableCollection;
+        protected readonly Observables<T> Observables;
 
-        public ReadOnlyObservableCollection(ObservableCollection<T> collection)
+        public ReadOnlyObservableCollection(Observables<T> observables)
         {
-            _observableCollection = collection;
+            Observables = observables;
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return _observableCollection.GetEnumerator();
+            return Observables.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable) _observableCollection).GetEnumerator();
+            return ((IEnumerable) Observables).GetEnumerator();
         }
 
         void ICollection<T>.Add(T item)
@@ -59,12 +59,12 @@ namespace Utilities
 
         public bool Contains(T item)
         {
-            return _observableCollection.Contains(item);
+            return Observables.Contains(item);
         }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            _observableCollection.CopyTo(array, arrayIndex);
+            Observables.CopyTo(array, arrayIndex);
         }
 
         bool ICollection<T>.Remove(T item)
@@ -72,7 +72,7 @@ namespace Utilities
             throw new NotSupportedException();
         }
 
-        public int Count => _observableCollection.Count;
+        public int Count => Observables.Count;
 
         public bool IsReadOnly => true;
     }

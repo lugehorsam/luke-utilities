@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Utilities
+namespace Utilities.Observable
 {
-    public class ObservableCollection<T> : Collection<T>, IObservableCollection<T>
+    [Serializable]
+    public class Observables<T> : Collection<T>, IObservableCollection<T>
     {
         public event Action<T> OnAfterItemRemove = delegate { };
         public event Action<T> OnAfterItemAdd = delegate { };
@@ -28,7 +29,6 @@ namespace Utilities
             OnAfterItemRemove(oldItem);
             HandleAfterItemAdd(item);
             OnAfterItemAdd(item);
-
         }
 
         protected sealed override void RemoveItem(int index)
@@ -43,18 +43,13 @@ namespace Utilities
         {
             base.InsertItem(index, item);
             HandleAfterItemAdd(item);
+            Diag.Log("adding item " + item);
+
             OnAfterItemAdd(item);
         }    
 
-        protected virtual void HandleAfterItemAdd(T item)
-        {
-        
-        }
-    
-        protected virtual void HandleAfterItemRemove(T item)
-        {
-        
-        }
+        protected virtual void HandleAfterItemAdd(T item) {}
+        protected virtual void HandleAfterItemRemove(T item) {}
        
         public void RegisterObserver(IList<T> otherList)
         {
@@ -62,12 +57,12 @@ namespace Utilities
             OnAfterItemRemove += item => otherList.Remove(item);
         }
 
-        public ObservableCollection(IList<T> list) : base(list)
+        public Observables(IList<T> list) : base(list)
         {
             
         }
 
-        public ObservableCollection()
+        public Observables()
         {
             
         }

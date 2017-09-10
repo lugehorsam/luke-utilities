@@ -1,16 +1,16 @@
-﻿using System;
-using System.Linq;
-using UnityEngine;
-
-namespace Utilities
+﻿namespace Utilities
 {
+    using System;
+    using System.Linq;
+    using Observable;
+    
     public sealed class ViewFactory<T, K> : ReadOnlyObservableCollection<K>
         where K : View<T> {
         
         private readonly Func<T, K> _viewConstructor;
         private readonly Action<K> _viewDestructor;
 
-        public ObservableCollection<T> Data
+        public Observables<T> Data
         {
             get { return _data; }
             set
@@ -28,18 +28,18 @@ namespace Utilities
             }
         }
         
-        protected ObservableCollection<T> _data;
+        protected Observables<T> _data;
         
-        public ViewFactory(ObservableCollection<T> collection, Func<T, K> viewConstructor,  Action<K> viewDestructor) : base(new ObservableCollection<K>())
+        public ViewFactory(Observables<T> observables, Func<T, K> viewConstructor,  Action<K> viewDestructor) : base(new Observables<K>())
         {
             _viewConstructor = viewConstructor;
             _viewDestructor = viewDestructor;
-            _data = collection;
+            _data = observables;
 
             _data.OnAfterItemAdd += HandleAfterDataAdd;
             _data.OnAfterItemRemove += HandleAfterDataRemove;
 
-            foreach (var item in collection)
+            foreach (var item in observables)
             {
                 HandleAfterDataAdd(item);
             }
@@ -49,13 +49,13 @@ namespace Utilities
         {
             var newView = _viewConstructor(data);
             newView.Data = data;
-            _observableCollection.Add(newView);
+            Observables.Add(newView);
         }
         
         void HandleAfterDataRemove(T data)
         {
             var oldView = this.First(view => view.Data.Equals(data));
-            _observableCollection.Remove(oldView);
+            Observables.Remove(oldView);
             _viewDestructor(oldView);
         }        
     }

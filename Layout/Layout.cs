@@ -1,11 +1,9 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-using UnityEngine;
-using Utilities.Input;
-
-namespace Utilities
+﻿namespace Utilities
 {
-    public abstract class Layout<T, TList> : View<TList> where TList : ObservableCollection<T> where T : ILayoutMember
+    using UnityEngine;
+    using Observable;
+    
+    public abstract class Layout<T, TList> : View<TList> where TList : Observables<T> where T : ILayoutMember
     {
         public T this[int i]
         {
@@ -53,7 +51,6 @@ namespace Utilities
 
         protected virtual void HandleLayoutDatumChanged(TList oldData, TList newData)
         {
-            
         }
         
         void HandleOnAdd(T datum)
