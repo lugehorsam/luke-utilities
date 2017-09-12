@@ -2,7 +2,7 @@
 {
     public interface IState
     {
-        void HandleTransitionFrom();
-        void HandleTransitionTo();
+        void OnExit();
+        void OnEnter();
     }
 }

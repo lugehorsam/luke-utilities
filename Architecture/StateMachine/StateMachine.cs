@@ -29,10 +29,10 @@ namespace Utilities
                 IState newState = value as IState;
                        
                 if (oldState != null)
-                    oldState.HandleTransitionFrom();
+                    oldState.OnExit();
         
                 if (newState != null)
-                    newState.HandleTransitionTo();
+                    newState.OnEnter();
 
                 OnStateChanged(oldProperty, value);
             }
@@ -57,7 +57,7 @@ namespace Utilities
             return machine.State;
         }
         
-        public static bool IsMachineChange<K>(T data1, T data2, Func<T, K> getProperty, out K property1, out K property2)
+        public static bool IsChange<K>(T data1, T data2, Func<T, K> getProperty, out K property1, out K property2)
         {
             property1 = default(K);
             property2 = default(K);
