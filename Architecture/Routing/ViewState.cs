@@ -1,15 +1,16 @@
 ﻿namespace Utilities
 {
+	using System;
 	using System.Collections;
 	using System.Collections.Generic;
 	
 	public class ViewState : IState
 	{
-		private readonly IEnumerator _enter;
-		private readonly IEnumerator _exit;
+		private readonly Func<IEnumerator> _enter;
+		private readonly Func<IEnumerator> _exit;
 		private readonly List<View> _views = new List<View>();
 		
-		public ViewState(IEnumerator enter = null, IEnumerator exit = null)
+		public ViewState(Func<IEnumerator> enter = null, Func<IEnumerator> exit = null)
 		{
 			_enter = enter;
 			_exit = exit;
@@ -17,14 +18,23 @@
 
 		public IEnumerator Exit()
 		{
-			yield return _exit;
+			Diag.Crumb(this, "Exiting state.");
+			
+			foreach (var view in _views)
+				view.Destroy();
+			
+			yield return _exit?.Invoke();
 		}
 
 		public IEnumerator Enter()
 		{
-			yield return _enter;
-		}		
+			Diag.Crumb(this, "Entering state.");
+			yield return _enter?.Invoke();
+		}
 
-		protected void RegisterView(View view) {}
+		protected void RegisterView(View view)
+		{
+			_views.Add(view);
+		}
 	}	
 }

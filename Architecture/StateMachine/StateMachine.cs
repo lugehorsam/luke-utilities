@@ -2,12 +2,12 @@
 
 namespace Utilities
 {
-	public class StateMachine<T> where T : IState
+	public sealed class StateMachine<T> where T : IState
 	{
 		public T State => _state.Value;
 		private readonly Reactive<T> _state = new Reactive<T>();
 
-		private readonly EnumeratorQueue _queue;
+		private readonly EnumeratorQueue _queue = new EnumeratorQueue();
 
 		public StateMachine()
 		{

@@ -10,6 +10,7 @@ namespace Utilities
 	public class Route : List<Route>, IState
 	{
 		[SerializeField] private string _fragment;
+		public string Fragment => _fragment;
 
 		private readonly IState _state;
 	

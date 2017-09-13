@@ -142,7 +142,7 @@ namespace Utilities
             
             public bool MoveNext()
             {
-                return _enumerator.MoveNext();
+                return _enumerator?.MoveNext() ?? false;
             }
 
             public void Reset()
