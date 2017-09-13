@@ -2,6 +2,7 @@
 namespace Utilities
 {
 	using System;
+	using System.Collections;
 	using System.Collections.Generic;
 	using UnityEngine;
 	
@@ -18,14 +19,14 @@ namespace Utilities
 			_state = state;
 		}
 
-		public void OnExit()
+		public IEnumerator Exit()
 		{
-			_state.OnExit();
+			return _state.Exit();
 		}
 
-		public void OnEnter()
+		public IEnumerator Enter()
 		{
-			_state.OnEnter();
+			return _state.Enter();
 		}
 	}
 }

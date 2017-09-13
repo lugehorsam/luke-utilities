@@ -1,28 +1,28 @@
 ﻿namespace Utilities
 {
-	using System;
+	using System.Collections;
 	using System.Collections.Generic;
 	
 	public class ViewState : IState
 	{
-		private readonly Action _onEnter;
-		private readonly Action _onExit;
+		private readonly IEnumerator _enter;
+		private readonly IEnumerator _exit;
 		private readonly List<View> _views = new List<View>();
 		
-		public ViewState(Action onEnter, Action onExit)
+		public ViewState(IEnumerator enter = null, IEnumerator exit = null)
 		{
-			_onEnter = onEnter;
-			_onExit = onExit;
+			_enter = enter;
+			_exit = exit;
 		}
 
-		public void OnExit()
+		public IEnumerator Exit()
 		{
-			_onExit?.Invoke();
+			yield return _exit;
 		}
 
-		public void OnEnter()
+		public IEnumerator Enter()
 		{
-			_onEnter?.Invoke();
+			yield return _enter;
 		}		
 
 		protected void RegisterView(View view) {}

@@ -5,45 +5,45 @@ namespace Utilities
 {
     public class View<T> : View {
         
-        public event StateMachine<T>.StateChangedHandler OnDataChanged
+        public event Reactive<T>.PropertyChangedHandler OnDataChanged
         {
-            add { stateMachine.OnStateChanged += value; }
-            remove { stateMachine.OnStateChanged -= value; }
+            add { _reactive.OnPropertyChanged += value; }
+            remove { _reactive.OnPropertyChanged -= value; }
         }
        
          public T Data {
             set
             {
-                stateMachine.State = value;
+                _reactive.Value = value;
             }
             get {
-                return stateMachine.State;
+                return _reactive.Value;
             }
         }
 
-        private readonly StateMachine<T> stateMachine = new StateMachine<T>();
+        private readonly Reactive<T> _reactive = new Reactive<T>();
     
         protected virtual void HandleDatumChanged (T oldData, T newData) {}
         
         public View(Transform parent) : base(parent)
         {
-            stateMachine.OnStateChanged += HandleDatumChanged;
+            _reactive.OnPropertyChanged += HandleDatumChanged;
         }
 
         public View()
         {
-            stateMachine.OnStateChanged += HandleDatumChanged;
+            _reactive.OnPropertyChanged += HandleDatumChanged;
         }
 
         public override string ToString()
         {            
-            return this.ToString("View", stateMachine.State != null ? stateMachine.State.ToString() : "");
+            return this.ToString("View", _reactive.Value != null ? _reactive.Value.ToString() : "");
         }
 
-        public void Bind(StateMachine<T> stateMachine)
+        public void Bind(Reactive<T> reactive)
         {
-            Data = stateMachine.State;
-            stateMachine.OnStateChanged += (oldVal, newVal) => Data = newVal;
+            Data = reactive.Value;
+            reactive.OnPropertyChanged += (oldVal, newVal) => Data = newVal;
         }
 
         public static IEnumerable<View<T>> FromData(IEnumerable<T> data)

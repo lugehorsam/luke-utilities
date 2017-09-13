@@ -1,8 +1,10 @@
 ﻿namespace Utilities
 {
+    using System.Collections;
+    
     public interface IState
     {
-        void OnExit();
-        void OnEnter();
+        IEnumerator Exit();
+        IEnumerator Enter();
     }
 }
