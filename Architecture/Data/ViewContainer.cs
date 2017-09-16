@@ -10,11 +10,6 @@ namespace Utilities
 			Data = new Observables<T>();
 		}
 
-		public ViewContainer(Transform parent) : base(parent)
-		{
-			Data = new Observables<T>();
-		}
-
 		protected sealed override void HandleDatumChanged(Observables<T> oldData, Observables<T> newData)
 		{
 			if (oldData != null)

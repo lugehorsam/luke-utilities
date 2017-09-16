@@ -25,16 +25,11 @@ namespace Utilities
     
         protected virtual void HandleDatumChanged (T oldData, T newData) {}
         
-        public View(Transform parent) : base(parent)
-        {
-            _reactive.OnPropertyChanged += HandleDatumChanged;
-        }
-
         public View()
         {
             _reactive.OnPropertyChanged += HandleDatumChanged;
         }
-
+        
         public override string ToString()
         {            
             return this.ToString("View", _reactive.Value != null ? _reactive.Value.ToString() : "");
@@ -78,11 +73,6 @@ namespace Utilities
             _GameObject = GetPrefab() ?? new GameObject();
             var binding = _GameObject.AddComponent<ViewBinding>();
             binding.View = this;
-        }
-
-        public View(Transform parent) : this()
-        {
-            Transform.SetParent(parent);
         }
 
         protected virtual GameObject GetPrefab()

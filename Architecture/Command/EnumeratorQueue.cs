@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace Utilities
 { 
-    public class EnumeratorQueue : IEnumerator, IEnumeratorQueue
+    public class EnumeratorQueue : IEnumerator
     {
         private readonly LinkedList<EnumeratorData> _nextEnumerators = new LinkedList<EnumeratorData>();
         private readonly Stack<EnumeratorData> _oldEnumerators = new Stack<EnumeratorData>();
-        private readonly List<IEnumerator> _parallelEnumerators = new List<IEnumerator>();
+        private readonly List<EnumeratorData> _parallelEnumerators = new List<EnumeratorData>();
 
         private EnumeratorData _currentEnumerator;
         
@@ -22,7 +22,7 @@ namespace Utilities
 
         public bool MoveNext ()
         {
-            bool isParallelEnumerator = TryUpdateParallelEnumerators();
+            var isParallelEnumerator = TryUpdateParallelEnumerators();
             
             if (_nextEnumerators.First == null)
                 return isParallelEnumerator;
@@ -47,11 +47,11 @@ namespace Utilities
             return true;                 
         }
 
-        bool TryUpdateParallelEnumerators()
+        private bool TryUpdateParallelEnumerators()
         {
-            bool updatedAtLeastOne = false;
+            var updatedAtLeastOne = false;
             
-            var enumeratorsToUpdate = new List<IEnumerator>(_parallelEnumerators);
+            var enumeratorsToUpdate = new List<EnumeratorData>(_parallelEnumerators);
             
             foreach (var enumerator in enumeratorsToUpdate)
             {
@@ -61,7 +61,8 @@ namespace Utilities
                 }
                 else
                 {                    
-                    _parallelEnumerators.Remove(enumerator); //TODO move it to the stack directly afterwards
+                    _parallelEnumerators.Remove(enumerator);
+                    _oldEnumerators.Push(enumerator);
                 }
             }
             
@@ -70,7 +71,18 @@ namespace Utilities
         
         public void Reset ()
         {
-            throw new NotImplementedException ();
+            while (_oldEnumerators.Count > 0)
+            {
+                _nextEnumerators.AddFirst(_oldEnumerators.Pop());
+            }
+        }
+
+        public void AddSerial(Func<IEnumerator> func)
+        {
+            _nextEnumerators.AddLast
+            (
+                new EnumeratorData(func, CommandMode.Serial)
+            );
         }
 
         public void AddSerial(Action action)
@@ -105,14 +117,6 @@ namespace Utilities
             yield return null;
         }
         
-        public void AddRange(IEnumerable<IEnumerator> enumerators)
-        {
-            foreach (IEnumerator enumerator in enumerators)
-            {
-                AddSerial(enumerator);
-            }
-        }
-
         void MoveEnumeratorToStack (EnumeratorData enumerator)
         {
             _nextEnumerators.RemoveFirst ();
@@ -121,7 +125,8 @@ namespace Utilities
 
         public void StopCurrentEnumerator ()
         {
-            if (_nextEnumerators.First != null) {
+            if (_nextEnumerators.First != null) 
+            {
                 MoveEnumeratorToStack (_nextEnumerators.First.Value);
             }
         }
@@ -132,7 +137,8 @@ namespace Utilities
 
             public CommandMode CommandMode { get; }
 
-            private readonly IEnumerator _enumerator;
+            private IEnumerator _enumerator;
+            private readonly Func<IEnumerator> _enumeratorFunc;
 
             public EnumeratorData(IEnumerator enumerator, CommandMode commandMode)
             {
@@ -140,9 +146,25 @@ namespace Utilities
                 CommandMode = commandMode;
             }
             
+            public EnumeratorData(Func<IEnumerator> enumerator, CommandMode commandMode)
+            {
+                _enumerator = null;
+                CommandMode = commandMode;
+                _enumeratorFunc = enumerator;
+            }
+            
             public bool MoveNext()
             {
-                return _enumerator?.MoveNext() ?? false;
+                if (_enumerator != null)
+                    return _enumerator.MoveNext();
+
+                if (_enumeratorFunc != null)
+                {
+                    _enumerator = _enumeratorFunc();
+                    return MoveNext();
+                }
+
+                return false;
             }
 
             public void Reset()
