@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace Utilities
 {
-    public class View<T> : View {
-        
+    public class View<T> : View 
+    {    
         public event Reactive<T>.PropertyChangedHandler OnDataChanged
         {
             add { _reactive.OnPropertyChanged += value; }
@@ -21,10 +21,9 @@ namespace Utilities
             }
         }
 
+
         private readonly Reactive<T> _reactive = new Reactive<T>();
-    
-        protected virtual void HandleDatumChanged (T oldData, T newData) {}
-        
+                
         public View()
         {
             _reactive.OnPropertyChanged += HandleDatumChanged;
@@ -54,11 +53,15 @@ namespace Utilities
             
             return views;
         }
+
+        protected virtual void HandleDatumChanged (T oldData, T newData) {}
     }
 
     public class View
     {
         public virtual string GameObjectName => ToString();
+
+        protected virtual Prefab _Prefab => null;
 
         private GameObject _GameObject
         {
@@ -70,14 +73,9 @@ namespace Utilities
 
         public View()
         {
-            _GameObject = GetPrefab() ?? new GameObject();
+            _GameObject = _Prefab == null ? new GameObject() : _Prefab.Instantiate();
             var binding = _GameObject.AddComponent<ViewBinding>();
             binding.View = this;
-        }
-
-        protected virtual GameObject GetPrefab()
-        {
-            return null;
         }
 
         public void Destroy()
@@ -88,6 +86,12 @@ namespace Utilities
         public T AddComponent<T>() where T : Component
         {
             return _GameObject.AddComponent<T>();
+        }
+
+        public T GetComponent<T>() where T : Component
+        {
+            Diag.Log("Gameobject is " + _GameObject);
+            return _GameObject.GetComponent<T>();
         }
     }
 }

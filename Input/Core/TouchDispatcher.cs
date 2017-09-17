@@ -25,7 +25,7 @@ namespace Utilities.Input
 
         private Transform _Transform => Collider.transform;
 
-        private UnityLifecycleDispatcher _dispatcher;
+        private readonly UnityLifecycleDispatcher _dispatcher;
         
         public TouchDispatcher(T owner, UnityLifecycleDispatcher dispatcher, Collider collider)
         {

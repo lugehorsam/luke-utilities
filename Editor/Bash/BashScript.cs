@@ -17,7 +17,7 @@ public class BashScript
 
     public BashScript(string filePath, string[] parameters, string workingDirectory)
     {
-        ProcessStartInfo startInfo = new ProcessStartInfo()
+        ProcessStartInfo startInfo = new ProcessStartInfo
         {
             FileName = "/bin/bash",
             Arguments = filePath + " " + String.Join(" ", parameters),
@@ -26,7 +26,8 @@ public class BashScript
             RedirectStandardError = true,
             WorkingDirectory = workingDirectory,
         };
-        process = new Process()
+        
+        process = new Process
         {
             StartInfo = startInfo,
         };

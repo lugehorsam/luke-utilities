@@ -31,6 +31,10 @@ namespace Utilities
             for (int i = 0; i < components.Length; i++)
             {
                 List<Type> potentialImplementingTypes = new List<Type>();
+
+                if (components[i] == null)
+                    continue;
+                
                 Type componentType = components[i].GetType();
                 potentialImplementingTypes.Add(componentType);
                 IEnumerable<Type> parentTypes = componentType.GetParentTypes();

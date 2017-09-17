@@ -30,7 +30,11 @@ namespace Utilities
 
         GameObject CreateGameObject()
         {
-            GameObject instance = dynamicGameObject ? new GameObject() : GameObject.Instantiate (prefab, Vector2.zero, Quaternion.Euler (Vector3.zero)) as GameObject;
+            GameObject instance = dynamicGameObject ? new GameObject() : GameObject.Instantiate (prefab, Vector2.zero, Quaternion.Euler (Vector3.zero));
+            
+            if (instance == null)
+                throw new NullReferenceException("No associated prefab.");
+            
             if (instantiationHolder != null)
             {
                 instance.transform.SetParent(instantiationHolder, worldPositionStays: false);
