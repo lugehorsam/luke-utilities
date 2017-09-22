@@ -61,8 +61,6 @@ namespace Utilities
     {
         public virtual string GameObjectName => ToString();
 
-        protected virtual Prefab _Prefab => null;
-
         private GameObject _GameObject
         {
             get;
@@ -71,9 +69,9 @@ namespace Utilities
         public Transform Transform => _GameObject.GetComponent<Transform>();
         public RectTransform RectTransform => _GameObject.GetComponent<RectTransform>();
 
-        public View()
+        public View(Prefab prefab = null)
         {
-            _GameObject = _Prefab == null ? new GameObject() : _Prefab.Instantiate();
+            _GameObject = prefab == null ? new GameObject() : prefab.Instantiate();
             var binding = _GameObject.AddComponent<ViewBinding>();
             binding.View = this;
         }
@@ -90,7 +88,6 @@ namespace Utilities
 
         public T GetComponent<T>() where T : Component
         {
-            Diag.Log("Gameobject is " + _GameObject);
             return _GameObject.GetComponent<T>();
         }
     }

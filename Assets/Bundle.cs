@@ -5,10 +5,10 @@
 	
 	public abstract class Bundle : ScriptableObject
 	{
+		protected AssetBundle _assetBundle;
+
 		public static string Directory => Path.Combine(Application.streamingAssetsPath, "AssetBundles");
-		
-		private AssetBundle _assetBundle;
-		
+				
 		public abstract string BundleId { get; }
 
 		public void Load()

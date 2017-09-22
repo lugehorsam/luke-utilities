@@ -3,13 +3,12 @@
 	using System.Collections;
 	using System.Collections.Generic;
 	
-	public class ViewState : IState
+	public abstract class ViewState : IState
 	{
 		protected readonly EnumeratorQueue _enter = new EnumeratorQueue();
 		protected readonly EnumeratorQueue _exit = new EnumeratorQueue();
-		
 		private readonly List<View> _views = new List<View>();
-		
+
 		public IEnumerator Exit()
 		{
 			Diag.Crumb(this, "Exiting state.");
