@@ -22,7 +22,7 @@ namespace Utilities
                 {
                     string formatter = ", ";
 
-                    if (item is System.Collections.Generic.KeyValuePair<object, object>)
+                    if (item is KeyValuePair<object, object>)
                     {
                         formatter = ": ";
                     }

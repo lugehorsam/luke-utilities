@@ -3,7 +3,7 @@
 	using System.IO;
 	using UnityEngine;
 	
-	public abstract class Bundle : ScriptableObject
+	public abstract class Bundle
 	{
 		protected AssetBundle _assetBundle;
 
@@ -15,12 +15,5 @@
 		{
 			_assetBundle = _assetBundle ?? AssetBundle.LoadFromFile(Path.Combine(Directory, BundleId));
 		}
-		
-#if UNITY_EDITOR
-		public void ReassignReference(AssetBundle assetBundle)
-		{
-			_assetBundle = assetBundle;
-		}
-#endif
 	}
 }
