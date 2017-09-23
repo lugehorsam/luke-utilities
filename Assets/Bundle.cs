@@ -1,4 +1,6 @@
-﻿namespace Utilities.Assets
+﻿using System.Linq;
+
+namespace Utilities.Assets
 {
 	using System.IO;
 	using UnityEngine;
@@ -14,6 +16,12 @@
 		public void Load()
 		{
 			_assetBundle = _assetBundle ?? AssetBundle.LoadFromFile(Path.Combine(Directory, BundleId));
+		}
+
+		public bool IsLoaded()
+		{
+			var loadedBundles = AssetBundle.GetAllLoadedAssetBundles();
+			return loadedBundles.Any(bundle => bundle.name == BundleId);
 		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿namespace Utilities
+﻿using System;
+
+namespace Utilities
 {
 	using UnityEngine;
 	using Observable;
@@ -11,25 +13,34 @@
 		public static Observables<Behavior<T>> Behaviors => _behaviors;
 		
 		private T _bundle;
-		protected T _Bundle => _bundle;
 
 		public bool HasBundle => _bundle != null;
 
 		private void Awake()
 		{
-			_behaviors.Add(this);
+			TryAddToBehaviors();
 		}
 		
-		protected abstract void SetVisuals();
+		protected abstract void SetVisuals(T bundle);
 
 		public void OnRenderObject()
 		{
-			SetVisuals();
+			TryAddToBehaviors();
+			
+			if (_bundle != null)
+				SetVisuals(_bundle);
 		}
 
 		public void SetBundle(T bundle)
 		{
+			Diag.Log("set bundle called");
 			_bundle = bundle;
+		}
+
+		private void TryAddToBehaviors()
+		{
+			if (!_behaviors.Contains(this))
+				_behaviors.Add(this);
 		}
 	}
 }

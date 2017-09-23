@@ -1,4 +1,6 @@
-﻿using Luke;
+﻿using System.Linq;
+using Luke;
+using UnityEditor.SceneManagement;
 
 #if UNITY_EDITOR
 
@@ -26,6 +28,12 @@ namespace Utilities.Assets
 			{
 				_bundler = _bundler ?? new Bundler<MainBundle>();
 				_bundler.AssignBundleToBehaviors();
+				var currentScene = EditorSceneManager.GetActiveScene();
+				var rootGameObjects = currentScene.GetRootGameObjects();
+				var behaviors = rootGameObjects.Select(root => root.GetComponentInChildren<Behavior<MainBundle>>());
+				behaviors.Concat(rootGameObjects.Select(root => root.GetComponent<Behavior<MainBundle>>()));
+				behaviors = behaviors.Where(behavior => behavior != null);
+				_bundler.AssignBundleToBehaviors(behaviors);
 			}
 		}
 	}
