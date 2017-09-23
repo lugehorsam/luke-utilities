@@ -1,4 +1,6 @@
-﻿namespace Utilities
+﻿using UnityEngine;
+
+namespace Utilities
 {
 	using System.Collections;
 	using System.Collections.Generic;
@@ -8,6 +10,9 @@
 		protected readonly EnumeratorQueue _enter = new EnumeratorQueue();
 		protected readonly EnumeratorQueue _exit = new EnumeratorQueue();
 		private readonly List<View> _views = new List<View>();
+		private readonly Transform _root;
+		
+		protected ViewState(Transform root) {}
 
 		public IEnumerator Exit()
 		{
@@ -30,6 +35,7 @@
 
 		protected void RegisterView(View view)
 		{
+			view.Transform.SetParent(_root);
 			_views.Add(view);
 		}
 	}	

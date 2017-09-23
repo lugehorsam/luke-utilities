@@ -3,6 +3,7 @@
 	using System.IO;
 	using UnityEditor;
 
+	/**
 	public class CreateAssetBundles
 	{	
 		[MenuItem("Assets/Build Asset Bundles")]
@@ -15,5 +16,5 @@
 		
 			BuildPipeline.BuildAssetBundles(Bundle.Directory, BuildAssetBundleOptions.None, BuildTarget.StandaloneOSXUniversal);
 		}
-	}
+	}**/
 }

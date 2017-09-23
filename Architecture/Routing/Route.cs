@@ -1,5 +1,5 @@
 ﻿
-namespace Utilities
+namespace Utilities.Routing
 {
 	using System;
 	using System.Collections;

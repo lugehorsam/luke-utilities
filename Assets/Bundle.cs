@@ -2,20 +2,17 @@
 
 namespace Utilities.Assets
 {
-	using System.IO;
 	using UnityEngine;
 	
-	public abstract class Bundle
+	public class Bundle : ScriptableObject
 	{
-		protected AssetBundle _assetBundle;
-
-		public static string Directory => Path.Combine(Application.streamingAssetsPath, "AssetBundles");
-				
-		public abstract string BundleId { get; }
-
+		[SerializeField] private string _bundleId;
+		public string BundleId => _bundleId;
+		
+		// TODO implement for asset bundles
 		public void Load()
 		{
-			_assetBundle = _assetBundle ?? AssetBundle.LoadFromFile(Path.Combine(Directory, BundleId));
+			
 		}
 
 		public bool IsLoaded()

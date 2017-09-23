@@ -1,45 +1,51 @@
-﻿using UnityEngine;
-using System;
+﻿using System.Linq;
 
 namespace Utilities
 {
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
+    
     [Serializable]
-    public class Prefab {
-
-        [SerializeField] GameObject prefab;
-        [SerializeField] private bool dynamicGameObject;
-        [SerializeField] Transform instantiationHolder;
-        [SerializeField] Vector3 localPosition;
-
-        public Prefab(Transform instantiationHolder, Vector3 localPosition)
+    public class Prefab 
+    {
+        [SerializeField] private GameObject _prefab;
+        [SerializeField] private bool _dynamic;
+        [SerializeField] private Transform _parent;
+        [SerializeField] private Vector3 _localPosition;
+        [SerializeField] private List<GameObject> _instances;
+        
+        public bool AnyInstances => _instances.Any();
+        
+        public Prefab(Transform parent, Vector3 localPosition)
         {
-            this.instantiationHolder = instantiationHolder;
-            this.localPosition = localPosition;
+            _parent = parent;
+            _localPosition = localPosition;
         }
 
-        public Prefab(Transform instantiationHolder)
+        public Prefab(Transform parent)
         {
-            this.instantiationHolder = instantiationHolder;
-            localPosition = Vector3.zero;
+            _parent = parent;
+            _localPosition = Vector3.zero;
         }
         
         public Prefab(GameObject gameObjectToWrap)
         {
-            prefab = gameObjectToWrap;
+            _prefab = gameObjectToWrap;
         }
 
         GameObject CreateGameObject()
         {
-            GameObject instance = dynamicGameObject ? new GameObject() : GameObject.Instantiate (prefab, Vector2.zero, Quaternion.Euler (Vector3.zero));
+            GameObject instance = _dynamic ? new GameObject() : GameObject.Instantiate (_prefab, Vector2.zero, Quaternion.Euler (Vector3.zero));
             
             if (instance == null)
                 throw new NullReferenceException("No associated prefab.");
             
-            if (instantiationHolder != null)
+            if (_parent != null)
             {
-                instance.transform.SetParent(instantiationHolder, worldPositionStays: false);
+                instance.transform.SetParent(_parent, worldPositionStays: false);
             }
-            instance.transform.localPosition = localPosition;
+            instance.transform.localPosition = _localPosition;
             return instance;
         }
 
@@ -47,6 +53,7 @@ namespace Utilities
         {
             var instance = CreateGameObject();
             InitGameObject(instance);
+            _instances.Add(instance);
             return instance;
         }
 
@@ -67,12 +74,28 @@ namespace Utilities
 
         public bool IsPrefabOf (GameObject gameObject)
         {
-            return prefab == gameObject;
+            return _prefab == gameObject;
         }
 
         public bool IsPrefabOf<T> (T gameObject) where T : Component
         {
-            return prefab.GetComponent<T>() == gameObject.GetComponent<T>();
+            return _prefab.GetComponent<T>() == gameObject.GetComponent<T>();
         }
+
+        public void DestroyInstances(bool immediate)
+        {
+            var instancesToDestroy = new List<GameObject>(_instances);
+                        
+            foreach (var instance in instancesToDestroy)
+            {
+                if (immediate)
+                    GameObject.DestroyImmediate(instance);
+                else
+                    GameObject.Destroy(instance);
+            }
+
+            _instances.Clear();
+        }
+
     }
 }
