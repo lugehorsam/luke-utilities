@@ -35,11 +35,10 @@ namespace Utilities
                 Diag.Log("current enumerator " + _currentEnumerator);
                 if (_currentEnumerator.MoveNext())
                 {
-                    Diag.Log("returning true");
+                    Diag.Log($"{_currentEnumerator} has moved next.");
                     return true;
                 }
                 
-                Diag.Log("moving to stack");
                 MoveEnumeratorToStack (_currentEnumerator);
                 return MoveNext() || isParallelEnumerator;
             }
@@ -128,11 +127,12 @@ namespace Utilities
         IEnumerator ActionWrapper(Action action)
         {            
             action();
-            yield return null;
+            return null;
         }
         
         void MoveEnumeratorToStack (EnumeratorData enumerator)
         {
+            Diag.Crumb(this, "Moving to stack: " + enumerator);
             _nextEnumerators.RemoveFirst ();
             _oldEnumerators.Push (enumerator);
         }
