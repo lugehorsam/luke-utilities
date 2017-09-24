@@ -14,6 +14,7 @@ namespace Utilities
         
         public int Count => _nextEnumerators.Count + _parallelEnumerators.Count;
         public object Current => _currentEnumerator;
+        public string Id { get; set; }
 
         public void Dispose()
         {
@@ -31,11 +32,14 @@ namespace Utilities
             
             if (_currentEnumerator.CommandMode == CommandMode.Serial)
             {
+                Diag.Log("current enumerator " + _currentEnumerator);
                 if (_currentEnumerator.MoveNext())
                 {
+                    Diag.Log("returning true");
                     return true;
                 }
                 
+                Diag.Log("moving to stack");
                 MoveEnumeratorToStack (_currentEnumerator);
                 return MoveNext() || isParallelEnumerator;
             }
@@ -45,6 +49,16 @@ namespace Utilities
             _parallelEnumerators.Add(_currentEnumerator);
             MoveNext();
             return true;                 
+        }
+
+        public override string ToString()
+        {
+            var str = base.ToString();
+
+            if (Id != null)
+                str += Id;
+
+            return str;
         }
 
         private bool TryUpdateParallelEnumerators()
@@ -170,6 +184,11 @@ namespace Utilities
             public void Reset()
             {
                 _enumerator.Reset();
+            }
+
+            public override string ToString()
+            {
+                return _enumerator.ToString();
             }
         }
     }   

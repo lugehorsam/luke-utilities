@@ -3,7 +3,7 @@ using Utilities.Input;
 
 namespace Utilities
 {
-	public class TrackingLine : View
+	public class TrackingLine : Controller
 	{
 		public LineBinding LineBinding => _lineBinding;
 

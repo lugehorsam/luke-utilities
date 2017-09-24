@@ -4,9 +4,9 @@ namespace Utilities
 { 
     public static class ComponentExt {
 
-        public static View GetView(this Component thisComponent)
+        public static Controller GetView(this Component thisComponent)
         {
-            return thisComponent.GetComponent<ViewBinding>().View;
+            return thisComponent.GetComponent<ViewBinding>().Controller;
         }
     }  
 }

@@ -3,7 +3,7 @@
     using UnityEngine;
     using Observable;
     
-    public abstract class Layout<T, TList> : View<TList> where TList : Observables<T> where T : ILayoutMember
+    public abstract class Layout<T, TList> : Controller<TList> where TList : Observables<T> where T : ILayoutMember
     {
         public T this[int i]
         {

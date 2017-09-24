@@ -9,34 +9,39 @@ namespace Utilities
 	{
 		protected readonly EnumeratorQueue _enter = new EnumeratorQueue();
 		protected readonly EnumeratorQueue _exit = new EnumeratorQueue();
-		private readonly List<View> _views = new List<View>();
+		private readonly List<Controller> controllers = new List<Controller>();
 		private readonly Transform _root;
-		
-		protected ViewState(Transform root) {}
+
+		protected ViewState(Transform root)
+		{
+			_enter.Id = $"Enter queue: {GetType()}";
+			_exit.Id = $"Exit queue: {GetType()}";
+
+			_root = root;
+		}
 
 		public IEnumerator Exit()
 		{
 			Diag.Crumb(this, "Exiting state.");
-			
-			foreach (var view in _views)
-				view.Destroy();
-
+		
 			_exit.Reset();
-			return _exit;
+			yield return _exit;
+
+			foreach (var view in controllers)
+				view.Destroy();
 		}
 
 		public IEnumerator Enter()
 		{
-			Diag.Crumb(this, "Entering state.");
-			
+			Diag.Crumb(this, "Entering state.");	
 			_enter.Reset();
 			return _enter;
 		}
 
-		protected void RegisterView(View view)
+		protected void RegisterController(Controller controller)
 		{
-			view.Transform.SetParent(_root);
-			_views.Add(view);
+			controller.Transform.SetParent(_root);
+			controllers.Add(controller);
 		}
 	}	
 }

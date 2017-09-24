@@ -4,7 +4,7 @@ namespace Utilities
 {
 	public class ViewBinding : MonoBehaviour {
 
-		public View View
+		public Controller Controller
 		{
 			get;
 			set;
@@ -13,7 +13,7 @@ namespace Utilities
 		void Update()
 		{
 #if UNITY_EDITOR
-			gameObject.name = View.GameObjectName;
+			gameObject.name = Controller.GameObjectName;
 #endif
 		}
 	}	

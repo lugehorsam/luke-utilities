@@ -5,7 +5,7 @@
     using Observable;
     
     public sealed class ViewFactory<T, K> : ReadOnlyObservableCollection<K>
-        where K : View<T> {
+        where K : Controller<T> {
         
         private readonly Func<T, K> _viewConstructor;
         private readonly Action<K> _viewDestructor;

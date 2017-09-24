@@ -2,7 +2,7 @@
 
 namespace Utilities.Meshes
 {
-	public class MeshView<T> : View where T : IProceduralMesh
+	public class MeshController<T> : Controller where T : IProceduralMesh
 	{
 		public MeshRenderer MeshRenderer => _meshRenderer;
 		private readonly MeshRenderer _meshRenderer;
@@ -16,7 +16,7 @@ namespace Utilities.Meshes
 		public T ProceduralMesh => _proceduralMesh;
 		private readonly T _proceduralMesh;
 		
-		public MeshView(T proceduralMesh)
+		public MeshController(T proceduralMesh)
 		{
 			_meshRenderer = AddComponent<MeshRenderer>();
 			_meshFilter = AddComponent<MeshFilter>();

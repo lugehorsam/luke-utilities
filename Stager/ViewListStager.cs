@@ -6,7 +6,7 @@ namespace Utilities
 	public class ViewListStager<T>
 	{
 		
-		public ViewListStager(ViewContainer<T> viewList1, ViewContainer<T> viewList2)
+		public ViewListStager(ControllerContainer<T> controllerList1, ControllerContainer<T> controllerList2)
 		{
 		}		
 	}

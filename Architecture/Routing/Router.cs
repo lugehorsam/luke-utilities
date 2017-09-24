@@ -15,13 +15,19 @@
 
 		public IEnumerator RouteTo(Route route)
 		{
+			Diag.Crumb(this, $"Begin routing to {route}");
+			
 			if (_currentRoute != null)
 				yield return _currentRoute.Exit();
 
 			_currentRoute = route;
-			
+
 			if (route != null)
-				yield return route.Enter();			
+			{
+				yield return route.Enter();
+			}
+			
+			Diag.Crumb(this, $"Finish routing to {route}");
 		}
 	}
 }

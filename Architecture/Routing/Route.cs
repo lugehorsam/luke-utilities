@@ -27,7 +27,8 @@ namespace Utilities.Routing
 
 		public IEnumerator Enter()
 		{
-			return _state.Enter();
+			var enter = _state.Enter();
+			return enter;
 		}
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace Utilities
 {
-	public class Console : View 
+	public class Console : Controller 
 	{
 		
 		public Console(Canvas canvas)

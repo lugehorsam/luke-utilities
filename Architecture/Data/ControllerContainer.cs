@@ -3,9 +3,9 @@ using Utilities.Observable;
 
 namespace Utilities
 {
-	public class ViewContainer<T> : View<Observables<T>> {
+	public class ControllerContainer<T> : Controller<Observables<T>> {
 
-		public ViewContainer()
+		public ControllerContainer()
 		{
 			Data = new Observables<T>();
 		}

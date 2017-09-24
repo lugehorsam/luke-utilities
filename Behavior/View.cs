@@ -4,7 +4,7 @@
 	using Assets;
 	
 	[ExecuteInEditMode]
-	public abstract class Visuals<T> : MonoBehaviour where T : Bundle
+	public abstract class View<T> : MonoBehaviour where T : Bundle
 	{
 		[SerializeField] private T _bundle;
 		

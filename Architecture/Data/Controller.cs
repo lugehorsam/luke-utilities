@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Utilities
 {
-    public class View<T> : View 
+    public class Controller<T> : Controller 
     {    
         public event Reactive<T>.PropertyChangedHandler OnDataChanged
         {
@@ -24,14 +24,14 @@ namespace Utilities
 
         private readonly Reactive<T> _reactive = new Reactive<T>();
                 
-        public View()
+        public Controller()
         {
             _reactive.OnPropertyChanged += HandleDatumChanged;
         }
         
         public override string ToString()
         {            
-            return this.ToString("View", _reactive.Value != null ? _reactive.Value.ToString() : "");
+            return this.ToString(typeof(Controller), _reactive.Value != null ? _reactive.Value.ToString() : "");
         }
 
         public void Bind(Reactive<T> reactive)
@@ -40,13 +40,13 @@ namespace Utilities
             reactive.OnPropertyChanged += (oldVal, newVal) => Data = newVal;
         }
 
-        public static IEnumerable<View<T>> FromData(IEnumerable<T> data)
+        public static IEnumerable<Controller<T>> FromData(IEnumerable<T> data)
         {
-            var views = new List<View<T>>();
+            var views = new List<Controller<T>>();
             
             foreach (var datum in data)
             {
-                var newView = new View<T>();
+                var newView = new Controller<T>();
                 newView.Data = datum;
                 views.Add(newView);   
             }
@@ -57,7 +57,7 @@ namespace Utilities
         protected virtual void HandleDatumChanged (T oldData, T newData) {}
     }
 
-    public class View
+    public class Controller
     {
         public virtual string GameObjectName => ToString();
 
@@ -69,11 +69,11 @@ namespace Utilities
         public Transform Transform => _GameObject.GetComponent<Transform>();
         public RectTransform RectTransform => _GameObject.GetComponent<RectTransform>();
 
-        public View(Prefab prefab = null)
+        public Controller(Prefab prefab = null)
         {
             _GameObject = prefab == null ? new GameObject() : prefab.Instantiate();
             var binding = _GameObject.AddComponent<ViewBinding>();
-            binding.View = this;
+            binding.Controller = this;
         }
 
         public void Destroy()
