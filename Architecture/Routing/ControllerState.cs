@@ -1,33 +1,29 @@
-﻿using UnityEngine;
-
-namespace Utilities
+﻿namespace Utilities
 {
 	using System.Collections;
 	using System.Collections.Generic;
+	using UnityEngine;
 	
-	public abstract class ViewState : IState
+	public class ControllerState : Controller, IState
 	{
 		protected readonly EnumeratorQueue _enter = new EnumeratorQueue();
 		protected readonly EnumeratorQueue _exit = new EnumeratorQueue();
-		private readonly List<Controller> controllers = new List<Controller>();
-		private readonly Transform _root;
+		private readonly List<Controller> _controllers = new List<Controller>();
 
-		protected ViewState(Transform root)
+		public ControllerState()
 		{
 			_enter.Id = $"Enter queue: {GetType()}";
 			_exit.Id = $"Exit queue: {GetType()}";
-
-			_root = root;
+			AddComponent<RectTransform>();
 		}
 
 		public IEnumerator Exit()
 		{
 			Diag.Crumb(this, "Exiting state.");
-		
 			_exit.Reset();
 			yield return _exit;
 
-			foreach (var view in controllers)
+			foreach (var view in _controllers)
 				view.Destroy();
 		}
 
@@ -40,8 +36,8 @@ namespace Utilities
 
 		protected void RegisterController(Controller controller)
 		{
-			controller.Transform.SetParent(_root);
-			controllers.Add(controller);
+			controller.Transform.SetParent(Transform);
+			_controllers.Add(controller);
 		}
 	}	
 }

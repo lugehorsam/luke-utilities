@@ -13,6 +13,8 @@
 
 		protected abstract void SetVisuals(T bundle);
 
+		protected RectTransform _RectTransform => gameObject.GetComponent<RectTransform>();
+
 		private void Update()
 		{
 			if (Bundle != null)
