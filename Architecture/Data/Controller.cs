@@ -61,34 +61,34 @@ namespace Utilities
     {
         public virtual string GameObjectName => ToString();
 
-        private GameObject _GameObject
-        {
-            get;
-        }
+        private GameObject _gameObject;
 
-        public Transform Transform => _GameObject.GetComponent<Transform>();
-        public RectTransform RectTransform => _GameObject.GetComponent<RectTransform>();
-
-        public Controller(Prefab prefab = null)
+        public Transform Transform => _gameObject.GetComponent<Transform>();
+        public RectTransform RectTransform => _gameObject.GetComponent<RectTransform>();
+        
+        protected virtual Prefab _Prefab { get; }
+        
+        protected void AddToScene(Transform parent)
         {
-            _GameObject = prefab == null ? new GameObject() : prefab.Instantiate();
-            var binding = _GameObject.AddComponent<ViewBinding>();
+            _gameObject = _Prefab == null ? new GameObject() : _Prefab.Instantiate(); 
+            var binding = _gameObject.AddComponent<ControllerBinding>();
             binding.Controller = this;
+            _gameObject.transform.SetParent(parent);
         }
 
-        public void Destroy()
+        protected void RemoveFromScene()
         {
-            GameObject.Destroy(_GameObject);
+            GameObject.Destroy(_gameObject);
         }
 
         public T AddComponent<T>() where T : Component
         {
-            return _GameObject.AddComponent<T>();
+            return _gameObject.AddComponent<T>();
         }
 
         public T GetComponent<T>() where T : Component
         {
-            return _GameObject.GetComponent<T>();
+            return _gameObject.GetComponent<T>();
         }
     }
 }

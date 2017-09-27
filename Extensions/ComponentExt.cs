@@ -6,7 +6,7 @@ namespace Utilities
 
         public static Controller GetView(this Component thisComponent)
         {
-            return thisComponent.GetComponent<ViewBinding>().Controller;
+            return thisComponent.GetComponent<ControllerBinding>().Controller;
         }
     }  
 }

@@ -2,7 +2,7 @@
 
 namespace Utilities
 {
-	public class ViewBinding : MonoBehaviour {
+	public class ControllerBinding : MonoBehaviour {
 
 		public Controller Controller
 		{
