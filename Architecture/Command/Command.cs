@@ -12,14 +12,7 @@
 
 		public bool MoveNext()
 		{
-			bool moveNext = _queue.MoveNext();
-
-			if (!moveNext)
-			{
-				Diag.Crumb(this, "Command complete");
-			}
-			
-			return moveNext;
+			return _queue.MoveNext();
 		}
 
 		public void Reset()

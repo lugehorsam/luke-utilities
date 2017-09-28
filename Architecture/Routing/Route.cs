@@ -10,10 +10,11 @@ namespace Utilities.Routing
 	public class Route : List<Route>, IState
 	{
 		[SerializeField] private string _fragment;
-		public string Fragment => _fragment;
 
 		private readonly IState _state;
 	
+		public string Fragment => _fragment;
+
 		public Route(string fragment, IState state)
 		{
 			_fragment = fragment;
@@ -22,13 +23,17 @@ namespace Utilities.Routing
 
 		public IEnumerator Exit()
 		{
-			return _state.Exit();
+			yield return _state.Exit();
 		}
 
 		public IEnumerator Enter()
 		{
-			var enter = _state.Enter();
-			return enter;
+			yield return _state.Enter();
+		}
+
+		public override string ToString()
+		{
+			return $"[{GetType()}] {_state}";
 		}
 	}
 }

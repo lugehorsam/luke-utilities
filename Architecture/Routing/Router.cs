@@ -1,10 +1,11 @@
-﻿namespace Utilities.Routing
+﻿using System.Collections;
+
+namespace Utilities.Routing
 {
-	using System.Collections;
 	using System.Collections.Generic;
 	
-	public class Router 
-	{
+	public class Router : Command
+	{		
 		private List<Route> _routes = new List<Route>();
 		private Route _currentRoute;
 		
@@ -13,25 +14,15 @@
 			_routes.Add(route);
 		}
 
-		public IEnumerator RouteTo(Route route)
+		public void RouteTo(Route route)
 		{
-			Diag.Crumb(this, $"Begin routing to {route}");
-
 			if (_currentRoute != null)
-			{
-				Diag.Crumb(this, "Yielding on exit");
-				yield return _currentRoute.Exit();
-			}
+				_queue.AddSerial(_currentRoute.Exit());
 			
 			_currentRoute = route;
 
 			if (_currentRoute != null)
-			{
-				Diag.Crumb(this, "Yielding on enter");
-				yield return _currentRoute.Enter();
-			}
-			
-			Diag.Crumb(this, $"Finish routing to {route}");
+				_queue.AddSerial(_currentRoute.Enter());			
 		}
 	}
 }

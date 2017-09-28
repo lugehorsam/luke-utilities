@@ -4,15 +4,14 @@
 	using System.Collections.Generic;
 	using UnityEngine;
 	
-	public class ControllerState : Controller, IState
+	public class StateController : Controller, IState
 	{
 		protected readonly EnumeratorQueue _enter = new EnumeratorQueue();
 		protected readonly EnumeratorQueue _exit = new EnumeratorQueue();
-		private readonly List<Controller> _controllers = new List<Controller>();
 
 		public Transform Root { get; set; }
 		
-		public ControllerState()
+		public StateController()
 		{
 			_enter.Id = $"Enter queue: {GetType()}";
 			_exit.Id = $"Exit queue: {GetType()}";			
@@ -22,22 +21,21 @@
 		{
 			Diag.Crumb(this, "Exiting state.");
 			_exit.Reset();
-			yield return _exit;
-			RemoveFromScene();
+			return _exit;
 		}
 
 		public IEnumerator Enter()
-		{
-			Diag.Crumb(this, "Entering state.");	
+		{   
+			Diag.Log("Enter called for state controller");
 			_enter.Reset();
-			AddToScene(Root);
+			Instantiate(Root);
 			return _enter;
 		}
 
 		protected void RegisterController(Controller controller)
 		{
+			controller.Instantiate(Transform);
 			controller.Transform.SetParent(Transform, false);
-			_controllers.Add(controller);
 		}
 	}	
 }

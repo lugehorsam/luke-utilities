@@ -21,8 +21,9 @@ namespace Utilities
             throw new NotImplementedException();
         }
 
-        public bool MoveNext ()
+        public bool MoveNext()
         {
+            Diag.Log("moving next " + this);
             var isParallelEnumerator = TryUpdateParallelEnumerators();
             
             if (_nextEnumerators.First == null)
@@ -32,10 +33,8 @@ namespace Utilities
             
             if (_currentEnumerator.CommandMode == CommandMode.Serial)
             {
-                Diag.Log("current enumerator " + _currentEnumerator);
                 if (_currentEnumerator.MoveNext())
                 {
-                    Diag.Log($"{_currentEnumerator} has moved next.");
                     return true;
                 }
                 
@@ -100,9 +99,10 @@ namespace Utilities
 
         public void AddSerial(Action action)
         {
+            Diag.Log("added serial action to " + this);
             _nextEnumerators.AddLast
             (
-                new EnumeratorData(ActionWrapper(action), CommandMode.Serial)
+                new EnumeratorData(action, CommandMode.Serial)
             );
         }
 
@@ -115,27 +115,14 @@ namespace Utilities
         {
             _nextEnumerators.AddLast
             (
-                new EnumeratorData(ActionWrapper(action), CommandMode.Parallel)
+                new EnumeratorData(action, CommandMode.Parallel)
             );
         }
 
         public void AddParallel(IEnumerator enumerator)
         {
             _nextEnumerators.AddLast(new EnumeratorData(enumerator, CommandMode.Parallel));
-        }
-
-        IEnumerator ActionWrapper(Action action)
-        {            
-            action();
-            return null;
-        }
-        
-        void MoveEnumeratorToStack (EnumeratorData enumerator)
-        {
-            Diag.Crumb(this, "Moving to stack: " + enumerator);
-            _nextEnumerators.RemoveFirst ();
-            _oldEnumerators.Push (enumerator);
-        }
+        }        
 
         public void StopCurrentEnumerator ()
         {
@@ -144,15 +131,21 @@ namespace Utilities
                 MoveEnumeratorToStack (_nextEnumerators.First.Value);
             }
         }
+        
+        private void MoveEnumeratorToStack (EnumeratorData enumerator)
+        {
+            _nextEnumerators.RemoveFirst ();
+            _oldEnumerators.Push (enumerator);
+        }
 
         private class EnumeratorData : IEnumerator
         {
-            public object Current => _enumerator.Current;
-
-            public CommandMode CommandMode { get; }
-
             private IEnumerator _enumerator;
             private readonly Func<IEnumerator> _enumeratorFunc;
+            private readonly Action _action;
+
+            public object Current => _enumerator.Current;
+            public CommandMode CommandMode { get; }
 
             public EnumeratorData(IEnumerator enumerator, CommandMode commandMode)
             {
@@ -166,9 +159,20 @@ namespace Utilities
                 CommandMode = commandMode;
                 _enumeratorFunc = enumerator;
             }
+
+            public EnumeratorData(Action action, CommandMode commandMode)
+            {
+                CommandMode = commandMode;
+                _action = action;
+            }
             
             public bool MoveNext()
             {
+                if (_action != null)
+                {
+                    _action();
+                    return false;
+                }
                 if (_enumerator != null)
                     return _enumerator.MoveNext();
 

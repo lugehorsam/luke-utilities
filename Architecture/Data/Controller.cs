@@ -68,7 +68,7 @@ namespace Utilities
         
         protected virtual Prefab _Prefab { get; }
         
-        protected void AddToScene(Transform parent)
+        public void Instantiate(Transform parent)
         {
             _gameObject = _Prefab == null ? new GameObject() : _Prefab.Instantiate(); 
             var binding = _gameObject.AddComponent<ControllerBinding>();
@@ -76,7 +76,7 @@ namespace Utilities
             _gameObject.transform.SetParent(parent);
         }
 
-        protected void RemoveFromScene()
+        public void Destroy()
         {
             GameObject.Destroy(_gameObject);
         }
