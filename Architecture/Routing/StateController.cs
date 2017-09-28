@@ -26,7 +26,7 @@
 
 		public IEnumerator Enter()
 		{   
-			Diag.Log("Enter called for state controller");
+			Diag.Log("returned enter");
 			_enter.Reset();
 			Instantiate(Root);
 			return _enter;

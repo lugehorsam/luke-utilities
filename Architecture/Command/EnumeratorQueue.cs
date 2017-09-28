@@ -23,7 +23,6 @@ namespace Utilities
 
         public bool MoveNext()
         {
-            Diag.Log("moving next " + this);
             var isParallelEnumerator = TryUpdateParallelEnumerators();
             
             if (_nextEnumerators.First == null)
@@ -99,7 +98,6 @@ namespace Utilities
 
         public void AddSerial(Action action)
         {
-            Diag.Log("added serial action to " + this);
             _nextEnumerators.AddLast
             (
                 new EnumeratorData(action, CommandMode.Serial)

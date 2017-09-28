@@ -23,12 +23,12 @@ namespace Utilities.Routing
 
 		public IEnumerator Exit()
 		{
-			yield return _state.Exit();
+			return _state.Exit();
 		}
 
 		public IEnumerator Enter()
 		{
-			yield return _state.Enter();
+			return _state.Enter();
 		}
 
 		public override string ToString()
