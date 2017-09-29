@@ -4,7 +4,7 @@
     
     public interface IState
     {
-        IEnumerator Exit();
-        IEnumerator Enter();
+        IEnumerator Run();
+        IState NextState { get; }
     }
 }

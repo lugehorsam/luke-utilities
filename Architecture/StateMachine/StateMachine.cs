@@ -1,32 +1,28 @@
-﻿namespace Utilities
+﻿using System.Collections;
+
+namespace Utilities
 {
 	public sealed class StateMachine
 	{
 		private IState _state;
 		
-		public IState State => _state;
-		
-		public StateTransition CreateTransition(IState newState)
+		public StateMachine(IState startState)
 		{
-			return StateTransition.FromMachine(this, newState);
+			_state = startState;
 		}
 		
-		public class StateTransition : Command
+		public IEnumerator Run()
 		{
-			private StateTransition(IState oldState, IState newState, StateMachine machine)
+			while (_state != null)
 			{
-				if (oldState != null)
-					_queue.AddSerial(oldState.Exit());
+				var runRoutine = _state.Run();
+				Diag.Crumb(this, "Running state " + _state);
 
-				machine._state = newState;
-			
-				if (newState != null)
-					_queue.AddSerial(newState.Enter());
-			}
-
-			public static StateTransition FromMachine(StateMachine machine, IState newState)
-			{
-				return new StateTransition(machine._state, newState, machine);
+				while (runRoutine.MoveNext())
+					yield return null;
+				
+				Diag.Crumb(this, "Setting next state: " + _state.NextState);
+				_state = _state.NextState;
 			}
 		}
 	}
