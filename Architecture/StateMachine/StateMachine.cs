@@ -1,29 +1,33 @@
-﻿using System.Collections;
-
-namespace Utilities
+﻿namespace Utilities
 {
-	public sealed class StateMachine<T> where T : IState
+	public sealed class StateMachine
 	{
-		public T State => _state.Value;
-		private readonly Reactive<T> _state = new Reactive<T>();
-
-		private readonly EnumeratorQueue _queue = new EnumeratorQueue();
-
-		public StateMachine()
+		private IState _state;
+		
+		public IState State => _state;
+		
+		public StateTransition CreateTransition(IState newState)
 		{
-			_state.OnPropertyChanged += HandleStateChanged;
+			return StateTransition.FromMachine(this, newState);
 		}
 		
-		public IEnumerator SetState(T newState)
+		public class StateTransition : Command
 		{
-			_state.Value = newState;
-			return _queue;
-		}
+			private StateTransition(IState oldState, IState newState, StateMachine machine)
+			{
+				if (oldState != null)
+					_queue.AddSerial(oldState.Exit());
 
-		private void HandleStateChanged(T oldState, T newState)
-		{
-			_queue.AddSerial(oldState?.Exit());
-			_queue.AddSerial(newState?.Enter());
+				machine._state = newState;
+			
+				if (newState != null)
+					_queue.AddSerial(newState.Enter());
+			}
+
+			public static StateTransition FromMachine(StateMachine machine, IState newState)
+			{
+				return new StateTransition(machine._state, newState, machine);
+			}
 		}
 	}
 }

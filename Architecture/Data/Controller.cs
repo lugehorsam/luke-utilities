@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace Utilities
-{
+{    
     public class Controller<T> : Controller 
     {    
         public event Reactive<T>.PropertyChangedHandler OnDataChanged
@@ -74,6 +74,7 @@ namespace Utilities
             var binding = _gameObject.AddComponent<ControllerBinding>();
             binding.Controller = this;
             _gameObject.transform.SetParent(parent);
+            OnInstantiated();
         }
 
         public void Destroy()
@@ -89,6 +90,11 @@ namespace Utilities
         public T GetComponent<T>() where T : Component
         {
             return _gameObject.GetComponent<T>();
+        }
+
+        protected virtual void OnInstantiated()
+        {
+            
         }
     }
 }

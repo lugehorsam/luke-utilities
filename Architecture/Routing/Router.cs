@@ -1,10 +1,10 @@
-﻿using System.Collections;
-
+﻿/**
 namespace Utilities.Routing
 {
+	using System.Linq;
 	using System.Collections.Generic;
 	
-	public class Router : Command
+	public class Router
 	{		
 		private List<Route> _routes = new List<Route>();
 		private Route _currentRoute;
@@ -14,15 +14,22 @@ namespace Utilities.Routing
 			_routes.Add(route);
 		}
 
-		public void RouteTo(Route route)
+		public void AddRoute(string route, IState state)
 		{
-			if (_currentRoute != null)
-				_queue.AddSerial(_currentRoute.Exit());
-			
-			_currentRoute = route;
+			_routes.Add(new Route(route, state));
+		}
 
-			if (_currentRoute != null)
-				_queue.AddSerial(_currentRoute.Enter());			
+		public RouteTransition RouteTo(Route route)
+		{
+			Route oldRoute = _currentRoute;
+			_currentRoute = route;
+			return new RouteTransition(oldRoute, route);	
+		}
+
+		public RouteTransition RouteTo(string uri)
+		{
+			var chosenRoute = _routes.First(route)
 		}
 	}
 }
+**/
