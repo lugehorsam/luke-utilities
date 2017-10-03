@@ -32,7 +32,7 @@ namespace Utilities.Input
             Owner = owner;
             Collider = collider;
             _dispatcher = dispatcher;
-            _rigidbody = collider.GetView().AddComponent<Rigidbody>();
+            //_rigidbody = collider.GetView().AddComponent<Rigidbody>();
             _rigidbody.isKinematic = true;
             _rigidbody.useGravity = false;
             dispatcher.OnUpdate += OnUpdate;

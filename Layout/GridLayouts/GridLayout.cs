@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Utilities.Input;
-
+/**
 namespace Utilities
 {
+    
     /// <summary>
+    /// 
     /// Arbitrary grid layout. Bottom left is row 0, col 0
     /// </summary>
     public class GridLayout<T> : Layout<T, Grid<T>>, IGridLayout where T : IGridMember, ILayoutMember
@@ -93,3 +95,4 @@ namespace Utilities
         
     }
 }
+**/

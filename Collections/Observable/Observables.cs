@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 namespace Utilities.Observable
 {
     [Serializable]
-    public class Observables<T> : Collection<T>, IObservableCollection<T>
+    public class Observables<T> : Collection<T>
     {
         public event Action<T> OnAfterItemRemove = delegate { };
         public event Action<T> OnAfterItemAdd = delegate { };

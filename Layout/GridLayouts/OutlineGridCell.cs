@@ -1,6 +1,6 @@
 ﻿namespace Utilities
 { 
-	public class OutlineGridCell : Controller
+	public class OutlineGridCell
 	{
 		private readonly IGridLayout _gridLayout;
 		

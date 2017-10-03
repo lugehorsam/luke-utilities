@@ -2,6 +2,7 @@
 {
     using UnityEngine;
     using Observable;
+    /**
     
     public abstract class Layout<T, TList> : Controller<TList> where TList : Observables<T> where T : ILayoutMember
     {
@@ -66,4 +67,5 @@
 
         protected abstract Vector2 GetIdealLocalPosition(T element);
     }      
+    **/
 }

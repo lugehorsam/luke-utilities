@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace Utilities
+namespace Utilities.Algorithms
 {
 	public class DepthFirstSearch<T> : IEnumerable<INode<T>>
 	{

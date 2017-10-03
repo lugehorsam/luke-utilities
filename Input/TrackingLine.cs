@@ -2,8 +2,8 @@
 using Utilities.Input;
 
 namespace Utilities
-{
-	public class TrackingLine : Controller
+{/**
+	public class TrackingLine
 	{
 		public LineBinding LineBinding => _lineBinding;
 
@@ -33,5 +33,5 @@ namespace Utilities
 		{
 			_lineBinding.SetProperty(_lineBinding.GetProperty(0));
 		}
-	}
+	}**/
 }

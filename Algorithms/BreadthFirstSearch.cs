@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Utilities
+namespace Utilities.Algorithms
 {
     public class BreadthFirstSearch<T>
     {
