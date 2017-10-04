@@ -23,7 +23,7 @@
 				yield return null;
 			}
 
-			Choice = _selectables.First();
+			Choice = _selectables.First(selectable => selectable.IsSelected);
 		}
 	}	
 }

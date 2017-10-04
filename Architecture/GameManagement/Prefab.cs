@@ -53,6 +53,7 @@
 
         public T Instantiate<T> () where T : Component
         {
+            Diag.Crumb(this, "Instantiating " + this);
             var instance = CreateGameObject();
             T component = instance.GetOrAddComponent<T>();
             return component;
@@ -66,6 +67,11 @@
         public bool IsPrefabOf<T> (T gameObject) where T : Component
         {
             return _prefab.GetComponent<T>() == gameObject.GetComponent<T>();
+        }
+
+        public override string ToString()
+        {
+            return _prefab == null ? base.ToString() : _prefab.name;
         }
     }
 }
