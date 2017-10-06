@@ -4,15 +4,10 @@ using UnityEngine;
 
 namespace Utilities
 {
-    public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProperty, TComponent>
-        where TComponent : Component 
+    public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProperty, TComponent> 
+        where TComponent : Component
     {
-
         public event Action<LerpBinding<TProperty, TComponent>> OnLerp = binding => { };
-
-        protected LerpBinding(TComponent component) : base(component)
-        {
-        }
 
         public abstract Func<TProperty, TProperty, TProperty> GetRandomizeDelegate ();
         public abstract TProperty AddProperty (TProperty property1, TProperty property2);
@@ -36,7 +31,6 @@ namespace Utilities
         }
 
         protected abstract Func<TProperty, TProperty, float, TProperty> GetLerpDelegate ();
-
 
         public IEnumerator CreateLerpEnumerator 
         (

@@ -6,15 +6,10 @@ namespace Utilities
 
         Vector3? trackedRotation; //single rotation representation for conversion to quaternions
 
-        protected RotationBinding(Transform transform) : base(transform)
-        {        
-            trackedRotation = Component.localEulerAngles;
-        }
-
         public sealed override void SetProperty(Vector3 rot) 
         {
             trackedRotation = rot;
-            Component.localEulerAngles = trackedRotation.Value;
+            _Component.localEulerAngles = trackedRotation.Value;
         }
 
         public sealed override Vector3 GetProperty() 

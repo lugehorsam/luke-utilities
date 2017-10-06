@@ -1,23 +1,20 @@
-﻿using System;
-using UnityEngine;
-
-namespace Utilities
+﻿namespace Utilities
 {
+    using System;
+    using UnityEngine;
+    using UnityEngine.UI;
+
     [Serializable]
-    public class ColorBinding : LerpBinding<Color, Renderer> {
+    public class ColorBinding : LerpBinding<Color, Image> {
     
-        public ColorBinding(Renderer renderer) : base(renderer)
-        {
-        }   
-        
         public override void SetProperty(Color color) 
         {
-            Component.material.color = color;
+            _Component.color = color;
         }
 
         public override Color GetProperty()
         {
-            return Component.material.color;
+            return _Component.color;
         }
 
         protected override Func<Color, Color, float, Color> GetLerpDelegate ()

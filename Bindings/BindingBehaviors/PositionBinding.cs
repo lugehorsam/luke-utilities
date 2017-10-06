@@ -3,12 +3,8 @@
 namespace Utilities
 {
  
-    public class PositionBinding : Vector3Binding<Transform> {
-
-        public PositionBinding(Transform transform) : base(transform)
-        {        
-        }
-    
+    public class PositionBinding : Vector3Binding<Transform> 
+    {    
         public PositionSpace PositionSpace 
         {
             get {
@@ -24,17 +20,17 @@ namespace Utilities
 
         public override void SetProperty(Vector3 position) {
             if (positionSpace == PositionSpace.LocalPosition) {
-                Component.localPosition = position;
+                _Component.localPosition = position;
             } else {
-                Component.position = position;
+                _Component.position = position;
             }
         }
   
         public override Vector3 GetProperty() {
             if (positionSpace == PositionSpace.LocalPosition) {
-                return  Component.localPosition;
+                return  _Component.localPosition;
             } else {
-                return  Component.position;
+                return  _Component.position;
             }
         }
     }   
