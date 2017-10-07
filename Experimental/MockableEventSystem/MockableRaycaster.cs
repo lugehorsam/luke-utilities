@@ -10,19 +10,28 @@ namespace Utilities
 	{
 		public override void Raycast(PointerEventData eventData, List<RaycastResult> resultAppendList)
 		{
-			Diag.Log("calling raycast");
-			var graphics = GraphicRegistry.GetGraphicsForCanvas(GetComponent<Canvas>());
+			var canvas = GetComponent<Canvas>();
+			var graphics = GraphicRegistry.GetGraphicsForCanvas(canvas);
+			
 			for (int i = 0; i < graphics.Count; i++)
 			{
 				var graphic = graphics[i];
+
+				Rect graphicRect = graphic.rectTransform.GetScreenRect(canvas);
+
+				GameObject graphicGameObject = null;
+				
+				if (graphicRect.Contains(eventData.pressPosition, true))
+					graphicGameObject = graphic.gameObject;
+				
 				RaycastResult raycastResult = new RaycastResult()
 				{
-					gameObject = graphic.gameObject,
+					gameObject = graphicGameObject,
 					module = this,
 					distance = 0,
-					screenPosition = (Vector2) eventData.position,
-					index = (float) resultAppendList.Count,
-					depth =1,
+					screenPosition = eventData.position,
+					index = resultAppendList.Count,
+					depth = 1,
 					sortingLayer = GetComponent<Canvas>().sortingLayerID,
 					sortingOrder = GetComponent<Canvas>().sortingOrder
 				};
@@ -31,16 +40,5 @@ namespace Utilities
 
 
 		}
-
-		private void OnGUI()
-		{			
-		}
-
-		public override bool IsActive()
-		{Diag.Log("is active called " + base.IsActive());
-			return base.IsActive();
-		}
 	}
-	
-
 }

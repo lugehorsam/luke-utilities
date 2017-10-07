@@ -19,7 +19,6 @@ namespace Utilities.Algorithms
 
 		IEnumerator<INode<T>> Execute(INode<T> node)
 		{		
-			Diag.Log("Returning " + node);
 			yield return node;
 			foreach (var edge in node.Edges)
 			{
@@ -30,7 +29,6 @@ namespace Utilities.Algorithms
 				}
 				else
 				{
-					Diag.Log("returning end " + end);
 					yield return end;
 				}
 				

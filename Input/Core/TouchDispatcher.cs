@@ -5,60 +5,37 @@ using UnityEngine;
 
 namespace Utilities.Input
 {
-    public class TouchDispatcher<T>
+    public class TouchDispatcher : MonoBehaviour
     {                       
-        public T Owner { get; }
-
-        public Collider Collider { get; }
-
         private readonly Rigidbody _rigidbody;
 
         public event Action<TouchLogic> OnEndFrame = delegate { };
-        public event Action<TouchEventInfo<T>> OnFirstDown = delegate { };
-        public event Action<TouchEventInfo<T>> OnRelease = delegate { };
-        public event Action<TouchEventInfo<T>> OnDrag = delegate { };
-        public event Action<TouchEventInfo<T>> OnDownOff = delegate { };
+        public event Action<TouchEventInfo> OnFirstDown = delegate { };
+        public event Action<TouchEventInfo> OnRelease = delegate { };
+        public event Action<TouchEventInfo> OnDrag = delegate { };
+        public event Action<TouchEventInfo> OnDownOff = delegate { };
 
         public ITouchState TouchState => _touchLogic;
        
         private TouchLogic _touchLogic = new TouchLogic();
 
-        private Transform _Transform => Collider.transform;
-
         private readonly UnityLifecycleDispatcher _dispatcher;
         
-        public TouchDispatcher(T owner, UnityLifecycleDispatcher dispatcher, Collider collider)
-        {
-            Owner = owner;
-            Collider = collider;
-            _dispatcher = dispatcher;
-            //_rigidbody = collider.GetView().AddComponent<Rigidbody>();
-            _rigidbody.isKinematic = true;
-            _rigidbody.useGravity = false;
-            dispatcher.OnUpdate += OnUpdate;
-        }
-
-        void OnUpdate()
-        {
-            if (Collider == null)
-            {
-                _dispatcher.OnUpdate -= OnUpdate;
-                return;
-            }
-            
-            Vector3 cameraPosition = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
-            RaycastHit[] hits = Physics.RaycastAll(cameraPosition, Vector3.forward, 1000f);
+        void Update()
+        {            
+            Vector3 mouseWorldPoint = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
+            RaycastHit[] hits = Physics.RaycastAll(mouseWorldPoint, Vector3.forward, 1000f);
 
             bool isFirstDown = UnityEngine.Input.GetMouseButtonDown(0);
             bool isDown = UnityEngine.Input.GetMouseButton(0);
-            bool isOver = cameraPosition.IsOver(Collider);
+            bool isOver = mouseWorldPoint.IsOver(null); //TODO replace
             bool isRelease = UnityEngine.Input.GetMouseButtonUp(0);
 
-            cameraPosition.z = _Transform.position.z;
-            _touchLogic.UpdateFrame(cameraPosition, isDown, !isFirstDown, isRelease, isOver);
+            mouseWorldPoint.z = transform.position.z;
+            
+            _touchLogic.UpdateFrame(mouseWorldPoint, isDown, !isFirstDown, isRelease, isOver);
 
-
-            var info = new TouchEventInfo<T>(this, _touchLogic, hits, cameraPosition);
+            var info = new TouchEventInfo(this, _touchLogic, hits, mouseWorldPoint);
 
             if (_touchLogic.IsFirstDownOn)
             {

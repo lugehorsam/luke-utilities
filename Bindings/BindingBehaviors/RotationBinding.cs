@@ -12,7 +12,7 @@ namespace Utilities
             _Component.localEulerAngles = trackedRotation.Value;
         }
 
-        public sealed override Vector3 GetProperty() 
+        public sealed override Vector3 GetCurrentProperty() 
         {
             return trackedRotation.Value;
         }

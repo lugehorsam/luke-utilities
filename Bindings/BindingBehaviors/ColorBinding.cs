@@ -12,7 +12,7 @@
             _Component.color = color;
         }
 
-        public override Color GetProperty()
+        public override Color GetCurrentProperty()
         {
             return _Component.color;
         }

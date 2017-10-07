@@ -14,13 +14,13 @@ namespace Utilities
 
         public void IncrementProperty (TProperty incrementValue)
         {
-            SetProperty (AddProperty (GetProperty (), incrementValue));
+            SetProperty (AddProperty (GetCurrentProperty (), incrementValue));
         }
 
         public void AddPropertyRandomly (TProperty min, TProperty max)
         {
             TProperty randValue = GetRandomizeDelegate () (min, max);
-            TProperty newValue = AddProperty (GetProperty (), randValue);
+            TProperty newValue = AddProperty (GetCurrentProperty (), randValue);
             SetProperty (newValue);
         }
 
@@ -41,7 +41,7 @@ namespace Utilities
         )
         {
             setupLerp?.Invoke();
-            TProperty initialProperty = GetProperty();
+            TProperty initialProperty = GetCurrentProperty();
             
             while (!lerp.HasReachedTargetTime) {
                 beforeLerp?.Invoke();

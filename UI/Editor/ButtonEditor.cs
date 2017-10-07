@@ -1,4 +1,4 @@
-﻿namespace Utilities
+﻿namespace Utilities.UI
 {
 	using UnityEditor;
 	
@@ -7,21 +7,11 @@
 	{
 		public override void OnInspectorGUI()
 		{
-			SerializedProperty serializedTintState = serializedObject.FindProperty("m_CurrentSelectionState");
-			TintState tintState = EnumExt.GetAtIndex<TintState>(serializedTintState.enumValueIndex);
-			var popup = EditorGUILayout.EnumPopup("Current Display", tintState);
+			SerializedProperty colorBlock = serializedObject.FindProperty("_colorBlockObject");
+			EditorGUILayout.ObjectField(colorBlock);
 			
 			base.OnInspectorGUI();
-			
 			serializedObject.Update();
-		}
-
-		private enum TintState
-		{
-			Normal,
-			Highlighted,
-			Pressed,
-			Disabled
 		}
 	}	
 }

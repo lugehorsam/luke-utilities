@@ -1,18 +1,18 @@
-﻿using UnityEngine.EventSystems;
-
-namespace Utilities
+﻿namespace Utilities.UI
 {
-	public class Button : UnityEngine.UI.Button 
-	{
-		public override void OnPointerDown(PointerEventData eventData)
-		{Diag.Log("on pointer down called");
-			base.OnPointerDown(eventData);
-		}
+	using UnityEngine;
 
-		public override void OnPointerEnter(PointerEventData eventData)
+	[ExecuteInEditMode]
+	public class Button : UnityEngine.UI.Button
+	{
+		[SerializeField] private ColorBlockObject _colorBlockObject;
+
+		private void Awake()
 		{
-			Diag.Log("pointer enter called");
-			base.OnPointerEnter(eventData);
+			if (_colorBlockObject != null)
+			{
+				colors = _colorBlockObject.ColorBlock;
+			}
 		}
 	}
 }

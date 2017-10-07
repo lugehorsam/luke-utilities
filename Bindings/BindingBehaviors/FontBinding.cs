@@ -4,7 +4,7 @@ namespace Utilities
 {
     public class FontBinding : PropertyBinding<Font, TextMesh> 
     {
-        public override Font GetProperty ()
+        public override Font GetCurrentProperty ()
         {
             return _Component.font;
         }

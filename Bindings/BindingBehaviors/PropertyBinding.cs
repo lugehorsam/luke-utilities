@@ -1,28 +1,14 @@
-﻿using UnityEngine;
-
-namespace Utilities
+﻿namespace Utilities
 {
-    [ExecuteInEditMode]
+    using UnityEngine;
+
     public abstract class PropertyBinding<TProperty, TComponent> : MonoBehaviour where TComponent : Component
     {
-        [SerializeField] protected TProperty _startProperty;
+        private TComponent _component;
+        
+        protected TComponent _Component => _component ?? (_component = GetComponent<TComponent>());
 
-        protected TComponent _Component => GetComponent<TComponent>(); //TODO cache this and throw relevant exceptions
-
-        public abstract TProperty GetProperty();
+        public abstract TProperty GetCurrentProperty();
         public abstract void SetProperty(TProperty property);
-
-        private void Start()
-        {
-            SetProperty(_startProperty);
-        }
-
-        private void Update()
-        {
-            if (Application.isEditor)
-            {
-                SetProperty(_startProperty);
-            }
-        }
     }  
 }

@@ -26,7 +26,7 @@ namespace Utilities
             }
         }
   
-        public override Vector3 GetProperty() {
+        public override Vector3 GetCurrentProperty() {
             if (positionSpace == PositionSpace.LocalPosition) {
                 return  _Component.localPosition;
             } else {

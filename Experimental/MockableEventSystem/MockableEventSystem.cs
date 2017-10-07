@@ -6,9 +6,5 @@
 	[ExecuteInEditMode]
 	public class MockableEventSystem : EventSystem 
 	{
-		private void OnGUI()
-		{
-			Diag.Log("is focused " + isFocused);
-		}
 	}	
 }

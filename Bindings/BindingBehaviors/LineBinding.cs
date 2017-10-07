@@ -20,7 +20,7 @@ namespace Utilities
             _Component.positionCount++;
         }
 
-        public override Vector3 GetProperty()
+        public override Vector3 GetCurrentProperty()
         {
             return _Component.GetPosition(_Component.positionCount - 1);
         }

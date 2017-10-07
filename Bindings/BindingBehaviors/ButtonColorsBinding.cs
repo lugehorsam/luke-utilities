@@ -4,7 +4,7 @@
 	
 	public class ButtonColorsBinding : PropertyBinding<ColorBlock, Button>
 	{
-		public override ColorBlock GetProperty()
+		public override ColorBlock GetCurrentProperty()
 		{
 			return _Component.colors;
 		}

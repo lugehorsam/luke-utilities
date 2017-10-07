@@ -11,6 +11,11 @@ namespace Utilities
             thisObject.GetComponent<MeshRenderer>().material.color = color;
         }
 
+        public static T GetComponentAnywhere<T>(this GameObject gameObject) where T : Component
+        {
+            return gameObject.GetComponent<T>() ?? gameObject.GetComponentInChildren<T>(true);
+        }
+
         public static T GetComponentWithInterface<T>(this GameObject thisObject) where T : class
         {
             Component[] components = thisObject.GetComponents<Component>();

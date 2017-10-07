@@ -15,7 +15,7 @@ namespace Utilities.Meshes
 			VertexToLerp.Set(property);
 		}
 
-		public override Vector3 GetProperty()
+		public override Vector3 GetCurrentProperty()
 		{
 			return VertexToLerp.AsVector3;
 		}
