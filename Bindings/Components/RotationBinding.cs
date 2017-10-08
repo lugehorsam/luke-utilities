@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Utilities
+namespace Utilities.Bindings
 { 
     public class RotationBinding : Vector3Binding<Transform> {
 
@@ -12,7 +12,7 @@ namespace Utilities
             _Component.localEulerAngles = trackedRotation.Value;
         }
 
-        public sealed override Vector3 GetCurrentProperty() 
+        public sealed override Vector3 GetProperty() 
         {
             return trackedRotation.Value;
         }

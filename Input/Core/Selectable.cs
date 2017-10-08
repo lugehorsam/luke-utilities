@@ -1,36 +1,33 @@
-﻿
-namespace Utilities.Input
-{
-	public delegate void SelectableHandler(Selectable selectable);
-	
-	public class Selectable
+﻿namespace Utilities.Input
+{		
+	public class Selectable : TouchDispatcher 
 	{
-		public SelectableHandler OnSelect = delegate { };
-		public SelectableHandler OnDeselect = delegate { };
+		private bool _currentlySelected;
 
-		private bool _selected;
-		
-		private readonly TouchDispatcher _touchDispatcher;
-
-		public Selectable(TouchDispatcher touchDispatcher)
+		protected override void OnProcess(TouchEventInfo info)
 		{
-			_touchDispatcher = touchDispatcher;
-			_touchDispatcher.OnEndFrame += HandleEndFrame;
-		}
-
-		void HandleEndFrame(TouchLogic touchLogic)
-		{
-			if ((touchLogic.IsFirstDownOff || touchLogic.IsFirstDownOn) && _selected)
+			bool wasSelected = _currentlySelected;
+			
+			if (_touchLogic.IsFirstDownOff && wasSelected)
 			{
-				_selected = false;
-				OnDeselect(this);
+				_currentlySelected = false;
+				OnDeselect(info);
 			}
 			
-			if (touchLogic.IsFirstDownOn && _selected)
+			if (_touchLogic.IsFirstDownOn && !wasSelected)
 			{
-				_selected = true;
-				OnSelect(this);
+				_currentlySelected = true;
+				OnSelect(info);
 			}
+		}
+
+		protected virtual void OnSelect(TouchEventInfo info)
+		{
+		}
+
+		protected virtual void OnDeselect(TouchEventInfo info)
+		{
+			
 		}
 	}	
 }

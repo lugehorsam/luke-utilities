@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-namespace Utilities
+namespace Utilities.Bindings
 {
     [System.Serializable]
     public class ScaleBinding : Vector3Binding<Transform> 
     {   
-        public override Vector3 GetCurrentProperty ()
+        public override Vector3 GetProperty ()
         {
             return _Component.localScale;
         }

@@ -1,35 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-
-namespace Utilities.Input
+﻿namespace Utilities.Input
 {
+    using UnityEngine;
+
     public class TouchDispatcher : MonoBehaviour
     {                       
-        private readonly Rigidbody _rigidbody;
-
-        public event Action<TouchLogic> OnEndFrame = delegate { };
-        public event Action<TouchEventInfo> OnFirstDown = delegate { };
-        public event Action<TouchEventInfo> OnRelease = delegate { };
-        public event Action<TouchEventInfo> OnDrag = delegate { };
-        public event Action<TouchEventInfo> OnDownOff = delegate { };
 
         public ITouchState TouchState => _touchLogic;
        
-        private TouchLogic _touchLogic = new TouchLogic();
-
-        private readonly UnityLifecycleDispatcher _dispatcher;
+        protected readonly TouchLogic _touchLogic = new TouchLogic();
         
-        void Update()
+        private void Update()
         {            
             Vector3 mouseWorldPoint = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(mouseWorldPoint, Vector3.forward, 1000f);
 
-            bool isFirstDown = UnityEngine.Input.GetMouseButtonDown(0);
-            bool isDown = UnityEngine.Input.GetMouseButton(0);
-            bool isOver = mouseWorldPoint.IsOver(null); //TODO replace
-            bool isRelease = UnityEngine.Input.GetMouseButtonUp(0);
+            bool isFirstDown = Input.GetMouseButtonDown(0);
+            bool isDown = Input.GetMouseButton(0);
+            bool isOver = mouseWorldPoint.IsOver(GetComponent<Collider>());
+            bool isRelease = Input.GetMouseButtonUp(0);
 
             mouseWorldPoint.z = transform.position.z;
             
@@ -55,9 +43,15 @@ namespace Utilities.Input
             if (_touchLogic.IsRelease)
             {
                 OnRelease(info);
-            }
+            }            
             
-            OnEndFrame(_touchLogic);
-        }
+            OnProcess(info);
+        }        
+        
+        protected virtual void OnFirstDown(TouchEventInfo info) {}
+        protected virtual void OnRelease(TouchEventInfo info){}
+        protected virtual void OnDrag(TouchEventInfo info) {}
+        protected virtual void OnDownOff(TouchEventInfo info) {}
+        protected virtual void OnProcess(TouchEventInfo info) {}
     }    
 }

@@ -2,8 +2,9 @@
 {
     using UnityEngine;
 
-    public class BindingObject<T> : ScriptableObject
+    public class PropertyObject<T> : ScriptableObject
     {
         [SerializeField] private T _property;
+        public T Property => _property;
     }    
 }

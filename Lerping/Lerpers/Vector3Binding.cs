@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Utilities
+namespace Utilities.Bindings
 {
     [Serializable]
     public abstract class Vector3Binding<TComponent> : LerpBinding<Vector3, TComponent>

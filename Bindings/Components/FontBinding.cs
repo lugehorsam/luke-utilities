@@ -1,10 +1,11 @@
-﻿using UnityEngine;
-
-namespace Utilities
+﻿namespace Utilities.Bindings
 {
+    using UnityEngine;
+
+    [ExecuteInEditMode]
     public class FontBinding : PropertyBinding<Font, TextMesh> 
     {
-        public override Font GetCurrentProperty ()
+        public override Font GetProperty ()
         {
             return _Component.font;
         }

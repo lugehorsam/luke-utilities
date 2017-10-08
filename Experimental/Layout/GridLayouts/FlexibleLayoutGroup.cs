@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Utilities
 {
-    public sealed class FlexibleLayoutGroup : UIBehaviour, ILayoutGroup
+    public sealed class FlexibleLayoutGroup : MonoBehaviour, ILayoutGroup
     {
         public bool Wrap { get; set; }        
         public float WrapThreshold { get; set; }
@@ -17,7 +17,6 @@ namespace Utilities
         private List<RectTransform> _Children => RectTransform.GetChildren();        
         private RectTransform RectTransform => gameObject.GetComponent<RectTransform>();
         
-        //TODO Optimize rec calls with dynamic programming
         private Vector2 GetIdealAnchoredPosition(RectTransform child) 
         {    
             Vector2 newAchoredPosition = Vector2.zero;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Utilities.Overlap;
 
 namespace Utilities
 {
@@ -51,26 +50,24 @@ namespace Utilities
             };
         }
         
-        public static bool Overlaps<T, K>(this T overlapper, K overlapee, out RectOverlapInfo<T, K> overlapInfo) where T : IRectOverlapper where K : IRectOverlapper
+        public static List<Quadrant> OverlappingQuadrants(this Rect rect1, Rect rect2)
         {
-            bool isOverlap = overlapper.Rect.Overlaps(overlapee.Rect);
+            var overlappingQuadrants = new List<Quadrant>();
 
-            if (isOverlap)
-            {
-                IEnumerable<Tuple<Quadrant, Rect>> quadrantInfo = overlapper.Rect.DivideIntoQuadrants();
+            IEnumerable<Tuple<Quadrant, Rect>> quadrants = rect1.DivideIntoQuadrants();
 
-                var overlappingQuadrants = quadrantInfo
-                        .Where(info => info.Item2.Overlaps(overlapee.Rect))
-                        .Select(info => info.Item1);
-                        
-                overlapInfo = new RectOverlapInfo<T, K>(overlapper, overlapee, overlappingQuadrants);
-
-                return true;
-
-            }
-
-            overlapInfo = null;
-            return false;
+                overlappingQuadrants.AddRange
+                (
+                    quadrants
+                        .Where(tuple =>
+                        {
+                            var quadRect = tuple.Item2;
+                            
+                            return quadRect.Overlaps(rect1) && quadRect.Overlaps(rect1);
+                        })
+                        .Select(info => info.Item1));
+                       
+            return overlappingQuadrants;
 
         }
     }   

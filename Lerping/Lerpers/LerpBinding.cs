@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Utilities
+namespace Utilities.Bindings
 {
     public abstract class LerpBinding<TProperty, TComponent> : PropertyBinding<TProperty, TComponent> 
         where TComponent : Component
@@ -14,13 +14,13 @@ namespace Utilities
 
         public void IncrementProperty (TProperty incrementValue)
         {
-            SetProperty (AddProperty (GetCurrentProperty (), incrementValue));
+            SetProperty (AddProperty (GetProperty (), incrementValue));
         }
 
         public void AddPropertyRandomly (TProperty min, TProperty max)
         {
             TProperty randValue = GetRandomizeDelegate () (min, max);
-            TProperty newValue = AddProperty (GetCurrentProperty (), randValue);
+            TProperty newValue = AddProperty (GetProperty (), randValue);
             SetProperty (newValue);
         }
 
@@ -41,7 +41,7 @@ namespace Utilities
         )
         {
             setupLerp?.Invoke();
-            TProperty initialProperty = GetCurrentProperty();
+            TProperty initialProperty = GetProperty();
             
             while (!lerp.HasReachedTargetTime) {
                 beforeLerp?.Invoke();

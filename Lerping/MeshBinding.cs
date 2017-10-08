@@ -1,7 +1,8 @@
-﻿using UnityEngine;
-
-namespace Utilities.Meshes
+﻿namespace Utilities.Bindings
 {
+	using UnityEngine;
+	using Meshes;
+	
 	public class MeshBinding : Vector3Binding<MeshFilter>
 	{
 		public Vertex VertexToLerp
@@ -15,7 +16,7 @@ namespace Utilities.Meshes
 			VertexToLerp.Set(property);
 		}
 
-		public override Vector3 GetCurrentProperty()
+		public override Vector3 GetProperty()
 		{
 			return VertexToLerp.AsVector3;
 		}

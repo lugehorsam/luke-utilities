@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Utilities
+namespace Utilities.Bindings
 {
     public class LineBinding : Vector3Binding<LineRenderer>
     {       
@@ -20,7 +20,7 @@ namespace Utilities
             _Component.positionCount++;
         }
 
-        public override Vector3 GetCurrentProperty()
+        public override Vector3 GetProperty()
         {
             return _Component.GetPosition(_Component.positionCount - 1);
         }

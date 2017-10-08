@@ -11,14 +11,14 @@
 		{
 			if (_colorObject != null)
 			{
-				color = _colorObject.Color;
+				color = _colorObject.Property;
 			}
 		}
 
 		public void OnGUI()
 		{
 			if (_colorObject != null)
-				color = _colorObject.Color;
+				color = _colorObject.Property;
 		}
 	}
 }

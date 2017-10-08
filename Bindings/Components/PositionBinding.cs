@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 
-namespace Utilities
+namespace Utilities.Bindings
 {
- 
     public class PositionBinding : Vector3Binding<Transform> 
     {    
         public PositionSpace PositionSpace 
@@ -26,7 +25,7 @@ namespace Utilities
             }
         }
   
-        public override Vector3 GetCurrentProperty() {
+        public override Vector3 GetProperty() {
             if (positionSpace == PositionSpace.LocalPosition) {
                 return  _Component.localPosition;
             } else {
