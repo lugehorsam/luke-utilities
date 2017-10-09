@@ -3,7 +3,7 @@
 	using UnityEngine;
 
 	[ExecuteInEditMode]
-	public class SpriteSliceSizeBinding : Vector2Binding<SpriteRenderer> 
+	public class BoxCollider2DSizeBinding : Vector2Binding<BoxCollider2D> 
 	{	
 		public override Vector2 GetProperty()
 		{

@@ -13,11 +13,6 @@ namespace Utilities.Input
             transform.position = newPosition;
         }
 
-        private void OnMouseUp()
-        {
-            
-        }
-
         private void OnMouseDown()
         {
             Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
