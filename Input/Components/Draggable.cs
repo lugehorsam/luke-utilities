@@ -2,27 +2,26 @@ namespace Utilities.Input
 {
     using UnityEngine;
 
-    public class Draggable : Selectable 
+    public class Draggable : MonoBehaviour 
     {       
         Vector3 offsetFromMouse;
 
-        protected override void OnDrag(TouchEventInfo info)
+        private void OnMouseDrag()
         {
-            Vector3 worldPoint = Camera.main.ScreenToWorldPoint(info.WorldPosition);
+            Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3 newPosition = worldPoint - offsetFromMouse;
             transform.position = newPosition;
         }
 
-        protected override void OnDeselect(TouchEventInfo info)
+        private void OnMouseUp()
         {
-            offsetFromMouse = Vector3.zero;
+            
         }
 
-        protected override void OnSelect(TouchEventInfo info)
+        private void OnMouseDown()
         {
-            Vector3 worldPoint = Camera.main.ScreenToWorldPoint(info.WorldPosition);
+            Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             offsetFromMouse = worldPoint - transform.position;
         }
     }
 }
-

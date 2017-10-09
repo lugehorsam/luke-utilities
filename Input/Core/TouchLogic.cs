@@ -5,15 +5,15 @@ namespace Utilities.Input
 	public struct TouchLogic : ITouchState {				
 		
 		public bool IsPositionChange { get; private set; }
-		public bool IsFirstDownOn { get; private set; }
+		public bool IsFirstDown { get; private set; }
 		public bool IsFirstDownOff { get; private set; }
-		public bool WasFirstDownOn { get; private set; }
+		public bool WasFirstDown { get; private set; }
 
 		public bool IsFirstDrag { get; private set; }
 		public bool IsRelease { get; private set; }
 
-		public bool IsDownOn { get; private set; }
-		public bool WasDownOn { get; private set; }
+		public bool IsDown { get; private set; }
+		public bool WasDown { get; private set; }
 
 		public bool IsDrag { get; private set; }
 		public bool WasDrag { get; private set; }
@@ -37,19 +37,21 @@ namespace Utilities.Input
 			_position = position;			
 
 			IsPositionChange = _lastPosition != _position;
-			IsDownOn = isDown && over;
-			IsFirstDownOn = !wasDown && IsDownOn;
+			IsDown = isDown && over;
+			IsFirstDown = !wasDown && IsDown;
 			IsFirstDownOff = !wasDown && isDown && !over;
-			IsHold = (IsFirstDownOn || WasHold) && !isRelease;
+			IsHold = (IsFirstDown || WasHold) && !isRelease;
 			IsFirstDrag = IsHold && IsPositionChange;
 			IsDrag = !isRelease && (IsFirstDrag || WasDrag);
 			
 			IsRelease = isRelease && WasDrag;
 			
-			WasDownOn = IsDownOn;
-			WasFirstDownOn = IsFirstDownOn;
+			WasDown = IsDown;
+			WasFirstDown = IsFirstDown;
 			WasHold = IsHold;
 			WasDrag = !isRelease && IsDrag;
+			
+			Diag.Log("UPDATE FRAME first down " + IsFirstDown);
 		}
 	}	
 }

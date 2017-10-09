@@ -227,6 +227,17 @@
             RaycastHit[] hits = Physics.RaycastAll(thisPos, Vector3.forward, 1000f);
             return hits.Any(hit => hit.collider == collider);
         }
+        
+        public static bool IsOver(this Vector2 thisPos, Collider2D collider)
+        {
+            RaycastHit2D[] hits = Physics2D.RaycastAll(thisPos, Vector2.zero, 1000f);
+            return hits.Any(hit => hit.collider == collider);
+        }
+        
+        public static bool IsOver(this Vector3 thisPos, Collider2D collider)
+        {
+            return IsOver((Vector2) thisPos, collider);
+        }
     }
 
 }

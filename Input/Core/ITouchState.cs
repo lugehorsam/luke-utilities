@@ -2,7 +2,7 @@
 {
 	public interface ITouchState
 	{
-		bool IsDownOn { get; }
+		bool IsDown { get; }
 		
 	}	
 }
