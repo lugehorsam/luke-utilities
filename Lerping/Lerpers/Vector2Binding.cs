@@ -20,5 +20,19 @@
 		{
 			return (v1, v2) => Vector2.Lerp(v1, v2, UnityEngine.Random.value);
 		}
+
+		protected override Vector2 GetPropertyFromObject(ScriptableObject propertyObject)
+		{
+			try
+			{
+				return base.GetPropertyFromObject(propertyObject);
+			}
+			catch (Exception)
+			{
+				PropertyObject<Vector3> castedPropertyObject = TryCastPropertyObject<Vector3>(propertyObject);
+				return castedPropertyObject.Property;
+			}
+			
+		}	
 	}	
 }

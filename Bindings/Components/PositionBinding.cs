@@ -2,35 +2,43 @@
 
 namespace Utilities.Bindings
 {
-    public class PositionBinding : Vector3Binding<Transform> 
-    {    
-        public PositionSpace PositionSpace 
+    [ExecuteInEditMode]
+    public class PositionBinding : Vector3Binding<Transform>
+    {               
+        public PositionSpace PositionSpace
         {
-            get {
-                return positionSpace;
+            get 
+            {
+                return _positionSpace;
             }
-            set {
-                positionSpace = value;
+            set 
+            {
+                _positionSpace = value;
             }
         }
 
-        [SerializeField]
-        PositionSpace positionSpace = PositionSpace.LocalPosition;
+        [SerializeField] PositionSpace _positionSpace = PositionSpace.Local;
 
-        public override void SetProperty(Vector3 position) {
-            if (positionSpace == PositionSpace.LocalPosition) {
+        public override void SetProperty(Vector3 position) 
+        {            
+            if (_positionSpace == PositionSpace.Local) 
+            {
                 _Component.localPosition = position;
-            } else {
+            } 
+            else 
+            {
                 _Component.position = position;
             }
         }
   
-        public override Vector3 GetProperty() {
-            if (positionSpace == PositionSpace.LocalPosition) {
-                return  _Component.localPosition;
-            } else {
-                return  _Component.position;
-            }
+        public override Vector3 GetProperty() 
+        {
+            if (_positionSpace == PositionSpace.Local) 
+            {
+                return _Component.localPosition;
+            } 
+
+            return _Component.position;
         }
     }   
 

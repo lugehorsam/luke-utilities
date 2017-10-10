@@ -16,6 +16,22 @@
         public abstract TProperty GetProperty();
         public abstract void SetProperty(TProperty property);
 
+        protected PropertyObject<T> TryCastPropertyObject<T>(ScriptableObject propertyObject)
+        {
+            PropertyObject<T> castedPropertyObject = propertyObject as PropertyObject<T>;
+            
+            if (propertyObject == null)
+                throw new NullReferenceException($"Object {propertyObject} on binding {this} could not be casted to a {typeof(PropertyObject<T>)}.");
+
+            return castedPropertyObject;
+        }
+
+        protected virtual TProperty GetPropertyFromObject(ScriptableObject propertyObject)
+        {
+            var castedPropertyObject = TryCastPropertyObject<TProperty>(_propertyObject);
+            return castedPropertyObject.Property;
+        }
+        
         private void Awake()
         {
             OnPropertyChanged();
@@ -23,7 +39,6 @@
 
         private void OnValidate()
         {
-            Diag.Log("on validate " + this.gameObject.name);
             OnPropertyChanged();
 
 #if UNITY_EDITOR
@@ -41,42 +56,28 @@
 
         private void OnPropertyChanged()
         {
-            Diag.Log("ON PROPERTY CHANGED " + gameObject.name);
             if (!isActiveAndEnabled)
                 return;
             
             try
             {
-                ApplyPropertyObject();
+                ApplyPropertyObject(_propertyObject);
             }  
             catch (Exception e) when (e is MissingReferenceException || 
                                       e is MissingComponentException || 
                                       e is UnassignedReferenceException)
             {                
                 _component = GetComponent<TComponent>();
-                ApplyPropertyObject();
+                ApplyPropertyObject(_propertyObject);
             }
         }
         
-        private void ApplyPropertyObject()
+        private void ApplyPropertyObject(ScriptableObject propertyObject)
         {
-            if (_propertyObject == null)
-                return;
-
-            var propertyObject = TryCastPropertyObject();
-            
-            SetProperty(propertyObject.Property);
-            Diag.Log("set property");
-        }
-
-        private PropertyObject<TProperty> TryCastPropertyObject()
-        {
-            PropertyObject<TProperty> propertyObject = _propertyObject as PropertyObject<TProperty>;
-            
             if (propertyObject == null)
-                throw new NullReferenceException($"Object {_propertyObject} on binding {this} could not be casted to a {typeof(PropertyObject<>)}.");
-
-            return propertyObject;
+                return;
+            
+            SetProperty(GetPropertyFromObject(propertyObject));
         }
     }  
 }

@@ -20,8 +20,6 @@
 
         private void OnValidate()
         {
-            Diag.Log("on validate " + this.name);
-
             OnPropertyChanged();
         }
     }    

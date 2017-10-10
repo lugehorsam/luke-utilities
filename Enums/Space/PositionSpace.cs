@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public enum PositionSpace
+﻿namespace Utilities
 {
-    LocalPosition,
-    WorldPosition
+    public enum PositionSpace
+    {
+        Local,
+        World
+    }    
 }
