@@ -20,13 +20,13 @@
         {
             PropertyObject<T> castedPropertyObject = propertyObject as PropertyObject<T>;
             
-            if (propertyObject == null)
+            if (castedPropertyObject == null)
                 throw new NullReferenceException($"Object {propertyObject} on binding {this} could not be casted to a {typeof(PropertyObject<T>)}.");
 
             return castedPropertyObject;
         }
 
-        protected virtual TProperty GetPropertyFromObject(ScriptableObject propertyObject)
+        private TProperty GetPropertyFromObject(ScriptableObject propertyObject)
         {
             var castedPropertyObject = TryCastPropertyObject<TProperty>(_propertyObject);
             return castedPropertyObject.Property;
@@ -47,7 +47,7 @@
                 return;
             }
 
-            PropertyObject<TProperty> propertyObject = TryCastPropertyObject();
+            PropertyObject<TProperty> propertyObject = TryCastPropertyObject<TProperty>(_propertyObject);
 
             propertyObject.OnPropertyChanged -= OnPropertyChanged;
             propertyObject.OnPropertyChanged += OnPropertyChanged;

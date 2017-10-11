@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Utilities.Bindings
 {
-    [Serializable]
     public abstract class Vector3Binding<TComponent> : LerpBinding<Vector3, TComponent>
         where TComponent : Component {
 

@@ -1,14 +1,21 @@
-﻿namespace Utilities.Bindings
+﻿using System.Collections.Generic;
+
+namespace Utilities.Bindings
 {
 	using UnityEngine;
-	
+
 	[CreateAssetMenu]
-	public sealed class PositionObject : Vector3Object 
+	public sealed class PositionObject : Vector3Object
 	{
 		[SerializeField] private Vector3Object _sizeObject;
 		[SerializeField] private Vector3Object _pivot;
 		[SerializeField] private Vector3Object _anchor;
 
+		protected override IEnumerable<IPropertyObject> ObjectsToWatch => new []
+		{
+			_sizeObject, _pivot, _anchor
+		};
+		
 		private bool _ShouldApplyPivot => _sizeObject != null && _pivot != null;
 		private bool _ShouldApplyAnchor => _anchor != null;
 
@@ -16,16 +23,12 @@
 		{
 			property = base.ProcessProperty(property);
 			
-			Diag.Log("property before anchor " + property);
-
 			if (_ShouldApplyAnchor)
 			{
 				Vector3 worldAnchoredPosition = Camera.main.ScreenToWorldPoint(_anchor.Property);
+				worldAnchoredPosition.z = property.z;
 				property += worldAnchoredPosition;
 			}
-			
-			Diag.Log("property after anchor " + property);
-
 			
 			if (_ShouldApplyPivot)
 			{
@@ -37,9 +40,6 @@
 				);
 			}
 			
-			Diag.Log("property after pivot " + property);
-
-
 			return property;
 		}
 	}
