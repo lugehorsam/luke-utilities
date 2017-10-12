@@ -29,6 +29,9 @@
             {
                 foreach (var subObject in ObjectsToWatch)
                 {
+                    if (subObject == null)
+                        continue;
+                    
                     subObject.OnPropertyChanged -= OnValidate;
                     subObject.OnPropertyChanged += OnValidate;
                 }                
