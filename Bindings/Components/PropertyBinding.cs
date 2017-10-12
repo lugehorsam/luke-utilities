@@ -4,7 +4,7 @@
     using UnityEngine;
 
     [ExecuteInEditMode]
-    public abstract class PropertyBinding<TProperty, TComponent> : MonoBehaviour
+    public abstract class PropertyBinding<TProperty, TComponent> : MonoBehaviour, IPropertyBinding
         where TComponent : Component
     {        
         [SerializeField] private ScriptableObject _propertyObject;
@@ -15,6 +15,11 @@
 
         public abstract TProperty GetProperty();
         public abstract void SetProperty(TProperty property);
+
+        public void SetObject(ScriptableObject propertyObject)
+        {
+            _propertyObject = propertyObject;
+        }
 
         protected PropertyObject<T> TryCastPropertyObject<T>(ScriptableObject propertyObject)
         {
@@ -28,7 +33,7 @@
 
         private TProperty GetPropertyFromObject(ScriptableObject propertyObject)
         {
-            var castedPropertyObject = TryCastPropertyObject<TProperty>(_propertyObject);
+            var castedPropertyObject = TryCastPropertyObject<TProperty>(propertyObject);
             return castedPropertyObject.Property;
         }
         

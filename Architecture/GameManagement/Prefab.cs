@@ -1,28 +1,15 @@
-﻿namespace Utilities
+﻿
+namespace Utilities
 {
     using System;
-    using System.Collections.Generic;
     using UnityEngine;
+    using Utilities.Bindings;
     
     [Serializable]
     public sealed class Prefab 
     {
         [SerializeField] private GameObject _prefab;
-        [SerializeField] private bool _dynamic;
         [SerializeField] private Transform _parent;
-        [SerializeField] private Vector3 _localPosition;
-                        
-        public Prefab(Transform parent, Vector3 localPosition)
-        {
-            _parent = parent;
-            _localPosition = localPosition;
-        }
-
-        public Prefab(Transform parent)
-        {
-            _parent = parent;
-            _localPosition = Vector3.zero;
-        }
         
         public Prefab(GameObject gameObjectToWrap)
         {
@@ -31,7 +18,7 @@
 
         private GameObject CreateGameObject()
         {
-            GameObject instance = _dynamic ? new GameObject() : GameObject.Instantiate (_prefab, Vector2.zero, Quaternion.Euler (Vector3.zero));
+            GameObject instance = GameObject.Instantiate (_prefab, Vector2.zero, Quaternion.Euler (Vector3.zero));
             
             if (instance == null)
                 throw new NullReferenceException("No associated prefab.");
@@ -41,7 +28,6 @@
                 instance.transform.SetParent(_parent, worldPositionStays: false);
             }
             
-            instance.transform.localPosition = _localPosition;
             return instance;
         }
 
