@@ -49,9 +49,7 @@ namespace Utilities.Input
 			WasDown = IsDown;
 			WasFirstDown = IsFirstDown;
 			WasHold = IsHold;
-			WasDrag = !isRelease && IsDrag;
-			
-			Diag.Log("UPDATE FRAME first down " + IsFirstDown);
+			WasDrag = !isRelease && IsDrag;			
 		}
 	}	
 }

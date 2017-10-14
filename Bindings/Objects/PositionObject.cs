@@ -23,7 +23,6 @@ namespace Utilities.Bindings
 			
 			if (_ShouldApplyAnchor)
 			{
-				
 				Vector3 worldAnchoredPosition = Camera.main.ViewportToWorldPoint
 				(
 					new Vector2(_anchor.Property.x, _anchor.Property.y)				
@@ -32,7 +31,6 @@ namespace Utilities.Bindings
 				worldAnchoredPosition.z = property.z;
 				
 				property = worldAnchoredPosition;
-				Diag.Log("anchor is " + worldAnchoredPosition);
 			}			
 			
 			return property;

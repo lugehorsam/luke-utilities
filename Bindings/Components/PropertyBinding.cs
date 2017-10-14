@@ -1,13 +1,18 @@
-﻿namespace Utilities.Bindings
+﻿using System.Linq;
+
+namespace Utilities.Bindings
 {
     using System;
     using UnityEngine;
 
     [ExecuteInEditMode]
-    public abstract class PropertyBinding<TProperty, TComponent> : MonoBehaviour, IPropertyBinding
+    public abstract class PropertyBinding<TProperty, TComponent> : MonoBehaviour
         where TComponent : Component
-    {        
+    {
+        [SerializeField] private string _variantId;
+        
         [SerializeField] private ScriptableObject _propertyObject;
+        [SerializeField] private PropertyObjectVariant[] _propertyObjectVariants;
         
         private TComponent _component;
 
@@ -16,13 +21,11 @@
         public abstract TProperty GetProperty();
         public abstract void SetProperty(TProperty property);
 
-        public void SetObject(ScriptableObject propertyObject)
-        {
-            _propertyObject = propertyObject;
-        }
-
         protected PropertyObject<T> TryCastPropertyObject<T>(ScriptableObject propertyObject)
         {
+            if (_propertyObject == null)
+                return null;
+            
             PropertyObject<T> castedPropertyObject = propertyObject as PropertyObject<T>;
             
             if (castedPropertyObject == null)
@@ -39,42 +42,43 @@
         
         private void Awake()
         {
-            OnPropertyChanged();
+            TryApplyProperty();
         }
 
         private void OnValidate()
         {
-            OnPropertyChanged();
+            _propertyObject = _propertyObject ?? AssignObjectFromVariants();
+            TryApplyProperty();
 
 #if UNITY_EDITOR
-            if (_propertyObject == null)
-            {
-                return;
-            }
-
-            PropertyObject<TProperty> propertyObject = TryCastPropertyObject<TProperty>(_propertyObject);
-
-            propertyObject.OnPropertyChanged -= OnPropertyChanged;
-            propertyObject.OnPropertyChanged += OnPropertyChanged;
+            AddSubPropertyListeners();
 #endif
         }
 
-        private void OnPropertyChanged()
+#if UNITY_EDITOR
+        private void AddSubPropertyListeners()
         {
-            if (!isActiveAndEnabled)
+            PropertyObject<TProperty> propertyObject = TryCastPropertyObject<TProperty>(_propertyObject);
+
+            if (propertyObject == null)
                 return;
             
-            try
+            propertyObject.OnPropertyChanged -= TryApplyProperty;
+            propertyObject.OnPropertyChanged += TryApplyProperty;
+        }
+#endif
+        
+        private void TryApplyProperty()
+        {
+            _propertyObject = _propertyObject ?? AssignObjectFromVariants();
+            
+            if (_propertyObject == null)
             {
-                ApplyPropertyObject(_propertyObject);
-            }  
-            catch (Exception e) when (e is MissingReferenceException || 
-                                      e is MissingComponentException || 
-                                      e is UnassignedReferenceException)
-            {                
-                _component = GetComponent<TComponent>();
-                ApplyPropertyObject(_propertyObject);
+                Diag.Warn($"Could not find property object on {this}");
+                return;
             }
+            
+            ApplyPropertyObject(_propertyObject);
         }
         
         private void ApplyPropertyObject(ScriptableObject propertyObject)
@@ -83,6 +87,11 @@
                 return;
             
             SetProperty(GetPropertyFromObject(propertyObject));
+        }
+
+        private ScriptableObject AssignObjectFromVariants()
+        {
+            return _propertyObjectVariants.FirstOrDefault(obj => obj.Id == _variantId).Object;
         }
     }  
 }

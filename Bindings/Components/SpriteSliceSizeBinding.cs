@@ -2,7 +2,6 @@
 {
 	using UnityEngine;
 
-	[ExecuteInEditMode]
 	public class SpriteSliceSizeBinding : Vector3Binding<SpriteRenderer> 
 	{	
 		public override Vector3 GetProperty()

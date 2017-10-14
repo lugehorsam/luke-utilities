@@ -14,7 +14,15 @@
             
         [SerializeField] private T _property;
         
-        public T Property => ProcessProperty(_property);
+        public T Property
+        {
+            get
+            {
+                var processedProperty = ProcessProperty(_property);
+                Diag.Log(UtilitiesFeature.Binding, $"Property object {this} is returning property {processedProperty}");
+                return processedProperty;
+            }
+        }
 
         protected virtual T ProcessProperty(T property)
         {

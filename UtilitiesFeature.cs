@@ -14,6 +14,7 @@
 		Theming,
 		Tweening,
 		Layouts,
-		Game
+		Game,
+		Binding
 	}	
 }

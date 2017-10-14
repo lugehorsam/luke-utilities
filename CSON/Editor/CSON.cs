@@ -50,14 +50,12 @@ namespace Utilities
 
         static void HandleCSONFileChanged(object sender, FileSystemEventArgs e)
         {
-            Diag.Log("File changed");
             CSONToJSON();
         }
 
         [MenuItem("Assets/CSON To JSON")]
         public static void CSONToJSON()
         {
-            Diag.Log("Transpiling CSON");
             BashScript bashScript = new BashScript
             (
                 bashScriptPathFromAssets,

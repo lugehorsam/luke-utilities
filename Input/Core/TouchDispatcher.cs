@@ -21,7 +21,6 @@ namespace Utilities.Input
 
             UpdateTouchLogic(mouseWorldPoint);
             
-            Diag.Log("after update touch logic it is " + _touchLogic.IsFirstDown);
             TouchEventInfo touchInfo = CreateTouchInfo(mouseWorldPoint);
             DispatchEvents(touchInfo);                                             
             OnProcess(touchInfo);
