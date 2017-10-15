@@ -10,7 +10,7 @@ namespace Utilities.Bindings
 		[SerializeField] private Vector3Object _sizeObject;
 		[SerializeField] private Vector3Object _anchor;
 
-		protected override IEnumerable<IPropertyObject> ObjectsToWatch => new []
+		protected override IEnumerable<PropertyObject> ObjectsToWatch => new []
 		{
 			_sizeObject, _anchor
 		};

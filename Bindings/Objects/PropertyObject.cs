@@ -4,14 +4,8 @@
     using System.Collections.Generic;
     using UnityEngine;
 
-    public class PropertyObject<T> : ScriptableObject, IPropertyObject
+    public abstract class PropertyObject<T> : PropertyObject
     {        
-#if UNITY_EDITOR
-        public event Action OnPropertyChanged = delegate { };
-#endif
-
-        protected virtual IEnumerable<IPropertyObject> ObjectsToWatch => null;
-            
         [SerializeField] private T _property;
         
         public T Property
@@ -28,22 +22,39 @@
         {
             return property;
         }
+    }
 
+    public class PropertyObject : ScriptableObject
+    {        
+#if UNITY_EDITOR
+            public event Action OnPropertyChanged;
+#endif
+            public BindType BindType { get; }
+        
+            protected virtual IEnumerable<PropertyObject> ObjectsToWatch => null;            
+
+
+#if UNITY_EDITOR
         private void OnValidate()
         {
             OnPropertyChanged();
+            SubscribeToObjects();
+        }
+#endif
+        
+        private void SubscribeToObjects()
+        {
+            if (ObjectsToWatch == null) return;
             
-            if (ObjectsToWatch != null)
+            foreach (var subObject in ObjectsToWatch)
             {
-                foreach (var subObject in ObjectsToWatch)
-                {
-                    if (subObject == null)
-                        continue;
+                if (subObject == null)
+                    continue;
                     
-                    subObject.OnPropertyChanged -= OnValidate;
-                    subObject.OnPropertyChanged += OnValidate;
-                }                
+                subObject.OnPropertyChanged -= OnValidate;
+                subObject.OnPropertyChanged += OnValidate;
             }
         }
-    }    
+
+    }
 }

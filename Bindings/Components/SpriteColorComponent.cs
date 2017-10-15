@@ -3,8 +3,10 @@
     using System;
     using UnityEngine;
     
-    public class SpriteColorBinding : LerpBinding<Color, SpriteRenderer> 
+    public class SpriteColorComponent : LerpComponent<Color, SpriteRenderer> 
     {
+        public override BindType BindType => BindType.SpriteColor;
+
         public override void SetProperty(Color color) 
         {
             _Component.color = color;

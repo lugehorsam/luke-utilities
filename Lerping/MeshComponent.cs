@@ -3,8 +3,10 @@
 	using UnityEngine;
 	using Meshes;
 	
-	public class MeshBinding : Vector3Binding<MeshFilter>
+	public class MeshComponent : Vector3Component<MeshFilter>
 	{
+		public override BindType BindType => BindType.Vertex;
+
 		public Vertex VertexToLerp
 		{
 			get;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Utilities.Bindings
 {
-    public abstract class Vector3Binding<TComponent> : LerpBinding<Vector3, TComponent>
+    public abstract class Vector3Component<TComponent> : LerpComponent<Vector3, TComponent>
         where TComponent : Component {
 
         protected sealed override Func<Vector3, Vector3, float, Vector3> GetLerpDelegate() 

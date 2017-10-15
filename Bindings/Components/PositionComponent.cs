@@ -3,8 +3,10 @@
 namespace Utilities.Bindings
 {
     [ExecuteInEditMode]
-    public class PositionBinding : Vector3Binding<Transform>
-    {               
+    public class PositionComponent : Vector3Component<Transform>
+    {            
+        public override BindType BindType => BindType.Position;
+
         public PositionSpace PositionSpace
         {
             get 

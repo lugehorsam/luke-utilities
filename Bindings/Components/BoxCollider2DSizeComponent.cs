@@ -3,8 +3,10 @@
 	using UnityEngine;
 
 	[ExecuteInEditMode]
-	public class BoxCollider2DSizeBinding : Vector3Binding<BoxCollider2D> 
+	public class BoxCollider2DSizeComponent : Vector3Component<BoxCollider2D> 
 	{	
+		public override BindType BindType => BindType.ColliderSize;
+
 		public override Vector3 GetProperty()
 		{
 			return _Component.size;

@@ -2,7 +2,10 @@
 
 namespace Utilities.Bindings
 { 
-    public class RotationBinding : Vector3Binding<Transform> {
+    public class RotationComponent : Vector3Component<Transform> 
+    {
+
+        public override BindType BindType => BindType.Rotation;
 
         Vector3? trackedRotation; //single rotation representation for conversion to quaternions
 

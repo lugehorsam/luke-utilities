@@ -2,8 +2,10 @@
 {
 	using UnityEngine;
 	
-	public class SpritePivotBinding : Vector3Binding<SpriteRenderer> 
+	public class SpritePivotComponent : Vector3Component<SpriteRenderer> 
 	{
+		public override BindType BindType => BindType.SpritePivot;
+
 		public override Vector3 GetProperty()
 		{
 			return _Component.sprite.pivot;

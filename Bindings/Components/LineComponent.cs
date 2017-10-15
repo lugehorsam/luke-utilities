@@ -2,8 +2,10 @@
 
 namespace Utilities.Bindings
 {
-    public class LineBinding : Vector3Binding<LineRenderer>
+    public class LineComponent : Vector3Component<LineRenderer>
     {       
+        public override BindType BindType => BindType.Line;
+
         public void SetInitialProperty(Vector3 position)
         {
             _Component.SetPosition(0, position);    

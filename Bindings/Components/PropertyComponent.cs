@@ -6,13 +6,10 @@ namespace Utilities.Bindings
     using UnityEngine;
 
     [ExecuteInEditMode]
-    public abstract class PropertyBinding<TProperty, TComponent> : MonoBehaviour
+    public abstract class PropertyComponent<TProperty, TComponent> : MonoBehaviour, IPropertyComponent
         where TComponent : Component
     {
-        [SerializeField] private string _variantId;
-        
-        [SerializeField] private ScriptableObject _propertyObject;
-        [SerializeField] private PropertyObjectVariant[] _propertyObjectVariants;
+        [SerializeField] private PropertyObject _propertyObject;
         
         private TComponent _component;
 
@@ -20,10 +17,16 @@ namespace Utilities.Bindings
 
         public abstract TProperty GetProperty();
         public abstract void SetProperty(TProperty property);
+        public abstract BindType BindType { get; }
+        
+        public void SetPropertyObject(PropertyObject propertyObject)
+        {
+            _propertyObject = propertyObject;
+        }
 
         protected PropertyObject<T> TryCastPropertyObject<T>(ScriptableObject propertyObject)
         {
-            if (_propertyObject == null)
+            if (propertyObject == null)
                 return null;
             
             PropertyObject<T> castedPropertyObject = propertyObject as PropertyObject<T>;
@@ -47,7 +50,6 @@ namespace Utilities.Bindings
 
         private void OnValidate()
         {
-            _propertyObject = _propertyObject ?? AssignObjectFromVariants();
             TryApplyProperty();
 
 #if UNITY_EDITOR
@@ -70,7 +72,6 @@ namespace Utilities.Bindings
         
         private void TryApplyProperty()
         {
-            _propertyObject = _propertyObject ?? AssignObjectFromVariants();
             
             if (_propertyObject == null)
             {
@@ -87,11 +88,6 @@ namespace Utilities.Bindings
                 return;
             
             SetProperty(GetPropertyFromObject(propertyObject));
-        }
-
-        private ScriptableObject AssignObjectFromVariants()
-        {
-            return _propertyObjectVariants.FirstOrDefault(obj => obj.Id == _variantId).Object;
         }
     }  
 }

@@ -33,8 +33,7 @@ namespace Utilities
 
         public GameObject Instantiate ()
         {
-            var instance = CreateGameObject();
-            return instance;
+            return CreateGameObject();
         }
 
         public T Instantiate<T> () where T : Component
