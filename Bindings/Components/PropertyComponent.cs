@@ -10,6 +10,7 @@ namespace Utilities.Bindings
         where TComponent : Component
     {
         [SerializeField] private PropertyObject _propertyObject;
+        [SerializeField] private bool _expectingVariant;
         
         private TComponent _component;
 
@@ -22,6 +23,7 @@ namespace Utilities.Bindings
         public void SetPropertyObject(PropertyObject propertyObject)
         {
             _propertyObject = propertyObject;
+            TryApplyProperty();
         }
 
         private PropertyObject<T> TryCastPropertyObject<T>(ScriptableObject propertyObject)
@@ -45,6 +47,9 @@ namespace Utilities.Bindings
         
         private void Awake()
         {
+            if (_expectingVariant)
+                return;
+            
             TryApplyProperty();
         }
 

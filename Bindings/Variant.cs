@@ -17,9 +17,7 @@
             foreach (var propertyObject in _propertyObjects)
             {
                 foreach (var propertyComponent in propertyComponents)
-                {
-                    Diag.Log("obj and comp " + propertyObject.BindType + ", " + propertyComponent.BindType);
-                    
+                {                    
                     if (propertyComponent.BindType == propertyObject.BindType)
                     {
                         propertyComponent.SetPropertyObject(propertyObject);
