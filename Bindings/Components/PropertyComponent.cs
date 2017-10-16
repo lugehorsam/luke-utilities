@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using UnityEditor;
 
 namespace Utilities.Bindings
 {
@@ -24,7 +24,7 @@ namespace Utilities.Bindings
             _propertyObject = propertyObject;
         }
 
-        protected PropertyObject<T> TryCastPropertyObject<T>(ScriptableObject propertyObject)
+        private PropertyObject<T> TryCastPropertyObject<T>(ScriptableObject propertyObject)
         {
             if (propertyObject == null)
                 return null;
@@ -50,10 +50,12 @@ namespace Utilities.Bindings
 
         private void OnValidate()
         {
-            TryApplyProperty();
-
 #if UNITY_EDITOR
-            AddSubPropertyListeners();
+            if (!EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                TryApplyProperty();
+                AddSubPropertyListeners();
+            }
 #endif
         }
 
@@ -71,11 +73,10 @@ namespace Utilities.Bindings
 #endif
         
         private void TryApplyProperty()
-        {
-            
+        {            
             if (_propertyObject == null)
             {
-                Diag.Warn($"Could not find property object on {this}");
+                Diag.Warn($"Could not find property object on {this} with root {transform.root.gameObject.name}");
                 return;
             }
             

@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-
-namespace Utilities.Bindings
+﻿namespace Utilities.Bindings
 {
+    using UnityEngine;
+    
     [System.Serializable]
     public class ScaleComponent : Vector3Component<Transform> 
     {

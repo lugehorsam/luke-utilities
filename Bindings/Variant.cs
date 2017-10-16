@@ -8,22 +8,26 @@
         [SerializeField] private Prefab _prefab;
         [SerializeField] private PropertyObject[] _propertyObjects;
 
-        public GameObject Instantiate()
+        public GameObject Instantiate(Transform parent)
         {
-            var instance = _prefab.Instantiate();
-
+            var prefab = _prefab.Instantiate(parent);
+            
+            var propertyComponents = prefab.GetComponentsWithInterface<IPropertyComponent>();
+            
             foreach (var propertyObject in _propertyObjects)
             {
-                foreach (var component in instance.GetComponentsWithInterface<IPropertyComponent>())
+                foreach (var propertyComponent in propertyComponents)
                 {
-                    if (component.BindType == propertyObject.BindType)
+                    Diag.Log("obj and comp " + propertyObject.BindType + ", " + propertyComponent.BindType);
+                    
+                    if (propertyComponent.BindType == propertyObject.BindType)
                     {
-                        component.SetPropertyObject(propertyObject);
+                        propertyComponent.SetPropertyObject(propertyObject);
                     }
                 }
             }
 			
-            return instance;
+            return prefab;
         }
     }
 }

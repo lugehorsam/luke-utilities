@@ -7,12 +7,13 @@ namespace Utilities.Bindings
 	[CreateAssetMenu]
 	public sealed class PositionObject : Vector3Object
 	{
-		[SerializeField] private Vector3Object _sizeObject;
 		[SerializeField] private Vector3Object _anchor;
+
+		public override BindType BindType => BindType.Position;
 
 		protected override IEnumerable<PropertyObject> ObjectsToWatch => new []
 		{
-			_sizeObject, _anchor
+			_anchor
 		};
 		
 		private bool _ShouldApplyAnchor => _anchor != null;

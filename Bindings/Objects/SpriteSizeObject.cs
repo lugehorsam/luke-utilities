@@ -4,10 +4,12 @@
 	using Utilities.Bindings;
 	
 	[CreateAssetMenu]
-	public class SizeObject : Vector3Object
+	public class SpriteSizeObject : Vector3Object
 	{
 		[SerializeField] private bool _useCameraWidth;
 		[SerializeField] private float _cameraWidthRatio;
+
+		public override BindType BindType => BindType.SpriteSize;
 
 		protected override Vector3 ProcessProperty(Vector3 property)
 		{

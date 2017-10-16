@@ -9,37 +9,36 @@ namespace Utilities
     public sealed class Prefab 
     {
         [SerializeField] private GameObject _prefab;
-        [SerializeField] private Transform _parent;
         
         public Prefab(GameObject gameObjectToWrap)
         {
             _prefab = gameObjectToWrap;
         }
 
-        private GameObject CreateGameObject()
+        private GameObject CreateGameObject(Transform parent)
         {
             GameObject instance = GameObject.Instantiate (_prefab, Vector2.zero, Quaternion.Euler (Vector3.zero));
             
             if (instance == null)
                 throw new NullReferenceException("No associated prefab.");
             
-            if (_parent != null)
+            if (parent != null)
             {
-                instance.transform.SetParent(_parent, worldPositionStays: false);
+                instance.transform.SetParent(parent, worldPositionStays: false);
             }
             
             return instance;
         }
 
-        public GameObject Instantiate ()
+        public GameObject Instantiate (Transform parent)
         {
-            return CreateGameObject();
+            return CreateGameObject(parent);
         }
 
-        public T Instantiate<T> () where T : Component
+        public T Instantiate<T> (Transform parent) where T : Component
         {
             Diag.Crumb(this, "Instantiating " + this);
-            var instance = CreateGameObject();
+            var instance = CreateGameObject(parent);
             T component = instance.GetOrAddComponent<T>();
             return component;
         }

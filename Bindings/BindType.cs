@@ -2,6 +2,8 @@
 {
 	public enum BindType 
 	{
+		Vector3,
+		Float,
 		ColliderSize,
 		Font,
 		Line,

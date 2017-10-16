@@ -5,6 +5,8 @@
 	[CreateAssetMenu]
 	public class Vector3Object : PropertyObject<Vector3>
 	{
+		public override BindType BindType => BindType.Vector3;
+
 		[SerializeField] private FloatObject _x;
 		[SerializeField] private FloatObject _y;
 		[SerializeField] private FloatObject _z;
