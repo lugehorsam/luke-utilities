@@ -4,7 +4,7 @@
 
 	public class Command : IEnumerator
 	{
-		protected readonly EnumeratorQueue _queue = new EnumeratorQueue();
+		protected readonly CommandQueue _queue = new CommandQueue();
 
 		public object Current => _queue.Current;
 

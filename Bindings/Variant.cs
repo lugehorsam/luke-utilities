@@ -6,26 +6,18 @@
     public class Variant : ScriptableObject
     {
         [SerializeField] private Prefab _prefab;
-        [SerializeField] private PropertyObject[] _propertyObjects;
+        [SerializeField] private Property[] _properties;
 
         public GameObject Instantiate(Transform parent)
         {
-            var prefab = _prefab.Instantiate(parent);
+            var instance = _prefab.Instantiate(parent);
             
-            var propertyComponents = prefab.GetComponentsWithInterface<IPropertyComponent>();
-            
-            foreach (var propertyObject in _propertyObjects)
+            foreach (var property in _properties)
             {
-                foreach (var propertyComponent in propertyComponents)
-                {                    
-                    if (propertyComponent.BindType == propertyObject.BindType)
-                    {
-                        propertyComponent.SetPropertyObject(propertyObject);
-                    }
-                }
+                property.Init(instance);
             }
-			
-            return prefab;
+
+            return instance;
         }
     }
 }

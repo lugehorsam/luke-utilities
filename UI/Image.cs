@@ -1,24 +1,26 @@
-﻿namespace Utilities.UI
+﻿using Utilities.Bindings;
+
+namespace Utilities.UI
 {
 	using UnityEngine;
 	
 	[ExecuteInEditMode]
 	public class Image : UnityEngine.UI.Image {
-
-		[SerializeField] private ColorObject _colorObject;
+/**
+		[SerializeField] private ColorProperty<Image> _colorBinding;
 
 		private void Awake()
 		{
-			if (_colorObject != null)
+			if (_colorBinding != null)
 			{
-				color = _colorObject.Property;
+				color = _colorBinding.Property;
 			}
 		}
 
 		public void OnGUI()
 		{
-			if (_colorObject != null)
-				color = _colorObject.Property;
-		}
+			if (_colorBinding != null)
+				color = _colorBinding.Property;
+		}**/
 	}
 }
