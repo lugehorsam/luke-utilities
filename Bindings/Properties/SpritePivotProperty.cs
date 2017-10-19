@@ -2,6 +2,7 @@
 {
 	using UnityEngine;
 	
+	[CreateAssetMenu]
 	public class SpritePivotProperty : Vector3Property<SpriteRenderer> 
 	{
 		protected override Vector3 Get(SpriteRenderer component)

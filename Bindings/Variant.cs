@@ -7,8 +7,8 @@
     {
         [SerializeField] private Prefab _prefab;
         [SerializeField] private Property[] _properties;
-
-        public GameObject Instantiate(Transform parent)
+        
+        public virtual GameObject Instantiate(Transform parent)
         {
             var instance = _prefab.Instantiate(parent);
             
