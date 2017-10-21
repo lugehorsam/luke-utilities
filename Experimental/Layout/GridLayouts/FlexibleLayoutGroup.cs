@@ -1,40 +1,34 @@
 ﻿using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using System.Collections.Generic;
 
 namespace Utilities
 {
-    public sealed class FlexibleLayoutGroup : MonoBehaviour, ILayoutGroup
+    public sealed class FlexibleLayoutGroup : MonoBehaviour
     {
-        public bool Wrap { get; set; }        
-        public float WrapThreshold { get; set; }
-        public FlexibleSpacingPolicy SpacingPolicy { get; set; }
-        public FlexibleFlowPolicy FlowPolicy { get; set; }
-        public float XSpacing { get; set; }
-        public float YSpacing { get; set; }
-        
-        private List<RectTransform> _Children => RectTransform.GetChildren();        
-        private RectTransform RectTransform => gameObject.GetComponent<RectTransform>();
-        
-        private Vector2 GetIdealAnchoredPosition(RectTransform child) 
+        [SerializeField] private bool _wrap;
+        [SerializeField] private float _wrapThreshold;
+        [SerializeField] private FlexibleFlowPolicy _flowPolicy;
+        [SerializeField] private float _xSpacing;
+        [SerializeField] private float _ySpacing;
+                
+        private Vector2 GetIdealLocalPosition(Transform child) 
         {    
             Vector2 newAchoredPosition = Vector2.zero;
-            
-            int currentChildIndex = _Children.IndexOf(child);
+
+            int currentChildIndex = child.GetSiblingIndex();
     
             if (currentChildIndex <= 0) 
             {
                 return newAchoredPosition;
             }
     
-            RectTransform previousChild = _Children[currentChildIndex - 1];
-            Rect previousChildRect =  previousChild.rect;
+            Transform previousChild = transform.GetChild(currentChildIndex - 1);
 
+            Vector2 previousChildSize = previousChild.GetComponent<FlexibleLayoutBehaviour>().Size;
+            
             //recursive
-            Vector2 previousChildAnchoredPosition = GetIdealAnchoredPosition (previousChild);
+            Vector2 previousChildAnchoredPosition = GetIdealLocalPosition (previousChild);
             newAchoredPosition = previousChildAnchoredPosition;
-            newAchoredPosition += new Vector2(previousChildRect.width, previousChildRect.height); //spacing
+            newAchoredPosition += new Vector2(previousChildSize.x, previousChildSize.y); //spacing
             newAchoredPosition += GetPaddingVector ();
             newAchoredPosition = ClampByFlow (previousChildAnchoredPosition, newAchoredPosition);
             
@@ -49,28 +43,28 @@ namespace Utilities
         Vector2 GetLocalPositionFromWrap(Vector2 newPosition) 
         {
             //TODO implement for vertical
-            switch (FlowPolicy) 
+            switch (_flowPolicy) 
                 {
                 case FlexibleFlowPolicy.Horizontal:
                 default:            
-                    return new Vector2 (0, newPosition.y - YSpacing);
+                    return new Vector2 (0, newPosition.y - _ySpacing);
             }
         }
     
         bool ShouldWrap(Transform newItem, Vector2 newAnchoredPosition) 
         {
             //TODO implement for vertical
-            return Wrap && newAnchoredPosition.x > WrapThreshold;
+            return _wrap && newAnchoredPosition.x > _wrapThreshold;
         }
     
         Vector2 GetPaddingVector() 
         {
-            return new Vector2 (XSpacing, YSpacing);
+            return new Vector2 (_xSpacing, _ySpacing);
         }
     
         Vector2 ClampByFlow(Vector2 lastItemPos, Vector2 newGameObjPos) 
         {
-            switch (FlowPolicy) 
+            switch (_flowPolicy) 
             {
                 case FlexibleFlowPolicy.None:
                     return newGameObjPos;
@@ -85,17 +79,17 @@ namespace Utilities
 
         public void SetLayoutHorizontal()
         {
-            foreach (var child in _Children)
+            foreach (var child in transform.GetChildren())
             {
-                child.anchoredPosition = GetIdealAnchoredPosition(child);
+                child.localPosition = GetIdealLocalPosition(child);
             }           
         }
 
         public void SetLayoutVertical()
         {
-            foreach (var child in _Children)
+            foreach (var child in transform.GetChildren())
             {
-                child.anchoredPosition = GetIdealAnchoredPosition(child);
+                child.localPosition = GetIdealLocalPosition(child);
             }
         }
     }   
