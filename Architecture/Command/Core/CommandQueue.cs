@@ -197,10 +197,6 @@
             }
         }
         
-        private enum CommandMode
-        {
-            Serial,
-            Parallel
-        }
+
     }
 }
