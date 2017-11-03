@@ -1,6 +1,6 @@
-﻿namespace Command
+﻿namespace Enact
 {
-    using System;
+    using System.Collections;
     using System.Collections.Generic;
 
     using UnityEngine;
@@ -17,8 +17,8 @@
             
             foreach (var command in _commands)
             {
-                var runCmd = command.CommandObject.Run(gameObject);
-
+                IEnumerator runCmd = command.CommandObject.Run(gameObject);                 
+                
                 if (command.CommandMode == CommandMode.Parallel)
                 {
                     cmdQueue.AddParallel(runCmd);

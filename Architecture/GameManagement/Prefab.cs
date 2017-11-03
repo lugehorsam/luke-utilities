@@ -1,9 +1,7 @@
-﻿
-namespace Utilities
+﻿namespace Utilities
 {
     using System;
     using UnityEngine;
-    using Utilities.Bindings;
     
     [Serializable]
     public sealed class Prefab 
