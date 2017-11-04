@@ -13,6 +13,7 @@
 
         private void Start()
         {
+            Diag.Log(EnactFeatures.Effector, $"{this} running with {_commands.Count} commands.");
             var cmdQueue = new CommandQueue();
             
             foreach (var command in _commands)

@@ -21,6 +21,13 @@
 			    {
 				    EditorGUI.LabelField(rect, "Mixins");
 			    };
+			    
+			    _list.drawElementCallback = delegate(Rect rect, int index, bool active, bool focused)
+			    {				    
+				    var element = _list.serializedProperty.GetArrayElementAtIndex(index);
+				    EditorGUI.ObjectField(new Rect(rect.x + 60, rect.y, rect.width - 60 - 30, EditorGUIUtility.singleLineHeight),
+				                          element, GUIContent.none);
+			    };
 		    }
 		    
 		    _list.DoList(position);

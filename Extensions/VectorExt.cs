@@ -238,6 +238,17 @@
         {
             return IsOver((Vector2) thisPos, collider);
         }
+
+        public static Vector3 SetByAxis(this Vector3 sourceVector, Vector3 newVector, params Axis[] axes)
+        {
+            var resultVector = new Vector3();
+
+            resultVector.x = axes.Contains(Axis.X) ? newVector.x : sourceVector.x;
+            resultVector.y = axes.Contains(Axis.Y) ? newVector.y : sourceVector.y;
+            resultVector.z = axes.Contains(Axis.Z) ? newVector.z : sourceVector.z;
+
+            return resultVector;
+        }
     }
 
 }
