@@ -1,6 +1,11 @@
-﻿public enum Axis {
-    None,
-    X,
-    Y,
-    Z
+﻿namespace Utilities
+{
+    public enum Axis
+    {
+        None,
+        X,
+        Y,
+        Z,
+        All
+    }
 }
