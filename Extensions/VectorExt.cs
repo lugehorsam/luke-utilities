@@ -249,6 +249,17 @@
 
             return resultVector;
         }
+        
+        public static Vector3 MultiplyByAxis(this Vector3 sourceVector, Vector3 newVector, params Axis[] axes)
+        {
+            var resultVector = new Vector3();
+
+            resultVector.x = axes.Contains(Axis.X) ? sourceVector.x * newVector.x : sourceVector.x;
+            resultVector.y = axes.Contains(Axis.Y) ? sourceVector.y * newVector.y : sourceVector.y;
+            resultVector.z = axes.Contains(Axis.Z) ? sourceVector.z * newVector.z : sourceVector.z;
+
+            return resultVector;
+        }
     }
 
 }
