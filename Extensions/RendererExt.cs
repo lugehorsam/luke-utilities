@@ -10,7 +10,7 @@ namespace Utilities
 
         public static float Height (this Renderer renderer)
         {
-            return renderer.bounds.size.x;
+            return renderer.bounds.size.y;
         }
 
         public static void CenterToParentRenderer (this Renderer childRenderer, Renderer parentRenderer)

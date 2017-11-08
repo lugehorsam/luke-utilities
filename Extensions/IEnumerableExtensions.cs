@@ -72,5 +72,20 @@ namespace Utilities
         {
             return Randomizer.Randomize(0, thisEnumerable.Count() - 1);
         }
+        
+        public static T[] RandomDistinct<T>(this IEnumerable<T> collection, int numDistinct)
+        {
+            var distinctValues = new HashSet<T>();
+            var collectionCopy = new List<T>(collection);
+
+            while ((distinctValues.Count < numDistinct) && (collectionCopy.Count > 0))
+            {
+                T randomElement = collectionCopy.GetRandomElement();
+                collectionCopy.Remove(randomElement);
+                distinctValues.Add(randomElement);
+            }
+
+            return distinctValues.ToArray();
+        }
     }  
 }

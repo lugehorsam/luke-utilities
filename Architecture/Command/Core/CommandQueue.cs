@@ -1,47 +1,53 @@
 ﻿namespace Utilities
 {
     using System;
-    using System.Linq;
     using System.Collections;
     using System.Collections.Generic;
-    
+    using System.Linq;
+
     /// <summary>
-    /// Holds a queue of enumerators and executes them either in serial or parallel.
+    ///     Holds a queue of enumerators and executes them either in serial or parallel.
     /// </summary>
     public class CommandQueue : IEnumerator
     {
         /// <summary>
-        /// A list of all serial and parallel commands in the queue. Commands are never removed from this list.
-        /// Instead the <see cref="_currCommandIndex"/> increments as it runs commands in sequence.
+        ///     A list of all serial and parallel commands in the queue. Commands are never removed from this list.
+        ///     Instead the <see cref="_currCommandIndex" /> increments as it runs commands in sequence.
         /// </summary>
         private readonly List<Command> _commands = new List<Command>();
 
         /// <summary>
-        /// All active parallel commands placed from <see cref="_commands"/> that have not yet completed.
+        ///     All active parallel commands placed from <see cref="_commands" /> that have not yet completed.
         /// </summary>
         private readonly List<Command> _activeParallelCommands = new List<Command>();
 
         /// <summary>
-        /// The index of the last run command from <see cref="_commands"/>.
+        ///     The index of the last run command from <see cref="_commands" />.
         /// </summary>
         private int _currCommandIndex;
 
         /// <summary>
-        /// Whether or not this command queue should reset itself.
+        ///     Whether or not this command queue should reset itself.
         /// </summary>
         private bool _shouldReset;
 
         /// <summary>
-        /// Unity's Coroutine system handles this property in a special manner.
-        /// See details in https://docs.unity3d.com/ScriptReference/CustomYieldInstruction.html
+        ///     Unity's Coroutine system handles this property in a special manner.
+        ///     See details in https://docs.unity3d.com/ScriptReference/CustomYieldInstruction.html
         /// </summary>
-        public object Current => _CurrentCommand?.Current;
+        public object Current
+        {
+            get { return _CurrentCommand?.Current; }
+        }
 
-        private Command _CurrentCommand => _currCommandIndex >=_commands.Count ? null : _commands[_currCommandIndex];
-        
+        private Command _CurrentCommand
+        {
+            get { return _currCommandIndex >= _commands.Count ? null : _commands[_currCommandIndex]; }
+        }
+
         /// <summary>
-        /// Calls <see cref="MoveNext"/> on the active parallel commands and the active serial command. Only returns
-        /// false if there are no serial and no parallel enumerators left, or if the queue has been <see cref="Reset"/>.
+        ///     Calls <see cref="MoveNext" /> on the active parallel commands and the active serial command. Only returns
+        ///     false if there are no serial and no parallel enumerators left, or if the queue has been <see cref="Reset" />.
         /// </summary>
         public bool MoveNext()
         {
@@ -72,29 +78,31 @@
         }
 
         /// <summary>
-        /// Moves all active parallel commands forward one step. Removes completed commands from
-        /// <see cref="_activeParallelCommands"/>
+        ///     Moves all active parallel commands forward one step. Removes completed commands from
+        ///     <see cref="_activeParallelCommands" />
         /// </summary>
         private void MoveNextParallelCommands()
         {
             IEnumerable<Command> activeCommands = new List<Command>(_activeParallelCommands);
-            foreach (var command in activeCommands)
+            foreach (Command command in activeCommands)
             {
                 if (!command.MoveNext())
+                {
                     _activeParallelCommands.Remove(command);
+                }
             }
         }
 
         /// <summary>
-        /// Processes the next command in <see cref="_commands"/> If a parallel command is encountered it is transferred
-        /// to <see cref="_activeParallelCommands"/> and run from there.
+        ///     Processes the next command in <see cref="_commands" /> If a parallel command is encountered it is transferred
+        ///     to <see cref="_activeParallelCommands" /> and run from there.
         /// </summary>
         private void MoveNextQueuedCommand()
         {
             Command queuedCommand = _CurrentCommand;
 
             if (queuedCommand.CommandMode == CommandMode.Serial)
-            {                
+            {
                 if (!queuedCommand.MoveNext())
                 {
                     _currCommandIndex++;
@@ -108,7 +116,7 @@
         }
 
         /// <summary>
-        /// Stops and rewinds the queue.
+        ///     Stops and rewinds the queue.
         /// </summary>
         public void Reset()
         {
@@ -116,8 +124,8 @@
         }
 
         /// <summary>
-        /// Enqueues a command that does not block subsequent commands. However, the enumerator must finish in order for
-        /// this command queue to finish.
+        ///     Enqueues a command that does not block subsequent commands. However, the enumerator must finish in order for
+        ///     this command queue to finish.
         /// </summary>
         public void AddParallel(IEnumerator enumerator)
         {
@@ -125,7 +133,7 @@
         }
 
         /// <summary>
-        /// Add a blocking command to the queue.
+        ///     Add a blocking command to the queue.
         /// </summary>
         public void AddSerial(IEnumerator enumerator)
         {
@@ -133,8 +141,8 @@
         }
 
         /// <summary>
-        /// Adds a one-shot action to the queue. The action self-evidently not block subsequent commands, but will be
-        /// blocked by previous commands, like any other command.
+        ///     Adds a one-shot action to the queue. The action self-evidently not block subsequent commands, but will be
+        ///     blocked by previous commands, like any other command.
         /// </summary>
         public void AddSerial(Action action)
         {
@@ -142,23 +150,29 @@
         }
 
         /// <summary>
-        /// Resets the <see cref="_currCommandIndex"/> and clears the list of active parallel commands.
+        ///     Resets the <see cref="_currCommandIndex" /> and clears the list of active parallel commands.
         /// </summary>
         private bool DoReset()
         {
             bool shouldReset = _shouldReset;
             if (shouldReset)
             {
-                _currCommandIndex = 0;
                 _activeParallelCommands.Clear();
+
+                while (_currCommandIndex > 0)
+                {
+                    _commands[_currCommandIndex].Reset();
+                    _currCommandIndex--;
+                }
+                
                 _shouldReset = false;
             }
             return shouldReset;
         }
 
         /// <summary>
-        /// A private wrapper on <see cref="IEnumerator"/> that consolidates serial commands, parallel commands, and
-        /// actions.
+        ///     A private wrapper on <see cref="IEnumerator" /> that consolidates serial commands, parallel commands, and
+        ///     actions.
         /// </summary>
         private class Command : IEnumerator
         {
@@ -166,7 +180,10 @@
 
             private readonly Action _action;
 
-            public object Current => _enumerator?.Current;
+            public object Current
+            {
+                get { return _enumerator?.Current; }
+            }
 
             public CommandMode CommandMode { get; }
 
@@ -191,7 +208,7 @@
                 }
 
                 if (_enumerator != null)
-                {                    
+                {
                     return _enumerator.MoveNext();
                 }
 

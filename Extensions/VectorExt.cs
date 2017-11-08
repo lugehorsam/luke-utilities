@@ -99,6 +99,16 @@
                     return thisVector;
             }
         }
+        
+        public static Vector3 RestrictToAxis(this Vector3 thisVector, params Axis[] axes)
+        {
+            foreach (var axis in axes)
+            {
+                thisVector = thisVector.RestrictToAxis(axis);
+            }
+
+            return thisVector;
+        }
     
         public static Direction DominantDirection(this Vector3 thisVector)
         {
