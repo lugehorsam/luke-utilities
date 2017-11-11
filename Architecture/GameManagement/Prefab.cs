@@ -35,7 +35,6 @@
 
         public T Instantiate<T> (Transform parent) where T : Component
         {
-            Diag.Crumb(this, "Instantiating " + this);
             var instance = CreateGameObject(parent);
             T component = instance.GetOrAddComponent<T>();
             return component;
