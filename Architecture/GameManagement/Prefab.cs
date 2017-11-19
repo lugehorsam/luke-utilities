@@ -32,6 +32,12 @@
         {
             return CreateGameObject(parent);
         }
+        
+        public GameObject Instantiate ()
+        {
+            return CreateGameObject(null);
+        }
+
 
         public T Instantiate<T> (Transform parent) where T : Component
         {

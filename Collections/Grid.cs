@@ -1,154 +1,99 @@
-﻿namespace Utilities
+﻿namespace Utilities.Collections
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
+
     using UnityEngine;
-    using Observable;
-    
-    public class Grid<T> : Observables<T>, IGrid where T : IGridMember
-    {                
-        public int Rows => _rows;
 
-        readonly int _rows;
+    public class Grid<T>
+    {
+        public int Rows { get; }
 
-        public int Columns => _columns;
+        public int Columns { get; }
 
-        readonly int _columns;
+        private readonly T[] _items;
 
-        public Grid() : base(new List<T>())
+        public Grid(int rows, int columns)
         {
-           
-        }
-        
-        public Grid(int rows, int columns) : base (new List<T>())
-        {           
-            _rows = rows;
-            _columns = columns;
+            Rows = rows;
+            Columns = columns;
+            _items = new T[GetMaxIndex() + 1];
         }
 
-        public T GetElement(int index)
+        public void Set(T item, int row, int column)
         {
-            return Items.FirstOrDefault(member => ToIndex(member.Row, member.Column) == index);
+            _items[ToIndex(row, column)] = item;
         }
 
-        public T GetElement(int row, int column)
+        public T Get(int row, int column)
         {
-            return Items.FirstOrDefault(member => member.Row == row && member.Column == column);
+            return _items[ToIndex(row, column)];
         }
 
-        protected sealed override void HandleAfterItemAdd(T item)
-        {
-            item.Grid = this;
-            ValidateMembers();
-        }
-        
-        protected sealed override void HandleAfterItemRemove(T item)
-        {
-            item.Grid = null;
-            ValidateMembers();
-        }       
-        
-        void ValidateMembers()
-        {
-            var asList = (List<T>) Items;
-            
-            asList.Sort((element1, element2) => ToIndex(element1).CompareTo(ToIndex(element2)));
-            
-            foreach (var member in this)
-            {
-                ValidateMember(member);
-            }            
-        }
-
-        int ToIndex(T element)
-        {
-            return ToIndex(element.Row, element.Column);
-        }
-
-        void ValidateMember(T member)
-        {
-            if (member.Column >= _columns || member.Row >= _rows)
-            {
-                throw new Exception(string.Format("Invalid member {0} rows and columns of grid {1}, {2}", member, _rows, _columns));
-            }
-        }
-    
         public int GetMaxIndex()
         {
-            return GridExt.GetMaxIndex(_rows, _columns);
-        }
-       
-        public int ToIndex(int row, int col) 
-        {
-            return GridExt.ToIndex(_rows, _columns, row, col);
-        }
- 
-        int[] ToRowCol(int index) {
-            return new int[2]{ GetRowOfIndex(index), GetColumnOfIndex(index)};
+            return GridExt.GetMaxIndex(Rows, Columns);
         }
 
-        int[] RowColOf(T startElement)
+        private int ToIndex(int row, int col)
         {
-            int index = ToIndex(startElement);
-            if (index < 0)
-            {
-                throw new Exception("RuneLevel does not contain element " + startElement + " , grid " + IEnumerableExtensions.Pretty(this));
-            }
-            return ToRowCol (index);
+            return GridExt.ToIndex(Rows, Columns, row, col);
         }
 
-        public T[] GetAdjacentElements(T startElement) {
-          
-            List<T> adjacentElements = new List<T> ();
-            
-            int[] rowCol = RowColOf (startElement);
-            
-            int row = rowCol [0];
-            int col = rowCol [1];
+        public GridPosition GetGridPosition(int index)
+        {
+            return new GridPosition {Row = GetRowOfIndex(index), Column = GetColumnOfIndex(index)};
+        }
+
+        public GridPosition GetGridPosition(T element)
+        {
+            return GetGridPosition(Array.IndexOf(_items, element));
+        }
+
+        public T[] GetAdjacentElements(T element)
+        {
+            var adjacentElements = new List<T>();
+
+            GridPosition gridPosition = GetGridPosition(Array.IndexOf(_items, element));
+
+            int row = gridPosition.Row;
+            int col = gridPosition.Column;
             int leftCol = col - 1;
             int rightCol = col + 1;
             int topRow = row + 1;
             int bottomRow = row - 1;
 
-            if (leftCol >= 0) {
-                adjacentElements.Add 
-                (
-                    this[ToIndex(row, leftCol)]
-                );                
-            } 
-
-            if (rightCol < Columns) {
-                adjacentElements.Add 
-                (
-                    this[ToIndex(row, rightCol)]
-                );                            
+            if (leftCol >= 0)
+            {
+                adjacentElements.Add(_items[ToIndex(row, leftCol)]);
             }
 
-            if (bottomRow >= 0) {
-                adjacentElements.Add (
-                    this[ToIndex(bottomRow, col)]
-                );                           
+            if (rightCol < Columns)
+            {
+                adjacentElements.Add(_items[ToIndex(row, rightCol)]);
             }
 
-            if (topRow < Rows) {
-                adjacentElements.Add(this[ToIndex(topRow, col)]);
+            if (bottomRow >= 0)
+            {
+                adjacentElements.Add(_items[ToIndex(bottomRow, col)]);
             }
-            
+
+            if (topRow < Rows)
+            {
+                adjacentElements.Add(_items[ToIndex(topRow, col)]);
+            }
+
             return adjacentElements.ToArray();
-        }       
-        
-        public int GetRowOfIndex(int index) {
-            return (int) Mathf.Floor (index / _columns);
-        }
-        
-        public int GetColumnOfIndex(int index) {
-            return index % _columns;
         }
 
-        public override string ToString()
+        public int GetRowOfIndex(int index)
         {
-            return this.ToString(_rows, _columns, IEnumerableExtensions.Pretty(this));
+            return (int) Mathf.Floor(index / Columns);
+        }
+
+        public int GetColumnOfIndex(int index)
+        {
+            return index % Columns;
         }
     }
 }

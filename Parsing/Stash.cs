@@ -12,7 +12,7 @@ namespace Utilities.Serializable
     
         [SerializeField] private T[] array;
         
-        private readonly Observable.Observables<T> _observables = new Observable.Observables<T>();
+        private readonly List<T> _observables = new List<T>();
         
         public Stash(){}
 
@@ -34,12 +34,7 @@ namespace Utilities.Serializable
             foreach (var item in array)
                 _observables.Add(item);
         }
-
-        public static implicit operator Observable.Observables<T>(Stash<T> thisStash)
-        {
-            return thisStash._observables;
-        }
-
+        
         public IEnumerator<T> GetEnumerator()
         {
             return _observables.GetEnumerator();

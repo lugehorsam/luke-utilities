@@ -122,7 +122,13 @@
                 case Axis.Z:
                     return thisVector.z > 0 ? Direction.Forward : Direction.Back;
             }
+            
             return Direction.None;
+        }
+
+        public static Direction DominantDirection(this Vector2 thisVector)
+        {
+            return DominantDirection((Vector3) thisVector);
         }
     
         public static Vector3 ExceptAxis(this Vector3 thisVector, Axis axis)

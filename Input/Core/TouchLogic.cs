@@ -2,9 +2,10 @@
 
 namespace Utilities.Input
 {
-	public struct TouchLogic : ITouchState {				
+	public class TouchLogic : ITouchState {				
 		
 		public bool IsPositionChange { get; private set; }
+		
 		public bool IsFirstDown { get; private set; }
 		public bool IsFirstDownOff { get; private set; }
 		public bool WasFirstDown { get; private set; }
@@ -20,7 +21,7 @@ namespace Utilities.Input
 		
 		public bool IsHold { get; private set; }
 		public bool WasHold { get; private set; }
-			
+					
 		private Vector3 _position;
 		private Vector3 _lastPosition;	
 		
@@ -39,17 +40,18 @@ namespace Utilities.Input
 			IsPositionChange = _lastPosition != _position;
 			IsDown = isDown && over;
 			IsFirstDown = !wasDown && IsDown;
+			
 			IsFirstDownOff = !wasDown && isDown && !over;
 			IsHold = (IsFirstDown || WasHold) && !isRelease;
 			IsFirstDrag = IsHold && IsPositionChange;
-			IsDrag = !isRelease && (IsFirstDrag || WasDrag);
+			IsDrag = !isRelease && (IsFirstDrag || WasDrag) && IsPositionChange;
 			
-			IsRelease = isRelease && WasDrag;
+			IsRelease = isRelease && (WasDrag || WasHold);
 			
 			WasDown = IsDown;
 			WasFirstDown = IsFirstDown;
 			WasHold = IsHold;
-			WasDrag = !isRelease && IsDrag;			
+			WasDrag = !isRelease && IsDrag;		
 		}
 	}	
 }
