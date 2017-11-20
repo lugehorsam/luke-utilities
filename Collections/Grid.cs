@@ -1,11 +1,13 @@
 ﻿namespace Utilities.Collections
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
 
     using UnityEngine;
 
-    public class Grid<T>
+    public class Grid<T> : IEnumerable
     {
         public int Rows { get; }
 
@@ -94,6 +96,16 @@
         public int GetColumnOfIndex(int index)
         {
             return index % Columns;
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return _items.GetEnumerator();
+        }
+
+        public GridPosition GetPositionOfIndex(int index)
+        {
+            return new GridPosition(GetRowOfIndex(index), GetColumnOfIndex(index));
         }
     }
 }

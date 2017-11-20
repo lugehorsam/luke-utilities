@@ -13,13 +13,23 @@ namespace Utilities
             }
 
             string formattedString = "";
+
+            int i = 0;
             
-            foreach (T item in thisEnumerable) 
+            foreach (T item in thisEnumerable)
             {
+                
+                if (item == null)
+                {
+                    continue;
+                }
+                
+                
                 formattedString += item.ToString();
 
                 if (!item.Equals(thisEnumerable.LastOrDefault()))
                 {
+                    formattedString += $"({i}) ";
                     string formatter = ", ";
 
                     if (item is KeyValuePair<object, object>)
@@ -30,6 +40,8 @@ namespace Utilities
                     formattedString += formatter;
                 }
             }
+            
+            i++;
             return formattedString;
         }
 

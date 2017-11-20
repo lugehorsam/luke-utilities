@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Utilities
+namespace Utilities.Collections
 {
     public static class GridExt {
 
@@ -37,7 +37,28 @@ namespace Utilities
         public static int GetColumnOfIndex(int index, int columns) 
         {
             return index % columns;
-        }        
+        }
+
+        public static GridPosition? GetFirstEmptyPosition<T>(this Grid<T> thisGrid)
+        {
+            var enumerator = thisGrid.GetEnumerator();
+
+            int i = 0;
+            
+            do
+            {
+                if (enumerator.Current == null)
+                {
+                    Diag.Log("returning at i " + i);
+                    return thisGrid.GetPositionOfIndex(i);
+                }
+
+                i++;
+            }
+            while (enumerator.MoveNext());
+
+            return null;
+        }
         
        
     }

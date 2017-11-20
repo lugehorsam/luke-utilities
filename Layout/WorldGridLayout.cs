@@ -9,7 +9,7 @@
     /// </summary>
     public class WorldGridLayout : MonoBehaviour
     {
-        private Grid<MonoBehaviour> _grid;
+        private Grid<GameObject> _grid;
         
         private float _TotalHeight => _cellHeight * _grid.Rows;
         private float _TotalWidth => _cellWidth * _grid.Columns;
@@ -22,16 +22,16 @@
 
         public void Init(int rows, int columns)
         {        
-            _grid = new Grid<MonoBehaviour>(rows, columns);   
+            _grid = new Grid<GameObject>(rows, columns);   
         }
 
-        public void Add(MonoBehaviour member, int row, int column)
+        public void Set(GameObject member, int row, int column)
         {
             _grid.Set(member, row, column);
 
             Vector3 idealLocalPos = GetLocalPosition(new GridPosition(row, column));
                         
-            var asGridMember = member as IGridLayoutMember;
+            var asGridMember = member.GetComponentWithInterface<IGridLayoutMember>();
             
             if (asGridMember == null)
             {
@@ -49,7 +49,7 @@
             return new Vector2(lowerLeft.x + _cellWidth/2, lowerLeft.y + _cellHeight/2);
         }
 
-        public GridPosition GetGridPosition(MonoBehaviour member)
+        public GridPosition GetGridPosition(GameObject member)
         {
             return _grid.GetGridPosition(member);
         }
