@@ -52,6 +52,22 @@
             newVector.z = transformation(thisVector.z);
             return newVector;
         }
+
+        public static Vector3 ApplyOnAxis(this Vector3 thisVector, Vector3 otherVector, Axis axis)
+        {
+            switch (axis)
+            {
+                case Axis.X:
+                    return new Vector3(otherVector.x, thisVector.y, thisVector.z);
+                case Axis.Y: 
+                    return new Vector3(thisVector.x, otherVector.y, thisVector.z);
+                case Axis.Z:
+                    return new Vector3(thisVector.x, thisVector.y, otherVector.z);
+                default:
+                    return thisVector;
+            }
+            
+        }
     
         public static float MaxDimension(this Vector3 thisVector)
         {
@@ -85,20 +101,20 @@
             return Axis.None;
         }
     
-        public static Vector3 RestrictToAxis(this Vector3 thisVector, Axis axis)
+        public static Vector3 RestrictToAxis(this Vector3 thisVector, Axis axis, float defaultValue = 0f)
         {
             switch (axis)
             {
                 case Axis.X:
-                    return new Vector3(thisVector.x, 0f, 0f);
+                    return new Vector3(thisVector.x, defaultValue, defaultValue);
                 case Axis.Y: 
-                    return new Vector3(0f, thisVector.y, 0f);
+                    return new Vector3(defaultValue, thisVector.y, defaultValue);
                 case Axis.Z:
-                    return new Vector3(0f, 0f, thisVector.z);
+                    return new Vector3(defaultValue, defaultValue, thisVector.z);
                 default:
                     return thisVector;
             }
-        }
+        }        
         
         public static Vector3 RestrictToAxis(this Vector3 thisVector, params Axis[] axes)
         {
