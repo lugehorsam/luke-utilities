@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Utilities.Meshes
+namespace Mesh
 {
 	public static class IMeshExt {
 

@@ -1,60 +1,40 @@
 ﻿using System;
-using System.Linq;
+
 using UnityEngine;
 
-namespace Utilities.Meshes
+namespace Mesh
 {
-     
-    [Serializable]
-    public class Vertex {
-
-        public Vector3 AsVector3 => new Vector3(x, y, z);
+    [Serializable] public class Vertex
+    {
+        public Vector3 AsVector3 => new Vector3(_x, _y, _z);
 
         public float X
         {
-            get
-            {
-                return x;
-            }
-            set
-            {
-                x = value;
-            }
+            get { return _x; }
+            set { _x = value; }
         }
-    
+
         public float Y
         {
-            get
-            {
-                return y;
-            }
-            set
-            {
-                y = value;
-            }
+            get { return _y; }
+            set { _y = value; }
         }
-    
+
         public float Z
         {
-            get
-            {
-                return z;
-            }
-            set
-            {
-                z = value;
-            }
+            get { return _z; }
+            set { _z = value; }
         }
-    
-        float x, y, z;
-    
+
+        [SerializeField] private float _x, _y, _z;
+
         public Vertex(float x, float y, float z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this._x = x;
+            this._y = y;
+            this._z = z;
         }
-        
+
         public Vertex(Vector3 vector3)
         {
             Set(vector3);
@@ -62,14 +42,14 @@ namespace Utilities.Meshes
 
         public void Set(Vector3 vector3)
         {
-            x = vector3.x;
-            y = vector3.y;
-            z = vector3.z;
+            _x = vector3.x;
+            _y = vector3.y;
+            _z = vector3.z;
         }
-    
+
         public override string ToString()
         {
             return $"[VertexDatum: X={X}, Y={Y}, Z={Z}]";
-        }       
-    }   
+        }
+    }
 }

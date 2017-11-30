@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-
-namespace Utilities
+﻿namespace Grid
 {
+	using UnityEngine;
+
 	public class MeshExt 
 	{
 		

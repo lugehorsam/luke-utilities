@@ -1,6 +1,6 @@
-﻿namespace Utilities
+﻿namespace Utilties
 {
-    public enum Direction 
+    public enum Direction
     {
         None,
         Left,

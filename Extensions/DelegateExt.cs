@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections;
-
-public static class DelegateExt 
+﻿namespace Utilities
 {
-    public static IEnumerator AsEnumerator(this Action thisAction)
-    {
-        bool hasInvoked = false;
-        
-        thisAction += () =>
-        {
-            hasInvoked = true;
-        };
+    using System;
+    using System.Collections;
 
-        while (!hasInvoked)
+    public static class DelegateExt
+    {
+        public static IEnumerator AsEnumerator(this Action thisAction)
         {
-            yield return null;
+            var hasInvoked = false;
+
+            thisAction += () =>
+            {
+                hasInvoked = true;
+            };
+
+            while (!hasInvoked)
+            {
+                yield return null;
+            }
         }
     }
 }

@@ -1,22 +1,24 @@
 ﻿namespace Utilities.Algorithms
 {
-	using UnityEngine;
-	
-	public static class Algorithms 
-	{
-		public static T[] Shuffle<T>(T[] collection) {
-			int index = collection.Length - 1;
-			T[] newCollection = collection;
+    using UnityEngine;
 
-			while (index > 0) {
-				int newIndex = (int) Mathf.Floor (Random.value * collection.Length);
-				T unplacedValue = newCollection [newIndex];
-				newCollection [newIndex] = newCollection [index];
-				newCollection [index] = unplacedValue;
-				index--;
-			}	
+    public static class Shuffle
+    {
+        public static T[] DoShuffle<T>(T[] collection)
+        {
+            int index = collection.Length - 1;
+            T[] newCollection = collection;
 
-			return newCollection;
-		}
-	}	
+            while (index > 0)
+            {
+                var newIndex = (int) Mathf.Floor(Random.value * collection.Length);
+                T unplacedValue = newCollection[newIndex];
+                newCollection[newIndex] = newCollection[index];
+                newCollection[index] = unplacedValue;
+                index--;
+            }
+
+            return newCollection;
+        }
+    }
 }

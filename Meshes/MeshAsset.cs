@@ -1,22 +1,22 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Utilities.Meshes
+﻿namespace Mesh
 {
-    public class MeshAsset : ScriptableObject {
+    using System.Collections.Generic;
+    using System.Linq;
 
-        [SerializeField]
-        private TriangleMesh[] triangles;
+    using UnityEngine;
 
-        [SerializeField]
-        private MeshAsset[] meshAssets;
+    [CreateAssetMenu]
+    public class MeshAsset : ScriptableObject
+    {
+        [SerializeField] private TriangleMesh[] triangles;
+
+        [SerializeField] private MeshAsset[] meshAssets;
 
         public Mesh ToMesh()
         {
-            List<TriangleMesh> effectiveTriangles = new List<TriangleMesh>(triangles);       
-            effectiveTriangles.AddRange(meshAssets.SelectMany(mesh => mesh.triangles));            
+            var effectiveTriangles = new List<TriangleMesh>(triangles);
+            effectiveTriangles.AddRange(meshAssets.SelectMany(mesh => mesh.triangles));
             return TriangleMesh.ToUnityMesh(triangles);
         }
-    }    
+    }
 }

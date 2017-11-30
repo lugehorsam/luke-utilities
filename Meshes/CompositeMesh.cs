@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-namespace Utilities.Meshes
+namespace Mesh
 {
+	using Mesh = UnityEngine.Mesh;
+
 	public class CompositeMesh : IProceduralMesh {
 
 		public ReadOnlyCollection<TriangleMesh> TriangleMeshes

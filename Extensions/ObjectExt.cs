@@ -1,21 +1,24 @@
-﻿using System;
-
-public static class ObjectExt
+﻿namespace Utilities
 {
-    public static string ToString(this Object thisObject, params object[] members)
+    public static class ObjectExt
     {
-        string result = "[";
-
-        for (int i = 0; i < members.Length; i++)
+        public static string ToString(this object thisObject, params object[] members)
         {
-            object member = members[i];
-            result += member == null ? "(null)" : member.ToString();
-            if (i < members.Length - 1)
-                result += ", ";
+            var result = "[";
+
+            for (var i = 0; i < members.Length; i++)
+            {
+                object member = members[i];
+                result += member == null ? "(null)" : member.ToString();
+                if (i < members.Length - 1)
+                {
+                    result += ", ";
+                }
+            }
+
+            result += "]";
+
+            return result;
         }
-
-        result += "]";
-
-        return result;
     }
 }

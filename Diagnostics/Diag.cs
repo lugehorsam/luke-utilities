@@ -89,36 +89,6 @@ namespace Utilities
         public static void Warn (string log)
         {
             Debug.LogWarning (log);
-        }
-        
-        public static void DrawGesture(Gesture gesture)
-        {
-            for (int frameIndex = 0; frameIndex < gesture.GestureFrames.Count - 1; frameIndex++)
-            {
-                GestureFrame currFrame = gesture.GestureFrames[frameIndex];
-                GestureFrame nextFrame = gesture.GestureFrames[frameIndex + 1];
-                Debug.DrawLine(currFrame.Position, nextFrame.Position, Color.red, GESTURE_DRAW_DURATION, depthTest: false);
-            }
-        }
-    
-        public static void Display(string text, TextAnchor textAlignment, Color color)
-        {
-            Diag.text = text;
-            Diag.textAlignment = textAlignment;
-            Diag.color = color;  
-        }
-    
-        static void OnGUI()
-        {
-            GUIStyle guiStyle = new GUIStyle();
-            guiStyle.normal.textColor = color;
-            int w = Screen.width, h = Screen.height;
-            Rect guiRect = new Rect(30, 30, w, h);
-            guiStyle.alignment = TextAnchor.UpperLeft;
-            guiStyle.fontSize = h * 2 / 100;
-            GUI.Label(guiRect, text, guiStyle);
-        }
+        }        
     }
-       
-
 }

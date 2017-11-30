@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Utilities.Meshes
+namespace Mesh
 {
 	public class RingMesh : SimpleProceduralMesh
 	{		

@@ -1,23 +1,27 @@
-﻿using System;
-
-namespace Utilities
+﻿namespace Utilties
 {
-    public static class FloatExt {
+    using System;
 
+    using UnityEngine;
+
+    public static class FloatExt
+    {
         public static bool ApproximatelyEquals(this float thisFloat, float otherFloat, float differenceCap)
         {
-            return Math.Sign(thisFloat) == Math.Sign(otherFloat) &&
-                   Math.Abs(thisFloat - otherFloat) < differenceCap;
+            float difference = Math.Abs(thisFloat - otherFloat);
+            float sign1 = Mathf.Sign(thisFloat);
+            float sign2 = Mathf.Sign(otherFloat);
+            return (sign1 == sign2) && (difference < differenceCap);
         }
 
         public static bool ApproximatelyLessThan(this float thisFloat, float otherFloat, float differenceCap)
         {
-            return thisFloat < otherFloat || thisFloat.ApproximatelyEquals(otherFloat, differenceCap);
+            return (thisFloat < otherFloat) || thisFloat.ApproximatelyEquals(otherFloat, differenceCap);
         }
 
         public static bool ApproximatelyGreaterThan(this float thisFloat, float otherFloat, float differenceCap)
         {
-            return thisFloat > otherFloat || thisFloat.ApproximatelyEquals(otherFloat, differenceCap);
+            return (thisFloat > otherFloat) || thisFloat.ApproximatelyEquals(otherFloat, differenceCap);
         }
-    }    
+    }
 }

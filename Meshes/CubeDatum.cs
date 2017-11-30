@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Utilities.Meshes
+namespace Mesh
 {
 
     [Serializable]

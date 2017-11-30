@@ -1,27 +1,20 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using UnityEngine;
-
-namespace Utilities.Meshes
+﻿namespace Mesh
 {
-    [Serializable]
-    public class TriangleMesh : SimpleProceduralMesh
-    {
-        public ReadOnlyCollection<Vertex> Vertices => new ReadOnlyCollection<Vertex>(new []
-        {
-            this[0],
-            this[1],
-            this[2]
-        });
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
 
-        public DirectedEdge<int>[] AsEdges => new[]
+    using UnityEngine;
+    
+    using Utilities;
+
+    [Serializable] public class TriangleMesh : SimpleProceduralMesh
+    {
+        public ReadOnlyCollection<Vertex> Vertices
         {
-            new DirectedEdge<int>(0, 1),
-            new DirectedEdge<int>(1, 2),
-            new DirectedEdge<int>(0, 2),
-        };
+            get { return new ReadOnlyCollection<Vertex>(new[] {this[0], this[1], this[2]}); }
+        }
 
         public Vertex Vertex1
         {
@@ -29,14 +22,14 @@ namespace Utilities.Meshes
 
             set { vertex1 = value; }
         }
-        
+
         public Vertex Vertex2
         {
             get { return vertex2; }
 
             set { vertex2 = value; }
         }
-        
+
         public Vertex Vertex3
         {
             get { return vertex3; }
@@ -44,9 +37,9 @@ namespace Utilities.Meshes
             set { vertex3 = value; }
         }
 
-        [SerializeField] Vertex vertex1;
-        [SerializeField] Vertex vertex2;
-        [SerializeField] Vertex vertex3;
+        [SerializeField] private Vertex vertex1;
+        [SerializeField] private Vertex vertex2;
+        [SerializeField] private Vertex vertex3;
 
         public Vertex this[int vertexIndex]
         {
@@ -85,11 +78,10 @@ namespace Utilities.Meshes
 
         public static TriangleMesh[] FromMesh(Mesh unityMesh)
         {
-            List<TriangleMesh> triangles = new List<TriangleMesh>();
-            TriangleMesh currTriangle = new TriangleMesh();
-            for (int i = 0; i < unityMesh.vertices.Length; i++)
+            var triangles = new List<TriangleMesh>();
+            var currTriangle = new TriangleMesh();
+            for (var i = 0; i < unityMesh.vertices.Length; i++)
             {
-
                 Vector3 currVertex = unityMesh.vertices[unityMesh.triangles[i]];
                 currTriangle[i % 3] = new Vertex(currVertex);
                 if ((i + 1) % 3 == 0)
@@ -98,13 +90,14 @@ namespace Utilities.Meshes
                     currTriangle = new TriangleMesh();
                 }
             }
+
             return triangles.ToArray();
         }
 
         public static Mesh ToUnityMesh(IEnumerable<TriangleMesh> triangles)
         {
-            List<int> triangleIndices = new List<int>();
-            List<Vector3> vertices = new List<Vector3>();
+            var triangleIndices = new List<int>();
+            var vertices = new List<Vector3>();
 
             foreach (TriangleMesh triangle in triangles)
             {
@@ -122,7 +115,7 @@ namespace Utilities.Meshes
                 }
             }
 
-            Mesh newUnityMesh = new Mesh();
+            var newUnityMesh = new Mesh();
             newUnityMesh.vertices = vertices.ToArray();
             newUnityMesh.triangles = triangleIndices.ToArray();
             return newUnityMesh;
@@ -130,13 +123,12 @@ namespace Utilities.Meshes
 
         public static Dictionary<Vertex, List<TriangleMesh>> GetVertexTriangleMap(TriangleMesh[] triangles)
         {
-
-            Dictionary<Vertex, List<TriangleMesh>> map = new Dictionary<Vertex, List<TriangleMesh>>();
-            for (int i = 0; i < triangles.Length; i++)
+            var map = new Dictionary<Vertex, List<TriangleMesh>>();
+            for (var i = 0; i < triangles.Length; i++)
             {
                 TriangleMesh currentTriangle = triangles[i];
                 ReadOnlyCollection<Vertex> vertexData = currentTriangle.Vertices;
-                for (int j = 0; j < vertexData.Count; i++)
+                for (var j = 0; j < vertexData.Count; i++)
                 {
                     Vertex datum = vertexData[j];
                     if (!map.ContainsKey(datum))
@@ -146,23 +138,24 @@ namespace Utilities.Meshes
                     map[datum].Add(currentTriangle);
                 }
             }
-            
+
             return map;
         }
 
         public int NumSharedVertices(TriangleMesh otherTriangle)
         {
-            int numShared = 0;
-            for (int i = 0; i < 3; i++)
+            var numShared = 0;
+            for (var i = 0; i < 3; i++)
             {
                 if (Array.IndexOf(otherTriangle.Vertices.ToArray(), this[i], 0) > -1)
                 {
                     numShared++;
                 }
             }
+
             return numShared;
         }
-       
+
         public void SortVertices()
         {
             Vertex[] newVertices = Vertices.ToArray();
@@ -196,17 +189,12 @@ namespace Utilities.Meshes
 
         public override string ToString()
         {
-            return IEnumerableExtensions.Pretty(Vertices);
+            return IEnumerableExt.Pretty(Vertices);
         }
 
         public TriangleMesh CreateCopy(Func<Vertex, Vertex> vertexProcessor)
         {
-            return new TriangleMesh
-            (
-                vertexProcessor(vertex1),
-                vertexProcessor(vertex2),
-                vertexProcessor(vertex3)
-            );
+            return new TriangleMesh(vertexProcessor(vertex1), vertexProcessor(vertex2), vertexProcessor(vertex3));
         }
     }
 }
