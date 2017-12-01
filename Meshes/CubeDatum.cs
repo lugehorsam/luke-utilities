@@ -1,14 +1,12 @@
-﻿using System;
-using UnityEngine;
-
-namespace Mesh
+﻿namespace Mesh
 {
+    using System;
 
-    [Serializable]
-    public struct CubeDatum {
+    using UnityEngine;
 
-        [SerializeField]
-        SquareMesh[] squares;
+    [Serializable] public struct CubeDatum
+    {
+        [SerializeField] private SquareMesh[] squares;
 
         public CubeDatum(SquareMesh[] squares)
         {
