@@ -1,4 +1,4 @@
-﻿namespace Utilties
+﻿namespace Utilities
 {
     using System;
     using System.Collections;
@@ -230,6 +230,11 @@
             return new Vector3(thisVector.x, thisVector.y, z);
         }
 
+        public static Vector3 SetZ(this Vector2 thisVector, float z)
+        {
+            return new Vector3(thisVector.x, thisVector.y, z);
+        }
+
         public static Vector2 SetX(this Vector2 thisVector, float x)
         {
             return new Vector3(x, thisVector.y);
@@ -323,6 +328,11 @@
             resultVector.z = axes.Contains(Axis.Z) ? sourceVector.z * newVector.z : sourceVector.z;
 
             return resultVector;
+        }
+        
+        public static Rect AsRect(this Vector2 thisSize)
+        {
+            return new Rect(0f, 0f, thisSize.x, thisSize.y);   
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Utilities.Grid
 {
-    using Utilties;
+    using Utilities;
     
     public struct GridCell
     {

@@ -5,6 +5,7 @@
     using System.Linq;
 
     using UnityEngine;
+    using Random = UnityEngine.Random;
 
     public static class RectExt
     {
@@ -19,7 +20,7 @@
             return new Rect(sourceRect.x + offset.x, sourceRect.y + offset.y, sourceRect.width, sourceRect.height);
         }
 
-        public static IEnumerable<Tuple<Quadrant, Rect>> DivideIntoQuadrants(this Rect thisRect)
+        public static IEnumerable<Tuple<Quadrant, Rect>> CreateQuadrantMap(this Rect thisRect)
         {
             float xMin = thisRect.xMin;
             float yMin = thisRect.yMin;
@@ -39,11 +40,16 @@
             };
         }
 
+        public static IEnumerable<Rect> CreateQuadrants(this Rect thisRect)
+        {
+            return thisRect.CreateQuadrantMap().Select(tuple => tuple.Item2);
+        }
+
         public static List<Quadrant> OverlappingQuadrants(this Rect rect1, Rect rect2)
         {
             var overlappingQuadrants = new List<Quadrant>();
 
-            IEnumerable<Tuple<Quadrant, Rect>> quadrants = rect1.DivideIntoQuadrants();
+            IEnumerable<Tuple<Quadrant, Rect>> quadrants = rect1.CreateQuadrantMap();
 
             overlappingQuadrants.AddRange(quadrants.Where(tuple =>
             {
@@ -53,6 +59,14 @@
             }).Select(info => info.Item1));
 
             return overlappingQuadrants;
+        }
+
+        public static Vector2 GetRandomPoint(this Rect thisRect)
+        {
+            float randX = Random.Range(0f, thisRect.width);
+            float randY = Random.Range(0f, thisRect.height);
+            
+            return new Vector2(thisRect.x + randX, thisRect.y + randY);
         }
     }
 }

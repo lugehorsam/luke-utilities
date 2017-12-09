@@ -27,7 +27,7 @@
         {
             thisTransform.localPosition = new Vector3(thisTransform.localPosition.x, thisTransform.localPosition.y, z);
         }
-
+        
         public static void ResetLocalValues(this Transform t)
         {
             t.localPosition = Vector3.zero;

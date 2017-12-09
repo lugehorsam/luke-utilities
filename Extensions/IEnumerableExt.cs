@@ -47,7 +47,7 @@
 
         public static T GetRandomElement<T>(this IEnumerable<T> thisEnumerable)
         {
-            int randNum = Random.Range(0, thisEnumerable.Count() - 1);
+            int randNum = Random.Range(0, thisEnumerable.Count());
 
             var counter = 0;
 

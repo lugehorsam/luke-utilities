@@ -1,4 +1,4 @@
-﻿namespace Utilties
+﻿namespace Utilities
 {
     using System;
     using System.Linq;

@@ -4,7 +4,7 @@
 
     using UnityEngine;
     
-    using Utilties;
+    using Utilities;
     
     /// <summary>
     /// Arbitrary grid layout. Bottom left is row 0, col 0
@@ -49,7 +49,7 @@
         {
             member.transform.SetParent(transform, true);
 
-            GridCell gridPos = _grid.GetGridPosition(member);
+            GridCell gridPos = _grid.GetGridCell(member);
 
             Vector3 idealLocalPos = GetLocalPosition(new GridCell(gridPos.Row, gridPos.Column));
                         
@@ -71,9 +71,9 @@
             return new Vector2(lowerLeft.x + _cellWidth/2, lowerLeft.y + _cellHeight/2);
         }
 
-        public GridCell GetGridPosition(GameObject member)
+        public Vector3 GetLocalPosition(int index)
         {
-            return _grid.GetGridPosition(member);
+            return GetLocalPosition(_grid.GetGridCell(index));
         }
         
         Vector3 RowAndColumnToPosition(int row, int column)

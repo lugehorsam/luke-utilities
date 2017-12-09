@@ -6,8 +6,6 @@
 
     using UnityEngine;
 
-    using Utilties;
-
     public sealed class TouchDispatch : MonoBehaviour
     {
         public delegate void TouchHandler(TouchEventInfo info);

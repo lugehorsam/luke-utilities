@@ -1,4 +1,4 @@
-﻿namespace Utilties
+﻿namespace Utilities
 {
     public enum Axis
     {

@@ -2,7 +2,7 @@
 {
     using UnityEngine;
 
-    using Utilties;
+    using Utilities;
 
     public static class RectTransformExt
     {

@@ -25,6 +25,11 @@
             _items[ToIndex(gridCell.Row, gridCell.Column)] = item;
         }
 
+        public void Set(int index, T item)
+        {
+            _items[index] = item;
+        }
+
         public bool HasWithinBounds(GridCell gridCell)
         {
             return gridCell.Row < Rows && gridCell.Row >= 0 && 
@@ -51,21 +56,21 @@
             return ToIndex(gridCell.Row, gridCell.Column);
         }
 
-        public GridCell GetGridPosition(int index)
+        public GridCell GetGridCell(int index)
         {
             return new GridCell {Row = GetRowOfIndex(index), Column = GetColumnOfIndex(index)};
         }
 
-        public GridCell GetGridPosition(T element)
+        public GridCell GetGridCell(T element)
         {
-            return GetGridPosition(Array.IndexOf(_items, element));
+            return GetGridCell(Array.IndexOf(_items, element));
         }
 
         public T[] GetAdjacentElements(T element)
         {
             var adjacentElements = new List<T>();
 
-            GridCell gridCell = GetGridPosition(Array.IndexOf(_items, element));
+            GridCell gridCell = GetGridCell(Array.IndexOf(_items, element));
 
             int row = gridCell.Row;
             int col = gridCell.Column;
