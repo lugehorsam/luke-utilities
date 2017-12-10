@@ -22,7 +22,6 @@
             Vector2 worldPosition = thisSpriteRenderer.transform.position;
             Vector2 size = thisSpriteRenderer.size;
             Vector2 lowerLeft = new Vector2(worldPosition.x - size.x * pivot.x, worldPosition.y - size.y * pivot.y);
-            Diag.Log("world position and pivot " + worldPosition + " , " + pivot);
             return new Rect(lowerLeft.x, lowerLeft.y, size.x, size.y);
         }
     }

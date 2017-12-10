@@ -25,18 +25,15 @@
             float xMin = thisRect.xMin;
             float yMin = thisRect.yMin;
 
-            float xMax = thisRect.xMax;
-            float yMax = thisRect.yMax;
-
-            float xHalf = (xMin + xMax) / 2;
-            float yHalf = (yMin + yMax) / 2;
-
+            float halfWidth = thisRect.width / 2;
+            float halfHeight = thisRect.height / 2;
+            
             return new List<Tuple<Quadrant, Rect>>
             {
-                Tuple.Create(Quadrant.UpperLeft, new Rect(xMin, yMin, xHalf, yHalf)),
-                Tuple.Create(Quadrant.UpperRight, new Rect(xHalf, yMin, xMax, yHalf)),
-                Tuple.Create(Quadrant.LowerRight, new Rect(xHalf, yHalf, xMax, yMax)),
-                Tuple.Create(Quadrant.LowerLeft, new Rect(xMin, xHalf, yHalf, yMax))
+                Tuple.Create(Quadrant.UpperLeft, new Rect(xMin, yMin, halfWidth, halfHeight)),
+                Tuple.Create(Quadrant.UpperRight, new Rect(xMin + halfWidth, yMin, halfWidth, halfHeight)),
+                Tuple.Create(Quadrant.LowerRight, new Rect(xMin + halfWidth, yMin + halfHeight, halfWidth, halfHeight)),
+                Tuple.Create(Quadrant.LowerLeft, new Rect(xMin, yMin + halfHeight, halfWidth, halfHeight))
             };
         }
 
@@ -66,7 +63,13 @@
             float randX = Random.Range(0f, thisRect.width);
             float randY = Random.Range(0f, thisRect.height);
             
-            return new Vector2(thisRect.x + randX, thisRect.y + randY);
+            return new Vector2(thisRect.xMin + randX, thisRect.yMin + randY);
         }
+
+        public static Rect Shrink(this Rect thisRect, float magnitude)
+        {
+            return new Rect(thisRect.xMin + magnitude/2, thisRect.yMin + magnitude/2, thisRect.width - magnitude,
+                            thisRect.height - magnitude);
+        }                
     }
 }
