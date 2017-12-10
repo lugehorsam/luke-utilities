@@ -77,10 +77,13 @@
         private void MoveNextParallelCommands()
         {
             IEnumerable<Command> activeCommands = new List<Command>(_activeParallelCommands);
+            
             foreach (var command in activeCommands)
             {
                 if (!command.MoveNext())
+                {
                     _activeParallelCommands.Remove(command);
+                }
             }
         }
         
@@ -136,6 +139,11 @@
         {
             _commands.Add(new Command(action));
         }
+
+        public void AddSerial(Func<IEnumerator> enumeratorFunc)
+        {
+            _commands.Add(new Command(enumeratorFunc));
+        }
         
         /// <summary>
         /// Resets the <see cref="_currCommandIndex"/> and clears the list of active parallel commands.
@@ -158,7 +166,9 @@
         /// </summary>
         private class Command : IEnumerator
         {
-            private readonly IEnumerator _enumerator;
+            private readonly Func<IEnumerator> _enumeratorFunc;
+            
+            private IEnumerator _enumerator;
             
             private readonly Action _action;
             
@@ -177,6 +187,12 @@
                 _action = action;
                 CommandMode = CommandMode.Serial; //it's a one-shot, but arbitrarily make it serial
             }
+
+            public Command(Func<IEnumerator> enumeratorFunc)
+            {
+                _enumeratorFunc = enumeratorFunc;
+                CommandMode = CommandMode.Serial;
+            }
             
             public bool MoveNext()
             {
@@ -185,10 +201,13 @@
                     _action();
                     return false;
                 }
-                if (_enumerator != null)
-                    return _enumerator.MoveNext();
                 
-                return false;
+                if (_enumerator == null && _enumeratorFunc != null)
+                {
+                    _enumerator = _enumeratorFunc();
+                } 
+                
+                return _enumerator != null && _enumerator.MoveNext();
             }
             
             public void Reset()
