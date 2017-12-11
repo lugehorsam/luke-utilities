@@ -23,7 +23,7 @@
 
         public void Execute()
         {
-            while (ExecuteOneLevel().MoveNext()) { }
+            ExecuteOneLevel().Run();
         }
 
         public IEnumerator ExecuteOneLevel()

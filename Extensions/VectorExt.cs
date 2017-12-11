@@ -334,5 +334,23 @@
         {
             return new Rect(0f, 0f, thisSize.x, thisSize.y);   
         }
+
+        public static Vector3 GetMidpoint(this IEnumerable<Vector3> vectors)
+        {
+            int vectorsCount = vectors.Count();
+            
+            Vector3 midpoint = Vector3.zero;
+            
+            foreach (var vector in vectors)
+            {
+                midpoint += vector;
+            }
+
+            float xValues = vectors.Sum(vector => vector.x);
+            float yValues = vectors.Sum(vector => vector.x);
+            float zValues = vectors.Sum(vector => vector.x);
+
+            return new Vector3(xValues / vectorsCount, yValues / vectorsCount, zValues / vectorsCount);
+        }
     }
 }

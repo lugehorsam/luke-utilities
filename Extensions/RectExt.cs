@@ -70,6 +70,12 @@
         {
             return new Rect(thisRect.xMin + magnitude/2, thisRect.yMin + magnitude/2, thisRect.width - magnitude,
                             thisRect.height - magnitude);
+        }         
+        
+        public static Rect Expand(this Rect thisRect, float magnitude)
+        {
+            return new Rect(thisRect.xMin - magnitude/2, thisRect.yMin - magnitude/2, thisRect.width + magnitude,
+                            thisRect.height + magnitude);
         }                
     }
 }
