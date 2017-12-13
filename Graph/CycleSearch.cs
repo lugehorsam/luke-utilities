@@ -1,7 +1,8 @@
 ﻿namespace Utilities
 {
     using System.Collections.Generic;
-    
+    using System.Linq;
+
     public class CycleSearch<T>
     {
         private readonly Graph<T> _graph;
@@ -17,14 +18,26 @@
             
             IEnumerable<T> allNodes = _graph.Nodes;
                         
+            HashSet<T> allSearchedNodes = new HashSet<T>();
+
             foreach (var node in allNodes)
             {
-                HashSet<T> searchedNodes;
+                if (allSearchedNodes.Contains(node))
+                {
+                    continue;
+                }
                 
+                HashSet<T> searchedNodes;
+
                 if (IsBackEdge(node, out searchedNodes))
                 {
                     cycles.Add(searchedNodes);
                 }
+                
+                foreach (var searchedNode in searchedNodes)
+                {
+                    allSearchedNodes.Add(searchedNode);
+                }                
             }
             
             return cycles;
@@ -38,13 +51,9 @@
             
             dfs.Run();
             
-            if (dfs.BrokeOnCycle)
-            {
-                nodes = new HashSet<T>(dfs.CurrentComponent);
-                return true;
-            }
+            nodes = new HashSet<T>(dfs.CurrentComponent);
 
-            return false;
+            return dfs.BrokeOnCycle;
         }
     }
 }

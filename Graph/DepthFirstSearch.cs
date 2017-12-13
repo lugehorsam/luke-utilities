@@ -18,7 +18,7 @@
                 
         public T Current { get { return _current; }}
         
-        public IEnumerable<T> CurrentComponent { get { return _stack; }}
+        public IEnumerable<T> CurrentComponent { get { return _visitedNodes; }}
         
         object IEnumerator.Current
         {
