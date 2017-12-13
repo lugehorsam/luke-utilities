@@ -31,16 +31,28 @@
 
         public void AddVertex(T vertex)
         {
+            if (_adjacencyList.ContainsKey(vertex))
+            {
+                throw new InvalidOperationException($"Attempted to add duplicate vertex {vertex}");
+            }
+            
             _adjacencyList[vertex] = new HashSet<T>();
         }
 
         public void AddEdge(Tuple<T, T> edge)
         {
-            if (_adjacencyList.ContainsKey(edge.Item1) && _adjacencyList.ContainsKey(edge.Item2))
+            if (!_adjacencyList.ContainsKey(edge.Item1))
             {
-                _adjacencyList[edge.Item1].Add(edge.Item2);
-                _adjacencyList[edge.Item2].Add(edge.Item1);
+                AddVertex(edge.Item1);
             }
+
+            if (!_adjacencyList.ContainsKey(edge.Item2))
+            {
+                AddVertex(edge.Item2);
+            }
+                        
+            _adjacencyList[edge.Item1].Add(edge.Item2);
+            _adjacencyList[edge.Item2].Add(edge.Item1);            
         }
     }
 }
