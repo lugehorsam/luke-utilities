@@ -2,14 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class Graph<T>
     {
-        public IEnumerable<T> this[T node]
-        {
-            get { return _adjacencyList[node]; }
-        }
-        
+        public IEnumerable<T> this[T node] => _adjacencyList[node];
+
         public Graph() { }
 
         public Graph(IEnumerable<T> vertices, IEnumerable<Tuple<T, T>> edges)
@@ -21,13 +19,13 @@
 
             foreach (Tuple<T, T> edge in edges)
             {
-                AddEdge(edge);
+                AddEdge(edge.Item1, edge.Item2);
             }
         }
 
         private readonly Dictionary<T, HashSet<T>> _adjacencyList = new Dictionary<T, HashSet<T>>();
-        
-        public IEnumerable<T> Nodes { get { return _adjacencyList.Keys; }}
+
+        public IEnumerable<T> Nodes => _adjacencyList.Keys;
 
         public void AddVertex(T vertex)
         {
@@ -35,24 +33,39 @@
             {
                 throw new InvalidOperationException($"Attempted to add duplicate vertex {vertex}");
             }
-            
+
             _adjacencyList[vertex] = new HashSet<T>();
         }
 
-        public void AddEdge(Tuple<T, T> edge)
+        public void AddEdge(T item1, T item2)
         {
-            if (!_adjacencyList.ContainsKey(edge.Item1))
+            if (!_adjacencyList.ContainsKey(item1))
             {
-                AddVertex(edge.Item1);
+                AddVertex(item1);
             }
 
-            if (!_adjacencyList.ContainsKey(edge.Item2))
+            if (!_adjacencyList.ContainsKey(item2))
             {
-                AddVertex(edge.Item2);
+                AddVertex(item2);
             }
-                        
-            _adjacencyList[edge.Item1].Add(edge.Item2);
-            _adjacencyList[edge.Item2].Add(edge.Item1);            
+
+            _adjacencyList[item1].Add(item2);
+            _adjacencyList[item2].Add(item1);
+        }
+
+        public List<Tuple<T, T>> GetEdgesBetween(IEnumerable<T> nodes)
+        {
+            var connectingEdges = new List<Tuple<T, T>>();
+
+            foreach (T node in nodes)
+            {
+                IEnumerable<T> connectedNodes = _adjacencyList[node].Where(nodes.Contains);
+                IEnumerable<Tuple<T, T>> connectedEdges =
+                        connectedNodes.Select(connectedNode => new Tuple<T, T>(node, connectedNode));
+                connectingEdges.AddRange(connectedEdges);
+            }
+
+            return connectingEdges;
         }
     }
 }
