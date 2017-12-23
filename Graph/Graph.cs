@@ -37,6 +37,19 @@
             _adjacencyList[vertex] = new HashSet<T>();
         }
 
+        public void RemoveVertex(T vertex)
+        {
+            _adjacencyList.Remove(vertex);
+            
+            foreach (var existingVertex in _adjacencyList.Keys)
+            {
+                if (_adjacencyList[existingVertex].Contains(vertex))
+                {
+                    _adjacencyList[existingVertex].Remove(vertex);
+                }    
+            }
+        }
+
         public void AddEdge(T item1, T item2)
         {
             if (!_adjacencyList.ContainsKey(item1))
@@ -60,12 +73,18 @@
             foreach (T node in nodes)
             {
                 IEnumerable<T> connectedNodes = _adjacencyList[node].Where(nodes.Contains);
+                
                 IEnumerable<Tuple<T, T>> connectedEdges =
                         connectedNodes.Select(connectedNode => new Tuple<T, T>(node, connectedNode));
                 connectingEdges.AddRange(connectedEdges);
             }
 
             return connectingEdges;
+        }
+
+        public bool IsEdgeBetween(T node1, T node2)
+        {
+            return _adjacencyList[node1].Contains(node2);
         }
     }
 }

@@ -1,59 +1,44 @@
 ﻿namespace Utilities
 {
+    using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class CycleSearch<T>
+    public class CycleSearch<T> : IEnumerator<T> where T : class
     {
         private readonly Graph<T> _graph;
+        private readonly ComponentSearch<T> _componentSearch;
+               
+        public T Current { get; private set; }
 
+        object IEnumerator.Current => Current;
+       
         public CycleSearch(Graph<T> graph)
         {
             _graph = graph;
-        }
-        
-        public IEnumerable<IEnumerable<T>> GetCycles()
-        {
-            var cycles = new List<IEnumerable<T>>();
-            
-            IEnumerable<T> allNodes = _graph.Nodes;
-                        
-            HashSet<T> allSearchedNodes = new HashSet<T>();
-
-            foreach (var node in allNodes)
-            {
-                if (allSearchedNodes.Contains(node))
-                {
-                    continue;
-                }
-                
-                HashSet<T> searchedNodes;
-
-                if (IsBackEdge(node, out searchedNodes))
-                {
-                    cycles.Add(searchedNodes);
-                }
-                
-                foreach (var searchedNode in searchedNodes)
-                {
-                    allSearchedNodes.Add(searchedNode);
-                }                
-            }
-            
-            return cycles;
+            _componentSearch = new ComponentSearch<T>(_graph);
         }
 
-        private bool IsBackEdge(T node, out HashSet<T> nodes)
+        public bool MoveNext()
         {
-            nodes = null;
-            
-            var dfs = new DepthFirstSearch<T>(_graph, node, true);
-            
-            dfs.Run();
-            
-            nodes = new HashSet<T>(dfs.CurrentComponent);
+            Current = _componentSearch.Current;
+            return _componentSearch.MoveNext();
+        }
 
-            return dfs.BrokeOnCycle;
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Reset()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<T> GetCycles()
+        {
+            throw new NotImplementedException();
         }
     }
 }

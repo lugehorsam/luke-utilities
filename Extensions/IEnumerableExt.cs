@@ -1,13 +1,14 @@
 ﻿namespace Utilities
 {
-    using System.Collections.Generic;
+    using System;
     using System.Linq;
+    using System.Collections.Generic;
 
-    using UnityEngine;
+    using Random = UnityEngine.Random;
 
     public static class IEnumerableExt
     {
-        public static string Pretty<T>(this IEnumerable<T> thisEnumerable)
+        public static string FormatPretty<T>(this IEnumerable<T> thisEnumerable)
         {
             if (thisEnumerable == null)
             {
@@ -75,7 +76,6 @@
             return baseEnumerable;
         }
 
-        //Order doesn't matter
         public static bool IdenticalContent<T>(this IEnumerable<T> thisEnumerable, IEnumerable<T> otherEnumerable)
         {
             return thisEnumerable.All(otherEnumerable.Contains) && otherEnumerable.All(thisEnumerable.Contains);
@@ -99,6 +99,21 @@
             }
 
             return distinctValues.ToArray();
+        }
+
+        public static IEnumerable<Tuple<T, T>> MakeAllPairs<T>(this IEnumerable<T> data)
+        {
+            List<T> items = data.ToList();
+            
+            for (var i = 0; i < items.Count; i++)
+            {
+                T a = items[i];
+                for (int j = i + 1; j < items.Count; j++)
+                {
+                    T b = items[j];
+                    yield return Tuple.Create(a, b);
+                }
+            }
         }
     }
 }

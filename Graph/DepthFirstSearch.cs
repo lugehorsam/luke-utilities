@@ -5,81 +5,105 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class DepthFirstSearch<T> : IEnumerator<T>
+    public class DepthFirstSearch<T> : IEnumerator<T> where T : class
     {
-        private readonly Graph<T> _graph;
-        private readonly HashSet<T> _visitedNodes = new HashSet<T>();
-        private readonly Stack<T> _stack = new Stack<T>();
-        private readonly bool _breakOnCycle;
-        
-        private T _current;
+        public delegate void LevelRevertHandler(T oldNode, int oldLevel, T newNode, int newLevel);
+        public event LevelRevertHandler OnLevelRevert = delegate { };
 
-        public bool BrokeOnCycle { get; private set; }
-                
-        public T Current { get { return _current; }}
+        public T Current => _currentSearchData.Vertex;
+        public List<T> VisitedNodes => _visitedNodes;
         
-        public IEnumerable<T> CurrentComponent { get { return _visitedNodes; }}
-        
-        object IEnumerator.Current
-        {
-            get { return _current; }
-        }
-        
-        public DepthFirstSearch(Graph<T> graph, T start, bool breakOnCycle)
+        private SearchData _currentSearchData;
+        private readonly Graph<T> _graph;
+        private readonly List<T> _visitedNodes = new List<T>();
+        private readonly Stack<SearchData> _pendingSearches = new Stack<SearchData>();
+
+        object IEnumerator.Current => Current;
+
+        public DepthFirstSearch(Graph<T> graph, T start)
         {
             _graph = graph;
-            _current = start;
-            _breakOnCycle = breakOnCycle;
-            
+
             if (!graph.Nodes.Contains(start))
             {
                 throw new Exception($"Node {start} was not found in graph {graph}.");
             }
-            
-            _stack.Push(_current);
+
+            _pendingSearches.Push(new SearchData(start, 0));
         }
         
         public bool MoveNext()
         {
-            bool anyOnStack = _stack.Any();
-
-            if (!anyOnStack)
-            {
-                return false;
-            }
-            
-            T vertex = _stack.Pop();
-
-            if (_visitedNodes.Contains(vertex))
-            {
-                BrokeOnCycle = _breakOnCycle;
-                return !_breakOnCycle && MoveNext();
-            }
-
-            _visitedNodes.Add(vertex);
-
-            _current = vertex;
-                
-            foreach (T neighbor in _graph[vertex])
-            {
-                if (!_visitedNodes.Contains(neighbor))
-                {
-                    _stack.Push(neighbor);
-                }
-            }
-
-            return true;
+            return !AnyVerticesLeft() && DoSearch();
         }
-
+        
         public void Reset()
         {
             throw new NotImplementedException();
         }
-      
 
         public void Dispose()
         {
             throw new NotImplementedException();
+        }
+
+        private void AssignCurrentVertex()
+        {
+            int oldLevel = _currentSearchData.Level;
+            T oldVertex = _currentSearchData.Vertex;
+            
+            _currentSearchData = _pendingSearches.Pop();
+
+            if (_currentSearchData.Level < oldLevel)
+            {
+                OnLevelRevert(oldVertex, oldLevel, _currentSearchData.Vertex, _currentSearchData.Level);
+            }
+        }
+
+        private bool AnyVerticesLeft()
+        {
+            return _pendingSearches.Any();
+        }
+
+        private bool DoSearch()
+        {
+            AssignCurrentVertex();
+
+            if (_visitedNodes.Contains(Current))
+            {
+                return MoveNext();
+            }
+
+            _visitedNodes.Add(Current);
+
+            PushNeighborsToStack();
+
+            return true;
+        }
+
+        private void PushNeighborsToStack()
+        {
+            IEnumerable<T> neighborList = _graph[Current];
+            
+            foreach (T neighbor in neighborList)
+            {
+                if (!_visitedNodes.Contains(neighbor))
+                {
+                    _pendingSearches.Push(new SearchData(neighbor, _currentSearchData.Level + 1));                    
+                }
+            }
+        }
+                
+        private class SearchData
+        {
+            public T Vertex { get; }
+            public int Level { get; }
+
+            public SearchData(T vertex, int level)
+            {
+                Vertex = vertex;
+                Level = level;
+            }
         }
     }
 }

@@ -189,7 +189,7 @@
 
         public override string ToString()
         {
-            return IEnumerableExt.Pretty(Vertices);
+            return IEnumerableExt.FormatPretty(Vertices);
         }
 
         public TriangleMesh CreateCopy(Func<Vertex, Vertex> vertexProcessor)
