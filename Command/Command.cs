@@ -2,13 +2,13 @@
 {	
 	using System.Collections;
 
-	public class Command : IEnumerator
+	public class CommandBase : IEnumerator
 	{
-		protected readonly CommandQueue _queue = new CommandQueue();
+		protected readonly Command _queue = new Command();
 
 		public object Current => _queue.Current;
 
-		protected Command() {}
+		protected CommandBase() {}
 
 		public bool MoveNext()
 		{

@@ -20,5 +20,13 @@
             Vector2 viewportPoint = thisCamera.WorldToViewportPoint(transform.position);
             return thisCamera.rect.Contains(viewportPoint);
         }
+
+        public static Rect GetWorldRect(this Camera thisCamera)
+        {
+            Vector3 upperLeft = thisCamera.ViewportToWorldPoint(new Vector3(0f, 0f, 0f));
+            Vector3 lowerRight = thisCamera.ViewportToWorldPoint(new Vector3(1f, 1f, 0f));
+
+            return new Rect(upperLeft, lowerRight - upperLeft);
+        }
     }
 }
