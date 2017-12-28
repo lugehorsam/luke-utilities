@@ -8,7 +8,7 @@
 
     public static class IEnumerableExt
     {
-        public static string FormatPretty<T>(this IEnumerable<T> thisEnumerable)
+        public static string PrettyPrint<T>(this IEnumerable<T> thisEnumerable)
         {
             if (thisEnumerable == null)
             {

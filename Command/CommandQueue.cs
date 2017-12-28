@@ -10,6 +10,14 @@
     /// </summary>
     public class Command : IEnumerator
     {
+        public string Id { get; set; }
+        
+        public event CommandCompleteHandler OnCommandComplete = delegate { };
+
+        public delegate void CommandCompleteHandler(Command command);
+
+        private bool _lastMoveNextResult = false;
+        
         /// <summary>
         ///     A list of all serial and parallel commands in the queue. Commands are never removed from this list.
         ///     Instead the <see cref="_currCommandIndex" /> increments as it runs commands in sequence.
@@ -46,18 +54,23 @@
         {
             if (DoReset())
             {
-                return false;
+                return _lastMoveNextResult = false;
             }
 
             bool anyQueuedCommands = _currCommandIndex < _commands.Count;
-            bool anyParallelCommands = _activeParallelCommands.Any();
+            bool anyActiveParallelCommands = _activeParallelCommands.Any();
 
-            if (!anyQueuedCommands && !anyParallelCommands)
+            if (!anyQueuedCommands && !anyActiveParallelCommands)
             {
-                return false;
+                if (_lastMoveNextResult)
+                {
+                    OnCommandComplete(this);
+                }
+                
+                return _lastMoveNextResult = false;
             }
 
-            if (anyParallelCommands)
+            if (anyActiveParallelCommands)
             {
                 MoveNextParallelCommands();
             }
@@ -67,7 +80,7 @@
                 MoveNextQueuedCommand();
             }
 
-            return true;
+            return _lastMoveNextResult = true;
         }
 
         /// <summary>
@@ -94,6 +107,7 @@
         private void MoveNextQueuedCommand()
         {
             CommandData queuedCommandData = _commands[_currCommandIndex];
+                        
             if (queuedCommandData.CommandMode == CommandMode.Serial)
             {
                 if (!queuedCommandData.MoveNext())
@@ -116,6 +130,13 @@
             _shouldReset = true;
         }
 
+        public void Complete()
+        {
+            _currCommandIndex = _commands.Count;
+            _activeParallelCommands.Clear();
+            OnCommandComplete(this);
+        }
+
         /// <summary>
         ///     Enqueues a command that does not block subsequent commands. However, the enumerator must finish in order for
         ///     this command queue to finish.
@@ -123,6 +144,11 @@
         public void AddParallel(IEnumerator enumerator)
         {
             _commands.Add(new CommandData(enumerator, CommandMode.Parallel));
+        }
+
+        public void AddParallel(Func<IEnumerator> enumeratorFunc)
+        {
+            _commands.Add(new CommandData(enumeratorFunc, CommandMode.Parallel));
         }
 
         /// <summary>
@@ -144,7 +170,7 @@
 
         public void AddSerial(Func<IEnumerator> enumeratorFunc)
         {
-            _commands.Add(new CommandData(enumeratorFunc));
+            _commands.Add(new CommandData(enumeratorFunc, CommandMode.Serial));
         }
 
         /// <summary>
@@ -190,12 +216,12 @@
                 CommandMode = CommandMode.Serial; //it's a one-shot, but arbitrarily make it serial
             }
 
-            public CommandData(Func<IEnumerator> enumeratorFunc)
+            public CommandData(Func<IEnumerator> enumeratorFunc, CommandMode commandMode)
             {
                 _enumeratorFunc = enumeratorFunc;
-                CommandMode = CommandMode.Serial;
+                CommandMode = commandMode;
             }
-
+            
             public bool MoveNext()
             {
                 if (_action != null)
