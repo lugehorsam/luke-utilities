@@ -46,8 +46,6 @@
         /// </summary>
         public object Current => null;
 
-        private bool _IsLastCommand => _currentCommandIndex == _commands.Count - 1;
-
         public Command()
         {
             OnComplete += delegate
@@ -62,10 +60,6 @@
         /// </summary>
         public bool MoveNext()
         {
-            if (Id == "Full")
-            {
-                Diag.Log("curr index " + _currentCommandIndex);
-            }
             bool continued = (_commands.Count > 0) && ContinueSubCommands();
 
             if (continued)
@@ -145,7 +139,10 @@
         /// </summary>
         private bool ContinueActiveParallelCommands()
         {
+            Diag.Log("continuing count " + _activeParallelCommands.Count);
             _activeParallelCommands.RemoveAll(command => !command.MoveNext());
+            Diag.Log("after count " + _activeParallelCommands.Count);
+
             return _activeParallelCommands.Count > 0;
         }
 
@@ -160,7 +157,14 @@
 
             if (isParallelCommand)
             {
+                Diag.Log("adding parallel command " + queuedData);
                 _activeParallelCommands.Add(queuedData);
+
+                int dataIndex = _commands.IndexOf(queuedData);
+                if (!IsLastCommand(dataIndex))
+                {
+                    AddParallelCommand(_commands[dataIndex + 1]);
+                }
             }
 
             return isParallelCommand;
@@ -202,27 +206,32 @@
 
         private bool ContinueSubCommands()
         {
-            bool isLastCommand = _IsLastCommand;
+            bool isLastCommand = IsLastCommand(_currentCommandIndex);
 
             CommandData currentQueuedCommand = GetCurrentQueuedCommand();
 
             bool continuedQueuedSerialCommand = ContinueQueuedSerialCommand(currentQueuedCommand);
-            bool addedParallelCommand = AddParallelCommand(currentQueuedCommand);
-            bool continuedActiveParallelCommands = ContinueActiveParallelCommands();
             
-            Diag.Log($"is last command {isLastCommand} continue queued serial {continuedQueuedSerialCommand}");
+            AddParallelCommand(currentQueuedCommand);
+
+            bool continuedActiveParallelCommands = ContinueActiveParallelCommands();
 
             if (!continuedQueuedSerialCommand)
             {
                 IncrementQueuedCommandIndex();
             }
 
-            if (addedParallelCommand && !isLastCommand)
-            {
-                return MoveNext();
-            }
-
             return !isLastCommand || continuedActiveParallelCommands;
+        }
+
+        private bool IsLastCommand(int commandIndex)
+        {
+            if (commandIndex > _commands.Count - 1)
+            {
+                throw new IndexOutOfRangeException("Command index is greater than the number of commands");
+            }
+            
+            return commandIndex == _commands.Count - 1;
         }
 
         private CommandData GetCurrentQueuedCommand()

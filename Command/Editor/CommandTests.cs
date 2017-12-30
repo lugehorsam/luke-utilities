@@ -11,7 +11,7 @@
         private static readonly bool[] _commandBools = new bool[100];
 
         [Test]
-        public static void TestOneSerial()
+        public static void TestSerial1()
         {
             Reset();
             var command = new Command();
@@ -21,7 +21,7 @@
         }
 
         [Test]
-        public static void TestTwoSerial()
+        public static void TestSerial2()
         {
             Reset();
 
@@ -150,6 +150,34 @@
         }
 
         [Test]
+        public static void TestSerialEnumerator1()
+        {
+            Reset();
+
+            var serialCommand = new Command();
+            serialCommand.AddSerial(SetToTrueEnumerator(0));
+            serialCommand.AddSerial(() => SetToFalse(0));
+            serialCommand.Run();
+            
+            Compare(new []{false});
+
+        }
+        
+        [Test]
+        public static void TestSerialEnumerator3()
+        {
+            Reset();
+
+            var serialCommand = new Command();
+            serialCommand.AddSerial(() => SetToFalse(0));
+            serialCommand.AddSerial(SetToTrueEnumerator(0));
+            serialCommand.AddSerial(() => SetToFalse(0));
+            serialCommand.Run();
+            
+            Compare(new []{false});
+        }
+               
+        [Test]
         public static void TestParallel2()
         {
             Reset();
@@ -162,10 +190,75 @@
             Compare(new []{true, true});
         }
         
+        
+        [Test]
+        public static void TestParallelEnumerator2()
+        {
+            Reset();
 
+            var parallelCommand = new Command();
+            parallelCommand.AddParallel(() => SetToFalse(0));
+            parallelCommand.AddParallel(SetToTrueEnumerator(0));
+            parallelCommand.Run();
+            Compare(new []{true});
+        }
+        
+        [Test]
+        public static void TestParallelEnumerator3()
+        {
+            Reset();
+
+            var parallelCommand = new Command();
+            parallelCommand.AddParallel(() => SetToFalse(0));
+            parallelCommand.AddParallel(SetToTrueEnumerator(0));
+            parallelCommand.AddParallel(() => SetToFalse(0));
+            parallelCommand.Run();
+            Compare(new []{true});
+        }
+               
+        [Test]
+        public static void TestParallelEnumerator8()
+        {
+            Reset();
+
+            var parallelCommand = new Command();
+            parallelCommand.AddParallel(SetToTrueEnumerator(0));
+            parallelCommand.AddParallel(SetToTrueEnumerator(1));
+
+            var serialCommand = new Command();
+            serialCommand.AddSerial(() => SetToFalse(0));
+            serialCommand.AddSerial(() => SetToFalse(1));
+
+            var fullCommand = new Command();
+            fullCommand.AddSerial(parallelCommand);
+            fullCommand.AddSerial(serialCommand);
+            
+            fullCommand.Run();
+            Compare(new []{false, false});
+        }
+        
+        
         private static void SetToTrue(int boolIndex)
         {
             _commandBools[boolIndex] = true;
+        }        
+        
+        private static void SetToFalse(int boolIndex)
+        {
+            Diag.Log("set to false called");
+            _commandBools[boolIndex] = false;
+        }
+
+        private static IEnumerator SetToTrueEnumerator(int boolIndex)
+        {
+            yield return null;
+            yield return null;
+            yield return null;
+            yield return null;
+            Diag.Log("set to true called");
+            SetToTrue(boolIndex);
+            yield return null;
+            yield return null;
         }
 
         private static void Reset()
