@@ -20,7 +20,7 @@
 
         /// <summary>
         ///     A list of all serial and parallel commands in the queue. Commands are never removed from this list.
-        ///     Instead the <see cref="_queuedCommandIndex" /> increments as it runs commands in sequence.
+        ///     Instead the <see cref="_currentCommandIndex" /> increments as it runs commands in sequence.
         /// </summary>
         private readonly List<CommandData> _commands = new List<CommandData>();
 
@@ -32,7 +32,7 @@
         /// <summary>
         ///     The index of the last run command from <see cref="_commands" />.
         /// </summary>
-        private int _queuedCommandIndex;
+        private int _currentCommandIndex;
 
         /// <summary>
         ///     Whether or not this command queue should reset itself.
@@ -46,7 +46,7 @@
         /// </summary>
         public object Current => null;
 
-        private bool _IsLastCommand => _queuedCommandIndex == _commands.Count - 1;
+        private bool _IsLastCommand => _currentCommandIndex == _commands.Count - 1;
 
         public Command()
         {
@@ -62,7 +62,11 @@
         /// </summary>
         public bool MoveNext()
         {
-            bool continued = ContinueSubCommands();
+            if (Id == "Full")
+            {
+                Diag.Log("curr index " + _currentCommandIndex);
+            }
+            bool continued = (_commands.Count > 0) && ContinueSubCommands();
 
             if (continued)
             {
@@ -82,7 +86,7 @@
         /// </summary>
         public void Reset()
         {
-            _queuedCommandIndex = 0;
+            _currentCommandIndex = 0;
             _activeParallelCommands.Clear();
             throw new NotImplementedException("Have not implemented resetting of subcommands.");
         }
@@ -139,35 +143,18 @@
         ///     Moves all active parallel commands forward one step. Removes completed commands from
         ///     <see cref="_activeParallelCommands" />
         /// </summary>
-        private bool ContinueParallelCommands()
+        private bool ContinueActiveParallelCommands()
         {
             _activeParallelCommands.RemoveAll(command => !command.MoveNext());
             return _activeParallelCommands.Count > 0;
         }
 
-        /// <summary>
-        ///     Processes the next command in <see cref="_commands" /> If a parallel command is encountered it is transferred
-        ///     to <see cref="_activeParallelCommands" /> and run from there.
-        /// </summary>
-        private bool ContinueQueuedCommand()
+        private bool ContinueQueuedSerialCommand(CommandData queuedData)
         {
-            if (_commands.Count == 0)
-            {
-                return false;
-            }
-
-            CommandData currentQueuedCommand = GetCurrentQueuedCommand();
-            
-            return ContinueSerialCommand(currentQueuedCommand) || ContinueParallelSubCommands(currentQueuedCommand);
-        }
-
-        private bool ContinueSerialCommand(CommandData queuedData)
-        {
-            Diag.Log("calling continue serial command");
             return (queuedData.CommandMode == CommandMode.Serial) && queuedData.MoveNext();
         }
 
-        private bool ContinueParallelSubCommands(CommandData queuedData)
+        private bool AddParallelCommand(CommandData queuedData)
         {
             bool isParallelCommand = queuedData.CommandMode == CommandMode.Parallel;
 
@@ -181,12 +168,12 @@
 
         private void IncrementQueuedCommandIndex()
         {
-            _queuedCommandIndex = Math.Min(_queuedCommandIndex + 1, _commands.Count - 1);
+            _currentCommandIndex = Math.Min(_currentCommandIndex + 1, _commands.Count - 1);
         }
 
         private void ResetForCompletion()
         {
-            _queuedCommandIndex = _commands.Count;
+            _currentCommandIndex = _commands.Count;
             _activeParallelCommands.Clear();
         }
 
@@ -198,7 +185,7 @@
 
         private void CompleteCurrentCommand()
         {
-            IEnumerator currentEnumerator = _commands[_queuedCommandIndex];
+            IEnumerator currentEnumerator = _commands[_currentCommandIndex];
             var currentCommand = currentEnumerator as Command;
             currentCommand?.Complete();
         }
@@ -215,28 +202,39 @@
 
         private bool ContinueSubCommands()
         {
-            bool continuedParallelCommands = ContinueParallelCommands();
-            bool continuedQueuedCommand = ContinueQueuedCommand();
-            bool shouldContinue = continuedParallelCommands || continuedQueuedCommand || !_IsLastCommand;
+            bool isLastCommand = _IsLastCommand;
+
+            CommandData currentQueuedCommand = GetCurrentQueuedCommand();
+
+            bool continuedQueuedSerialCommand = ContinueQueuedSerialCommand(currentQueuedCommand);
+            bool addedParallelCommand = AddParallelCommand(currentQueuedCommand);
+            bool continuedActiveParallelCommands = ContinueActiveParallelCommands();
             
-            if (!continuedQueuedCommand)
+            Diag.Log($"is last command {isLastCommand} continue queued serial {continuedQueuedSerialCommand}");
+
+            if (!continuedQueuedSerialCommand)
             {
                 IncrementQueuedCommandIndex();
             }
 
-            return shouldContinue;
+            if (addedParallelCommand && !isLastCommand)
+            {
+                return MoveNext();
+            }
+
+            return !isLastCommand || continuedActiveParallelCommands;
         }
 
         private CommandData GetCurrentQueuedCommand()
         {
             try
             {
-                CommandData queuedCommandData = _commands[_queuedCommandIndex];
+                CommandData queuedCommandData = _commands[_currentCommandIndex];
                 return queuedCommandData;
             }
             catch (ArgumentOutOfRangeException)
             {
-                string msg = $"Could not index command at {_queuedCommandIndex} from list of length {_commands.Count}";
+                string msg = $"Could not index command at {_currentCommandIndex} from list of length {_commands.Count}";
                 throw new IndexOutOfRangeException(msg);
             }
         }

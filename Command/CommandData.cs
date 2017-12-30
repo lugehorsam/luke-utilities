@@ -39,7 +39,6 @@
 
         public bool MoveNext()
         {
-            Diag.Log("calling move next with action " + _action);
             if (_action != null)
             {
                 _action();

@@ -72,6 +72,7 @@
 
             fullCommand.MoveNext();
             Compare(new[] {true, false});
+            
             fullCommand.MoveNext();
             Compare(new[] {true, true});
         }
@@ -89,13 +90,17 @@
             serialCommand2.AddSerial(() => SetToTrue(2));
             serialCommand2.AddSerial(() => SetToTrue(3));
 
-            var fullCommand = new Command();
+            var fullCommand = new Command();            
+            serialCommand1.Id = "Full";
+
             fullCommand.AddSerial(serialCommand1);
             fullCommand.AddSerial(serialCommand2);
             
             fullCommand.MoveNext();
             Compare(new[] {true, false, false, false});
             fullCommand.MoveNext();
+
+            
             Compare(new[] {true, true, false, false});
             fullCommand.MoveNext();
             Compare(new[] {true, true, true, false});
@@ -153,7 +158,6 @@
             parallelCommand.AddParallel(() => SetToTrue(0));
             parallelCommand.AddParallel(() => SetToTrue(1));
 
-            parallelCommand.MoveNext();
             parallelCommand.MoveNext();
             Compare(new []{true, true});
         }
