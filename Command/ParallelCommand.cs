@@ -9,13 +9,8 @@
         protected override bool MoveNextInternal()
         {
             var anyCommandsRan = false;
-
-            foreach (CommandStep commandStep in _commandSteps)
-            {
-                anyCommandsRan = commandStep.MoveNext() || anyCommandsRan;
-            }
-
-            return anyCommandsRan;
+            _commandSteps.RemoveAll(step => !step.MoveNext());
+            return _commandSteps.Count > 0;
         }
 
         public override void Reset()
