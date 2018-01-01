@@ -14,8 +14,8 @@
         public static void TestSerial1()
         {
             Reset();
-            var command = new Command();
-            command.AddSerial(() => SetToTrue(0));
+            var command = new SerialCommand();
+            command.Add(() => SetToTrue(0));
             command.MoveNext();
             Compare(new[] {true});
         }
@@ -25,9 +25,9 @@
         {
             Reset();
 
-            var command = new Command();
-            command.AddSerial(() => SetToTrue(0));
-            command.AddSerial(() => SetToTrue(1));
+            var command = new SerialCommand();
+            command.Add(() => SetToTrue(0));
+            command.Add(() => SetToTrue(1));
 
             command.MoveNext();
             Compare(new[] {true, false});
@@ -40,10 +40,10 @@
         {
             Reset();
 
-            var serialCommand = new Command();
-            serialCommand.AddSerial(() => SetToTrue(0));
-            serialCommand.AddSerial(() => SetToTrue(1));
-            serialCommand.AddSerial(() => SetToTrue(2));
+            var serialCommand = new SerialCommand();
+            serialCommand.Add(() => SetToTrue(0));
+            serialCommand.Add(() => SetToTrue(1));
+            serialCommand.Add(() => SetToTrue(2));
 
             serialCommand.MoveNext();
             Compare(new[] {true, false, false});
@@ -60,15 +60,15 @@
         {
             Reset();
 
-            var serialCommand1 = new Command();
-            serialCommand1.AddSerial(() => SetToTrue(0));
+            var serialCommand1 = new SerialCommand();
+            serialCommand1.Add(() => SetToTrue(0));
 
-            var serialCommand2 = new Command();
-            serialCommand2.AddSerial(() => SetToTrue(1));
+            var serialCommand2 = new SerialCommand();
+            serialCommand2.Add(() => SetToTrue(1));
 
-            var fullCommand = new Command();
-            fullCommand.AddSerial(serialCommand1);
-            fullCommand.AddSerial(serialCommand2);
+            var fullCommand = new SerialCommand();
+            fullCommand.Add(serialCommand1);
+            fullCommand.Add(serialCommand2);
 
             fullCommand.MoveNext();
             Compare(new[] {true, false});
@@ -82,26 +82,26 @@
         {
             Reset();
             
-            var serialCommand1 = new Command();
-            serialCommand1.AddSerial(() => SetToTrue(0));
-            serialCommand1.AddSerial(() => SetToTrue(1));
+            var serialCommand1 = new SerialCommand();
+            serialCommand1.Add(() => SetToTrue(0));
+            serialCommand1.Add(() => SetToTrue(1));
 
-            var serialCommand2 = new Command();
-            serialCommand2.AddSerial(() => SetToTrue(2));
-            serialCommand2.AddSerial(() => SetToTrue(3));
+            var serialCommand2 = new SerialCommand();
+            serialCommand2.Add(() => SetToTrue(2));
+            serialCommand2.Add(() => SetToTrue(3));
 
-            var fullCommand = new Command();            
-            serialCommand1.Id = "Full";
+            var fullCommand = new SerialCommand();         
 
-            fullCommand.AddSerial(serialCommand1);
-            fullCommand.AddSerial(serialCommand2);
+            fullCommand.Add(serialCommand1);
+            fullCommand.Add(serialCommand2);
             
             fullCommand.MoveNext();
             Compare(new[] {true, false, false, false});
             fullCommand.MoveNext();
 
-            
             Compare(new[] {true, true, false, false});
+            return;
+
             fullCommand.MoveNext();
             Compare(new[] {true, true, true, false});
             fullCommand.MoveNext();
@@ -113,19 +113,19 @@
         {
             Reset();
 
-            var serialCommand1 = new Command();
-            serialCommand1.AddSerial(() => SetToTrue(0));
-            serialCommand1.AddSerial(() => SetToTrue(1));
-            serialCommand1.AddSerial(() => SetToTrue(2));
+            var serialCommand1 = new SerialCommand();
+            serialCommand1.Add(() => SetToTrue(0));
+            serialCommand1.Add(() => SetToTrue(1));
+            serialCommand1.Add(() => SetToTrue(2));
 
-            var serialCommand2 = new Command();
-            serialCommand2.AddSerial(() => SetToTrue(3));
-            serialCommand2.AddSerial(() => SetToTrue(4));
-            serialCommand2.AddSerial(() => SetToTrue(5));
+            var serialCommand2 = new SerialCommand();
+            serialCommand2.Add(() => SetToTrue(3));
+            serialCommand2.Add(() => SetToTrue(4));
+            serialCommand2.Add(() => SetToTrue(5));
 
-            var fullCommand = new Command();
-            fullCommand.AddSerial(serialCommand1);
-            fullCommand.AddSerial(serialCommand2);
+            var fullCommand = new SerialCommand();
+            fullCommand.Add(serialCommand1);
+            fullCommand.Add(serialCommand2);
 
             fullCommand.MoveNext();
             Compare(new[] {true, false, false, false, false, false});
@@ -154,9 +154,9 @@
         {
             Reset();
 
-            var serialCommand = new Command();
-            serialCommand.AddSerial(SetToTrueEnumerator(0));
-            serialCommand.AddSerial(() => SetToFalse(0));
+            var serialCommand = new SerialCommand();
+            serialCommand.Add(SetToTrueEnumerator(0));
+            serialCommand.Add(() => SetToFalse(0));
             serialCommand.Run();
             
             Compare(new []{false});
@@ -168,10 +168,10 @@
         {
             Reset();
 
-            var serialCommand = new Command();
-            serialCommand.AddSerial(() => SetToFalse(0));
-            serialCommand.AddSerial(SetToTrueEnumerator(0));
-            serialCommand.AddSerial(() => SetToFalse(0));
+            var serialCommand = new SerialCommand();
+            serialCommand.Add(() => SetToFalse(0));
+            serialCommand.Add(SetToTrueEnumerator(0));
+            serialCommand.Add(() => SetToFalse(0));
             serialCommand.Run();
             
             Compare(new []{false});
@@ -182,9 +182,9 @@
         {
             Reset();
 
-            var parallelCommand = new Command();
-            parallelCommand.AddParallel(() => SetToTrue(0));
-            parallelCommand.AddParallel(() => SetToTrue(1));
+            var parallelCommand = new ParallelCommand();
+            parallelCommand.Add(() => SetToTrue(0));
+            parallelCommand.Add(() => SetToTrue(1));
 
             parallelCommand.MoveNext();
             Compare(new []{true, true});
@@ -196,9 +196,9 @@
         {
             Reset();
 
-            var parallelCommand = new Command();
-            parallelCommand.AddParallel(() => SetToFalse(0));
-            parallelCommand.AddParallel(SetToTrueEnumerator(0));
+            var parallelCommand = new ParallelCommand();
+            parallelCommand.Add(() => SetToFalse(0));
+            parallelCommand.Add(SetToTrueEnumerator(0));
             parallelCommand.Run();
             Compare(new []{true});
         }
@@ -208,11 +208,12 @@
         {
             Reset();
 
-            var parallelCommand = new Command();
-            parallelCommand.AddParallel(() => SetToFalse(0));
-            parallelCommand.AddParallel(SetToTrueEnumerator(0));
-            parallelCommand.AddParallel(() => SetToFalse(0));
+            var parallelCommand = new ParallelCommand();
+            parallelCommand.Add(() => SetToFalse(0));
+            parallelCommand.Add(SetToTrueEnumerator(0));
+            parallelCommand.Add(() => SetToFalse(0));
             parallelCommand.Run();
+                        
             Compare(new []{true});
         }
                
@@ -221,17 +222,17 @@
         {
             Reset();
 
-            var parallelCommand = new Command();
-            parallelCommand.AddParallel(SetToTrueEnumerator(0));
-            parallelCommand.AddParallel(SetToTrueEnumerator(1));
+            var parallelCommand = new ParallelCommand();
+            parallelCommand.Add(SetToTrueEnumerator(0));
+            parallelCommand.Add(SetToTrueEnumerator(1));
 
-            var serialCommand = new Command();
-            serialCommand.AddSerial(() => SetToFalse(0));
-            serialCommand.AddSerial(() => SetToFalse(1));
+            var serialCommand = new SerialCommand();
+            serialCommand.Add(() => SetToFalse(0));
+            serialCommand.Add(() => SetToFalse(1));
 
-            var fullCommand = new Command();
-            fullCommand.AddSerial(parallelCommand);
-            fullCommand.AddSerial(serialCommand);
+            var fullCommand = new SerialCommand();
+            fullCommand.Add(parallelCommand);
+            fullCommand.Add(serialCommand);
             
             fullCommand.Run();
             Compare(new []{false, false});
@@ -240,6 +241,7 @@
         
         private static void SetToTrue(int boolIndex)
         {
+            Diag.Log("set to true called at index " + boolIndex);
             _commandBools[boolIndex] = true;
         }        
         
@@ -255,7 +257,6 @@
             yield return null;
             yield return null;
             yield return null;
-            Diag.Log("set to true called");
             SetToTrue(boolIndex);
             yield return null;
             yield return null;
