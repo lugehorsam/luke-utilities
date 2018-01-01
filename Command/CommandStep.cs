@@ -48,5 +48,10 @@
         }
 
         public object Current { get; }
+
+        public void Cancel()
+        {
+            (_enumerator as Command)?.Cancel();
+        }
     }
 }

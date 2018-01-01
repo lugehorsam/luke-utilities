@@ -1,6 +1,5 @@
 ﻿namespace Utilities.Command
 {
-    using System;
 
     public class SerialCommand : Command
     {
@@ -25,7 +24,11 @@
 
         public override void Reset()
         {
-            throw new NotImplementedException();
+        }
+
+        protected override void CancelInternal()
+        {
+            _commandSteps[_currentIndex].Cancel();
         }
     }
 }

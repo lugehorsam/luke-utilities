@@ -17,5 +17,13 @@
         {
             throw new NotImplementedException();
         }
+
+        protected override void CancelInternal()
+        {
+            foreach (var step in _commandSteps)
+            {
+                step.Cancel();
+            }
+        }
     }
 }

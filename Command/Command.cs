@@ -38,6 +38,7 @@
         public void Cancel()
         {
             _cancelled = true;
+            CancelInternal();
             OnCancel(this);
         }
 
@@ -45,15 +46,11 @@
 
         public bool MoveNext()
         {
-            if (_cancelled)
-            {
-                return false;
-            }
-
-            return MoveNextInternal();
+            return !_cancelled && MoveNextInternal();
         }
         
-        protected abstract bool MoveNextInternal();
-        
+        protected abstract bool MoveNextInternal();        
+
+        protected abstract void CancelInternal();
     }
 }

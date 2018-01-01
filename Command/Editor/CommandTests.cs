@@ -237,7 +237,24 @@
             fullCommand.Run();
             Compare(new []{false, false});
         }
-        
+
+        [Test]
+        public static void TestComposite1()
+        {
+            Reset();
+            
+            var serialCommand = new SerialCommand();
+            serialCommand.Add(() => SetToTrue(0));
+
+            var parallelCommand = new ParallelCommand();
+            parallelCommand.Add(() => SetToFalse(0));
+            parallelCommand.Add(() => SetToTrue(1));
+            
+            serialCommand.Add(parallelCommand);
+            serialCommand.Run();
+            
+            Compare(new []{false, true});
+        }
         
         private static void SetToTrue(int boolIndex)
         {
