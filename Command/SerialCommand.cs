@@ -20,7 +20,7 @@
                 _currentIndex++;
             }
 
-            return true;
+            return _currentIndex < _commandSteps.Count;
         }
 
         public override void Reset()
