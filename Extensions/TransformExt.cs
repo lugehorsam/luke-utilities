@@ -54,5 +54,10 @@
 
             return children;
         }
+
+        public static Vector3 GetNewScale(this Transform thisTransform, float modifier)
+        {
+            return thisTransform.localScale.Map(dim => dim *= modifier);
+        }
     }
 }

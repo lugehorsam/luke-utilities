@@ -72,7 +72,7 @@
 
             fullCommand.MoveNext();
             Compare(new[] {true, false});
-            
+
             fullCommand.MoveNext();
             Compare(new[] {true, true});
         }
@@ -81,7 +81,7 @@
         public static void TestNestedSerial2()
         {
             Reset();
-            
+
             var serialCommand1 = new SerialCommand();
             serialCommand1.Add(() => SetToTrue(0));
             serialCommand1.Add(() => SetToTrue(1));
@@ -90,17 +90,16 @@
             serialCommand2.Add(() => SetToTrue(2));
             serialCommand2.Add(() => SetToTrue(3));
 
-            var fullCommand = new SerialCommand();         
+            var fullCommand = new SerialCommand();
 
             fullCommand.Add(serialCommand1);
             fullCommand.Add(serialCommand2);
-            
+
             fullCommand.MoveNext();
             Compare(new[] {true, false, false, false});
             fullCommand.MoveNext();
 
             Compare(new[] {true, true, false, false});
-            return;
 
             fullCommand.MoveNext();
             Compare(new[] {true, true, true, false});
@@ -158,11 +157,10 @@
             serialCommand.Add(SetToTrueEnumerator(0));
             serialCommand.Add(() => SetToFalse(0));
             serialCommand.Run();
-            
-            Compare(new []{false});
 
+            Compare(new[] {false});
         }
-        
+
         [Test]
         public static void TestSerialEnumerator3()
         {
@@ -173,10 +171,10 @@
             serialCommand.Add(SetToTrueEnumerator(0));
             serialCommand.Add(() => SetToFalse(0));
             serialCommand.Run();
-            
-            Compare(new []{false});
+
+            Compare(new[] {false});
         }
-               
+
         [Test]
         public static void TestParallel2()
         {
@@ -187,10 +185,9 @@
             parallelCommand.Add(() => SetToTrue(1));
 
             parallelCommand.MoveNext();
-            Compare(new []{true, true});
+            Compare(new[] {true, true});
         }
-        
-        
+
         [Test]
         public static void TestParallelEnumerator2()
         {
@@ -200,9 +197,9 @@
             parallelCommand.Add(() => SetToFalse(0));
             parallelCommand.Add(SetToTrueEnumerator(0));
             parallelCommand.Run();
-            Compare(new []{true});
+            Compare(new[] {true});
         }
-        
+
         [Test]
         public static void TestParallelEnumerator3()
         {
@@ -213,10 +210,10 @@
             parallelCommand.Add(SetToTrueEnumerator(0));
             parallelCommand.Add(() => SetToFalse(0));
             parallelCommand.Run();
-                        
-            Compare(new []{true});
+
+            Compare(new[] {true});
         }
-               
+
         [Test]
         public static void TestParallelEnumerator8()
         {
@@ -233,38 +230,36 @@
             var fullCommand = new SerialCommand();
             fullCommand.Add(parallelCommand);
             fullCommand.Add(serialCommand);
-            
+
             fullCommand.Run();
-            Compare(new []{false, false});
+            Compare(new[] {false, false});
         }
 
         [Test]
         public static void TestComposite1()
         {
             Reset();
-            
+
             var serialCommand = new SerialCommand();
             serialCommand.Add(() => SetToTrue(0));
 
             var parallelCommand = new ParallelCommand();
             parallelCommand.Add(() => SetToFalse(0));
             parallelCommand.Add(() => SetToTrue(1));
-            
+
             serialCommand.Add(parallelCommand);
             serialCommand.Run();
-            
-            Compare(new []{false, true});
+
+            Compare(new[] {false, true});
         }
-        
+
         private static void SetToTrue(int boolIndex)
         {
-            Diag.Log("set to true called at index " + boolIndex);
             _commandBools[boolIndex] = true;
-        }        
-        
+        }
+
         private static void SetToFalse(int boolIndex)
         {
-            Diag.Log("set to false called");
             _commandBools[boolIndex] = false;
         }
 
@@ -274,6 +269,7 @@
             yield return null;
             yield return null;
             yield return null;
+
             SetToTrue(boolIndex);
             yield return null;
             yield return null;
