@@ -35,9 +35,6 @@
             IsDown = isDown && over;
             IsFirstDown = !wasDown && IsDown;
 
-            if (IsFirstDown)
-                Diag.Log("Is first down ");
-
             IsFirstDownOff = !wasDown && isDown && !over;
             IsHold = (IsFirstDown || WasHold) && !isRelease;
             IsFirstDrag = IsHold && IsPositionChange;

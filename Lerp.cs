@@ -14,7 +14,7 @@
         private readonly T _end;
         
         private float _elapsedTime;
-        
+        private bool _timeHasElapsed;
                 
         public Lerp(T start, T end, float targetDuration, Func<T, T, float, T> lerp)
         {
@@ -32,9 +32,14 @@
 
         public bool MoveNext()
         {
-            if (_elapsedTime >= _targetDuration)
+            if (_timeHasElapsed)
             {
                 return false;
+            }
+            
+            if (_elapsedTime >= _targetDuration)
+            {
+                _timeHasElapsed = true;
             }
             
             Current = _lerp(_start, _end, _elapsedTime/_targetDuration);
@@ -47,6 +52,7 @@
         {
             _elapsedTime = 0f;
             Current = _start;
+            _timeHasElapsed = false;
         }
 
         public T Current { get; private set; }

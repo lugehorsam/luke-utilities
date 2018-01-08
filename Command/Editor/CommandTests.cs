@@ -236,6 +236,32 @@
         }
 
         [Test]
+        public static void TestParallelEnumeratorFinish()
+        {
+            Reset();
+
+            var parallelCommand = new ParallelCommand();
+            parallelCommand.Add(() => SetToTrue(0));
+            parallelCommand.Add(SetToFalseEnumerator(0));
+            parallelCommand.Run();
+            Compare(new []{false});
+        }
+        
+        [Test]
+        public static void TestSerialEnumeratorFinish()
+        {
+            Reset();
+
+            var parallelCommand = new SerialCommand();
+            parallelCommand.Add(() => SetToTrue(0));
+            parallelCommand.Add(SetToFalseEnumerator(0));
+            parallelCommand.Run();
+            Compare(new []{false});
+        }
+        
+        
+
+        [Test]
         public static void TestComposite1()
         {
             Reset();
@@ -251,8 +277,8 @@
             serialCommand.Run();
 
             Compare(new[] {false, true});
-        }
-
+        }        
+        
         private static void SetToTrue(int boolIndex)
         {
             _commandBools[boolIndex] = true;
@@ -273,6 +299,17 @@
             SetToTrue(boolIndex);
             yield return null;
             yield return null;
+        }
+        
+        private static IEnumerator SetToFalseEnumerator(int boolIndex)
+        {
+            yield return null;
+            yield return null;
+            yield return null;
+            yield return null;
+            yield return null;
+            yield return null;
+            SetToFalse(boolIndex);
         }
 
         private static void Reset()

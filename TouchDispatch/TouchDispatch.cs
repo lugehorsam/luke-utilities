@@ -74,7 +74,6 @@
         {
             if (TouchLogic.IsFirstDown)
             {
-                Diag.Log("Dispatching on down " + gameObject.name);
                 OnDown(touchInfo);
             }
 
