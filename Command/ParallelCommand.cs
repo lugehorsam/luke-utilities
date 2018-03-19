@@ -8,7 +8,6 @@
 
         protected override bool MoveNextInternal()
         {
-            var anyCommandsRan = false;
             _commandSteps.RemoveAll(step => !step.MoveNext());
             return _commandSteps.Count > 0;
         }
@@ -20,7 +19,7 @@
 
         protected override void CancelInternal()
         {
-            foreach (var step in _commandSteps)
+            foreach (CommandStep step in _commandSteps)
             {
                 step.Cancel();
             }

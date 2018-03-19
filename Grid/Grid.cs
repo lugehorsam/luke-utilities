@@ -3,14 +3,11 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+
     using UnityEngine;
 
     public class Grid<T> : IEnumerable
     {
-        public int Rows { get; }
-
-        public int Columns { get; }
-
         private readonly T[] _items;
 
         public Grid(int rows, int columns)
@@ -19,7 +16,16 @@
             Columns = columns;
             _items = new T[GetMaxIndex() + 1];
         }
-        
+
+        public int Rows { get; }
+
+        public int Columns { get; }
+
+        public IEnumerator GetEnumerator()
+        {
+            return _items.GetEnumerator();
+        }
+
         public void Set(T item, GridCell gridCell)
         {
             _items[ToIndex(gridCell.Row, gridCell.Column)] = item;
@@ -32,8 +38,7 @@
 
         public bool HasWithinBounds(GridCell gridCell)
         {
-            return gridCell.Row < Rows && gridCell.Row >= 0 && 
-                   gridCell.Column < Columns && gridCell.Column >= 0;
+            return (gridCell.Row < Rows) && (gridCell.Row >= 0) && (gridCell.Column < Columns) && (gridCell.Column >= 0);
         }
 
         public T Get(GridCell gridCell)
@@ -110,11 +115,6 @@
         public int GetColumnOfIndex(int index)
         {
             return index % Columns;
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return _items.GetEnumerator();
         }
 
         public GridCell GetPositionOfIndex(int index)

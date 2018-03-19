@@ -3,21 +3,23 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
 
     public class CycleSearch<T> : IEnumerator<T> where T : class
     {
-        private readonly Graph<T> _graph;
         private readonly ComponentSearch<T> _componentSearch;
-               
-        public T Current { get; private set; }
+        private readonly Graph<T> _graph;
 
-        object IEnumerator.Current => Current;
-       
         public CycleSearch(Graph<T> graph)
         {
             _graph = graph;
             _componentSearch = new ComponentSearch<T>(_graph);
+        }
+
+        public T Current { get; private set; }
+
+        object IEnumerator.Current
+        {
+            get { return Current; }
         }
 
         public bool MoveNext()

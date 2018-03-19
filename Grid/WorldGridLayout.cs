@@ -3,58 +3,74 @@
     using System.Collections;
 
     using UnityEngine;
-    
-    using Utilities;
-    
+
     /// <summary>
-    /// Arbitrary grid layout. Bottom left is row 0, col 0
+    ///     Arbitrary grid layout. Bottom left is row 0, col 0
     /// </summary>
     public class WorldGridLayout : MonoBehaviour, IEnumerable
     {
-        private Grid<GameObject> _grid;
-
-        public Grid<GameObject> Grid => _grid;
-        
-        private float _TotalHeight => _cellHeight * _grid.Rows;
-        private float _TotalWidth => _cellWidth * _grid.Columns;
-
-        [SerializeField] private float _cellWidth;
         [SerializeField] private float _cellHeight;
 
-        [SerializeField] private int _rows;
+        [SerializeField] private float _cellWidth;
         [SerializeField] private int _columns;
 
-        public float CellWidth => _cellWidth;
-        public float CellHeight => _cellHeight;
+        [SerializeField] private int _rows;
+
+        public Grid<GameObject> Grid { get; private set; }
+
+        private float _TotalHeight
+        {
+            get { return _cellHeight * Grid.Rows; }
+        }
+
+        private float _TotalWidth
+        {
+            get { return _cellWidth * Grid.Columns; }
+        }
+
+        public float CellWidth
+        {
+            get { return _cellWidth; }
+        }
+
+        public float CellHeight
+        {
+            get { return _cellHeight; }
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return Grid.GetEnumerator();
+        }
 
         private void Awake()
-        {        
-            _grid = new Grid<GameObject>(_rows, _columns);   
+        {
+            Grid = new Grid<GameObject>(_rows, _columns);
         }
 
         public void UpdateLayout()
         {
-            foreach (GameObject member in _grid)
+            foreach (GameObject member in Grid)
             {
                 if (member == null)
                 {
                     continue;
                 }
-                
-                UpdateLayout(member);    
+
+                UpdateLayout(member);
             }
         }
- 
+
         private void UpdateLayout(GameObject member)
         {
             member.transform.SetParent(transform, true);
 
-            GridCell gridPos = _grid.GetGridCell(member);
+            GridCell gridPos = Grid.GetGridCell(member);
 
             Vector3 idealLocalPos = GetLocalPosition(new GridCell(gridPos.Row, gridPos.Column));
-                        
+
             var asGridMember = member.GetComponentWithInterface<IWorldGridMember>();
-            
+
             if (asGridMember == null)
             {
                 member.transform.localPosition = idealLocalPos;
@@ -67,34 +83,25 @@
 
         public Vector3 GetLocalPosition(GridCell gridCell)
         {
-            Vector2 lowerLeft = RowAndColumnToPosition(gridCell.Row, gridCell.Column);   
-            return new Vector2(lowerLeft.x + _cellWidth/2, lowerLeft.y + _cellHeight/2);
+            Vector2 lowerLeft = RowAndColumnToPosition(gridCell.Row, gridCell.Column);
+            return new Vector2(lowerLeft.x + _cellWidth / 2, lowerLeft.y + _cellHeight / 2);
         }
 
         public Vector3 GetLocalPosition(int index)
         {
-            return GetLocalPosition(_grid.GetGridCell(index));
-        }
-        
-        Vector3 RowAndColumnToPosition(int row, int column)
-        {
-            return new Vector2(column * _cellWidth - _TotalWidth * .5f, row * _cellHeight - _TotalHeight * .5f);   
-        }
-        
-        public Vector2[] GetSquarePoints(int gridIndex)
-        {
-            var offsetCombinations = new Vector2
-            (
-                _grid.GetColumnOfIndex(gridIndex) * _cellWidth,
-                _grid.GetRowOfIndex(gridIndex) * _cellHeight
-            ).GetOffsetCombinations(_cellWidth, _cellHeight);
-            
-            return offsetCombinations;
+            return GetLocalPosition(Grid.GetGridCell(index));
         }
 
-        public IEnumerator GetEnumerator()
+        private Vector3 RowAndColumnToPosition(int row, int column)
         {
-            return _grid.GetEnumerator();
+            return new Vector2(column * _cellWidth - _TotalWidth * .5f, row * _cellHeight - _TotalHeight * .5f);
+        }
+
+        public Vector2[] GetSquarePoints(int gridIndex)
+        {
+            Vector2[] offsetCombinations = new Vector2(Grid.GetColumnOfIndex(gridIndex) * _cellWidth, Grid.GetRowOfIndex(gridIndex) * _cellHeight).GetOffsetCombinations(_cellWidth, _cellHeight);
+
+            return offsetCombinations;
         }
     }
 }

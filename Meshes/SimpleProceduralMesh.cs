@@ -11,12 +11,27 @@
 
     [Serializable] public class SimpleProceduralMesh : IProceduralMesh, IComparer<Vertex>
     {
+        protected readonly List<TriangleMesh> _triangles = new List<TriangleMesh>();
+
+        public int Compare(Vertex vertex1, Vertex vertex2)
+        {
+            if (vertex1 == vertex2)
+            {
+                return 0;
+            }
+
+            Vector3 anchorVertex = GetCenterPoint();
+            Vector3 vector1 = vertex1.AsVector3 - anchorVertex;
+            Vector3 vector2 = vertex2.AsVector3 - anchorVertex;
+            float angle = MathExt.GetSignedAngle(vector1, vector2);
+            int sign = Math.Sign(angle);
+            return sign;
+        }
+
         public ReadOnlyCollection<TriangleMesh> TriangleMeshes
         {
             get { return new ReadOnlyCollection<TriangleMesh>(_triangles); }
         }
-
-        protected readonly List<TriangleMesh> _triangles = new List<TriangleMesh>();
 
         public Mesh ToUnityMesh()
         {
@@ -92,21 +107,6 @@
                 triangle.Vertex2 = new Vertex(triangle.Vertex2.AsVector3);
                 triangle.Vertex3 = new Vertex(triangle.Vertex3.AsVector3);
             }
-        }
-
-        public int Compare(Vertex vertex1, Vertex vertex2)
-        {
-            if (vertex1 == vertex2)
-            {
-                return 0;
-            }
-
-            Vector3 anchorVertex = GetCenterPoint();
-            Vector3 vector1 = vertex1.AsVector3 - anchorVertex;
-            Vector3 vector2 = vertex2.AsVector3 - anchorVertex;
-            float angle = MathExt.GetSignedAngle(vector1, vector2);
-            int sign = Math.Sign(angle);
-            return sign;
         }
 
         protected IEnumerable<Vertex> GetVertices()

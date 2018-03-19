@@ -8,27 +8,9 @@
 
     [Serializable] public class DirectedEdge<T> : IDirectedEdge<T>, ISerializationCallbackReceiver
     {
-        private void UpdateNodeEdgeList(INode<T> element)
-        {
-            element.Edges.Add(this);
-        }
-
-        public bool Contains(T element)
-        {
-            return Start.Value.Equals(element) || End.Value.Equals(element);
-        }
-
-        public INode<T> OtherElement(T element)
-        {
-            return element.Equals(Start.Value) ? End : Start;
-        }
-
-        public INode<T> Start { get; private set; }
-
-        public INode<T> End { get; private set; }
+        [SerializeField] private T _end;
 
         [SerializeField] private T _start;
-        [SerializeField] private T _end;
 
         public DirectedEdge(T start, T end)
         {
@@ -39,14 +21,13 @@
             UpdateNodeEdgeList(End);
         }
 
+        public INode<T> Start { get; private set; }
+
+        public INode<T> End { get; private set; }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        public bool DirectsTo(DirectedEdge<T> otherDirectedEdge)
-        {
-            return End.Equals(otherDirectedEdge.Start);
         }
 
         public IEnumerator<INode<T>> GetEnumerator()
@@ -76,11 +57,6 @@
             yield return End.Value;
         }
 
-        public override string ToString()
-        {
-            return this.ToString("Start " + Start, "End " + End);
-        }
-
         public void OnBeforeSerialize() { }
 
         public void OnAfterDeserialize()
@@ -96,6 +72,31 @@
                 End = new Node<T>(_end);
                 UpdateNodeEdgeList(End);
             }
+        }
+
+        private void UpdateNodeEdgeList(INode<T> element)
+        {
+            element.Edges.Add(this);
+        }
+
+        public bool Contains(T element)
+        {
+            return Start.Value.Equals(element) || End.Value.Equals(element);
+        }
+
+        public INode<T> OtherElement(T element)
+        {
+            return element.Equals(Start.Value) ? End : Start;
+        }
+
+        public bool DirectsTo(DirectedEdge<T> otherDirectedEdge)
+        {
+            return End.Equals(otherDirectedEdge.Start);
+        }
+
+        public override string ToString()
+        {
+            return this.ToString("Start " + Start, "End " + End);
         }
     }
 }

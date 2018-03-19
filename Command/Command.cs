@@ -9,17 +9,24 @@
     ///     actions.
     /// </summary>
     public abstract class Command : IEnumerator
-    {    
+    {
         public delegate void CommandCancelHandler(Command command);
 
-        public event CommandCancelHandler OnCancel = delegate { };
+        protected readonly List<CommandStep> _commandSteps = new List<CommandStep>();
 
         private bool _cancelled;
 
         public abstract object Current { get; }
 
-        protected readonly List<CommandStep> _commandSteps = new List<CommandStep>();
-        
+        public abstract void Reset();
+
+        public bool MoveNext()
+        {
+            return !_cancelled && MoveNextInternal();
+        }
+
+        public event CommandCancelHandler OnCancel = delegate { };
+
         public void Add(IEnumerator enumerator)
         {
             _commandSteps.Add(new CommandStep(enumerator));
@@ -29,7 +36,7 @@
         {
             _commandSteps.Add(new CommandStep(action));
         }
-                
+
         public void Add(Func<IEnumerator> enumeratorFunc)
         {
             _commandSteps.Add(new CommandStep(enumeratorFunc));
@@ -42,14 +49,7 @@
             OnCancel(this);
         }
 
-        public abstract void Reset();
-
-        public bool MoveNext()
-        {
-            return !_cancelled && MoveNextInternal();
-        }
-        
-        protected abstract bool MoveNextInternal();        
+        protected abstract bool MoveNextInternal();
 
         protected abstract void CancelInternal();
     }

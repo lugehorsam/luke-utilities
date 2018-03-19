@@ -6,13 +6,6 @@
 
     public class TouchEventInfo : ITouchEventInfo
     {
-        public GameObject Owner { get; }
-        public ITouchState TouchState { get; }
-        public RaycastHit[] Hits { get; }
-        public RaycastHit2D[] Hits2D { get; }
-        public Vector3 WorldPosition { get; }
-        public Dimension Dimension { get; }
-
         public TouchEventInfo(TouchDispatch dispatch, TouchLogic touchState, RaycastHit[] hits, Vector3 worldPosition)
         {
             Owner = dispatch.gameObject;
@@ -28,5 +21,12 @@
             WorldPosition = worldPosition;
             Dimension = Dimension.Two;
         }
+
+        public GameObject Owner { get; }
+        public RaycastHit2D[] Hits2D { get; }
+        public Dimension Dimension { get; }
+        public ITouchState TouchState { get; }
+        public RaycastHit[] Hits { get; }
+        public Vector3 WorldPosition { get; }
     }
 }

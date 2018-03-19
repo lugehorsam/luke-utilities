@@ -1,7 +1,5 @@
 ﻿namespace Utilities.Grid
 {
-    using Utilities;
-    
     public struct GridCell
     {
         public int Row { get; set; }
@@ -17,7 +15,7 @@
         {
             int newRow = Row;
             int newCol = Column;
-            
+
             switch (direction)
             {
                 case Direction.Up:
@@ -30,10 +28,10 @@
                     newCol--;
                     break;
                 case Direction.Right:
-                    newCol++;    
+                    newCol++;
                     break;
             }
-            
+
             return new GridCell(newRow, newCol);
         }
 

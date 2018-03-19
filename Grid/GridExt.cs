@@ -6,7 +6,7 @@
 
     public static class GridExt
     {
-/**        public static int GetManhattanDistanceFrom (IGridMember elementA, IGridMember elementB)
+        /**        public static int GetManhattanDistanceFrom (IGridMember elementA, IGridMember elementB)
         {
             return Math.Abs (elementA.Row - elementB.Row) + Math.Abs (elementA.Column - elementB.Column);
         }

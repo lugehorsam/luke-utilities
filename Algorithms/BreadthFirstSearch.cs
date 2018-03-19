@@ -7,18 +7,17 @@
 
     public class BreadthFirstSearch<T>
     {
-        private readonly INode<T> _sourceNode;
-
-        public ReadOnlyCollection<INode<T>> SearchedNodes
-        {
-            get { return new ReadOnlyCollection<INode<T>>(_searchedNodes.ToList()); }
-        }
-
         private readonly HashSet<INode<T>> _searchedNodes = new HashSet<INode<T>>();
+        private readonly INode<T> _sourceNode;
 
         public BreadthFirstSearch(INode<T> sourceNode)
         {
             _sourceNode = sourceNode;
+        }
+
+        public ReadOnlyCollection<INode<T>> SearchedNodes
+        {
+            get { return new ReadOnlyCollection<INode<T>>(_searchedNodes.ToList()); }
         }
 
         public void Execute()

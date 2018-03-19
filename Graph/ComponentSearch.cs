@@ -8,14 +8,8 @@
     public class ComponentSearch<T> : IEnumerator<T> where T : class
     {
         private readonly Graph<T> _graph;
-        private DepthFirstSearch<T> _currentDFS;
         private readonly HashSet<T> _visitedNodes = new HashSet<T>();
-
-        public List<List<T>> AllComponents { get; } = new List<List<T>>();
-
-        public T Current { get; private set; }
-
-        object IEnumerator.Current => Current;
+        private DepthFirstSearch<T> _currentDFS;
 
         public ComponentSearch(Graph<T> graph)
         {
@@ -24,6 +18,15 @@
             CreateCurrentComponent();
             AssignNewCurrent();
             AddCurrentToComponent();
+        }
+
+        public List<List<T>> AllComponents { get; } = new List<List<T>>();
+
+        public T Current { get; private set; }
+
+        object IEnumerator.Current
+        {
+            get { return Current; }
         }
 
         public void Dispose()

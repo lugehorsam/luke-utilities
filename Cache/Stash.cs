@@ -8,9 +8,8 @@
 
     [Serializable] public class Stash<T> : IEnumerable<T>, ISerializationCallbackReceiver
     {
-        [SerializeField] private T[] array;
-
         private readonly List<T> _observables = new List<T>();
+        [SerializeField] private T[] array;
 
         public Stash() { }
 
@@ -20,6 +19,16 @@
             {
                 _observables.Add(item);
             }
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return _observables.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable) _observables).GetEnumerator();
         }
 
         public void OnBeforeSerialize()
@@ -38,16 +47,6 @@
             {
                 _observables.Add(item);
             }
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return _observables.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable) _observables).GetEnumerator();
         }
     }
 }

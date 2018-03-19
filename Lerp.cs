@@ -5,17 +5,17 @@
     using System.Collections.Generic;
 
     using UnityEngine;
-    
+
     public class Lerp<T> : IEnumerator<T>
-    {        
-        private readonly float _targetDuration;
+    {
+        private readonly T _end;
         private readonly Func<T, T, float, T> _lerp;
         private readonly T _start;
-        private readonly T _end;
-        
+        private readonly float _targetDuration;
+
         private float _elapsedTime;
         private bool _timeHasElapsed;
-                
+
         public Lerp(T start, T end, float targetDuration, Func<T, T, float, T> lerp)
         {
             _start = start;
@@ -24,7 +24,7 @@
             _targetDuration = targetDuration;
             Current = _start;
         }
- 
+
         public void Dispose()
         {
             throw new NotImplementedException();
@@ -36,15 +36,15 @@
             {
                 return false;
             }
-            
+
             if (_elapsedTime >= _targetDuration)
             {
                 _timeHasElapsed = true;
             }
-            
-            Current = _lerp(_start, _end, _elapsedTime/_targetDuration);
+
+            Current = _lerp(_start, _end, _elapsedTime / _targetDuration);
             _elapsedTime += Time.deltaTime;
-            
+
             return true;
         }
 

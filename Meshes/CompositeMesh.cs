@@ -1,31 +1,28 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using UnityEngine;
-
-namespace Mesh
+﻿namespace Mesh
 {
-	using Mesh = UnityEngine.Mesh;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
 
-	public class CompositeMesh : IProceduralMesh {
+    using UnityEngine;
 
-		public ReadOnlyCollection<TriangleMesh> TriangleMeshes
-		{
-			get { return new ReadOnlyCollection<TriangleMesh>(Meshes.SelectMany(mesh => mesh.TriangleMeshes).ToList()); }
-		}
+    public class CompositeMesh : IProceduralMesh
+    {
+        public List<IProceduralMesh> Meshes { get; } = new List<IProceduralMesh>();
 
-		public List<IProceduralMesh> Meshes => _meshes;
+        public ReadOnlyCollection<TriangleMesh> TriangleMeshes
+        {
+            get { return new ReadOnlyCollection<TriangleMesh>(Meshes.SelectMany(mesh => mesh.TriangleMeshes).ToList()); }
+        }
 
-		private readonly List<IProceduralMesh> _meshes = new List<IProceduralMesh>();
+        public Mesh ToUnityMesh()
+        {
+            return TriangleMesh.ToUnityMesh(Meshes.SelectMany(mesh => mesh.TriangleMeshes));
+        }
 
-		public void AddMesh(IProceduralMesh mesh)
-		{
-			_meshes.Add(mesh);
-		}
-
-		public Mesh ToUnityMesh()
-		{
-			return TriangleMesh.ToUnityMesh(Meshes.SelectMany(mesh => mesh.TriangleMeshes));
-		}
-	}
+        public void AddMesh(IProceduralMesh mesh)
+        {
+            Meshes.Add(mesh);
+        }
+    }
 }

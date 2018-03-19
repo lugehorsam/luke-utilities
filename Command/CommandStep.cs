@@ -5,11 +5,10 @@
 
     public class CommandStep : IEnumerator
     {
+        private readonly Action _action;
         private readonly Func<IEnumerator> _enumeratorFunc;
 
         private IEnumerator _enumerator;
-
-        private readonly Action _action;
 
         public CommandStep(Func<IEnumerator> enumeratorFunc)
         {

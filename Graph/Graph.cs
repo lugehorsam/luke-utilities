@@ -6,7 +6,7 @@
 
     public class Graph<T>
     {
-        public IEnumerable<T> this[T node] => _adjacencyList[node];
+        private readonly Dictionary<T, HashSet<T>> _adjacencyList = new Dictionary<T, HashSet<T>>();
 
         public Graph() { }
 
@@ -23,9 +23,15 @@
             }
         }
 
-        private readonly Dictionary<T, HashSet<T>> _adjacencyList = new Dictionary<T, HashSet<T>>();
+        public IEnumerable<T> this[T node]
+        {
+            get { return _adjacencyList[node]; }
+        }
 
-        public IEnumerable<T> Nodes => _adjacencyList.Keys;
+        public IEnumerable<T> Nodes
+        {
+            get { return _adjacencyList.Keys; }
+        }
 
         public void AddVertex(T vertex)
         {
@@ -40,13 +46,13 @@
         public void RemoveVertex(T vertex)
         {
             _adjacencyList.Remove(vertex);
-            
-            foreach (var existingVertex in _adjacencyList.Keys)
+
+            foreach (T existingVertex in _adjacencyList.Keys)
             {
                 if (_adjacencyList[existingVertex].Contains(vertex))
                 {
                     _adjacencyList[existingVertex].Remove(vertex);
-                }    
+                }
             }
         }
 
@@ -73,9 +79,8 @@
             foreach (T node in nodes)
             {
                 IEnumerable<T> connectedNodes = _adjacencyList[node].Where(nodes.Contains);
-                
-                IEnumerable<Tuple<T, T>> connectedEdges =
-                        connectedNodes.Select(connectedNode => new Tuple<T, T>(node, connectedNode));
+
+                IEnumerable<Tuple<T, T>> connectedEdges = connectedNodes.Select(connectedNode => new Tuple<T, T>(node, connectedNode));
                 connectingEdges.AddRange(connectedEdges);
             }
 

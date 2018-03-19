@@ -7,9 +7,9 @@
 
     public class RectSearch
     {
-        private Rect _masterRect;
         private readonly IEnumerable<Rect> _occupantRects;
         private readonly float _searchSize;
+        private Rect _masterRect;
 
         public RectSearch(Rect masterRect, IEnumerable<Rect> occupantRects, float searchSize)
         {

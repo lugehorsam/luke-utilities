@@ -1,11 +1,9 @@
 ﻿namespace Utilities.Command
 {
-
     public class SerialCommand : Command
     {
-        public override object Current { get; }
-
         private int _currentIndex;
+        public override object Current { get; }
 
         protected override bool MoveNextInternal()
         {
@@ -22,9 +20,7 @@
             return _currentIndex < _commandSteps.Count;
         }
 
-        public override void Reset()
-        {
-        }
+        public override void Reset() { }
 
         protected override void CancelInternal()
         {

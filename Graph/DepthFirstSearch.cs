@@ -8,17 +8,11 @@
     public class DepthFirstSearch<T> : IEnumerator<T> where T : class
     {
         public delegate void LevelRevertHandler(T oldNode, int oldLevel, T newNode, int newLevel);
-        public event LevelRevertHandler OnLevelRevert = delegate { };
 
-        public T Current => _currentSearchData.Vertex;
-        public List<T> VisitedNodes => _visitedNodes;
-        
-        private SearchData _currentSearchData;
         private readonly Graph<T> _graph;
-        private readonly List<T> _visitedNodes = new List<T>();
         private readonly Stack<SearchData> _pendingSearches = new Stack<SearchData>();
 
-        object IEnumerator.Current => Current;
+        private SearchData _currentSearchData;
 
         public DepthFirstSearch(Graph<T> graph, T start)
         {
@@ -31,12 +25,24 @@
 
             _pendingSearches.Push(new SearchData(start, 0));
         }
-        
+
+        public List<T> VisitedNodes { get; } = new List<T>();
+
+        public T Current
+        {
+            get { return _currentSearchData.Vertex; }
+        }
+
+        object IEnumerator.Current
+        {
+            get { return Current; }
+        }
+
         public bool MoveNext()
         {
             return !AnyVerticesLeft() && DoSearch();
         }
-        
+
         public void Reset()
         {
             throw new NotImplementedException();
@@ -47,11 +53,13 @@
             throw new NotImplementedException();
         }
 
+        public event LevelRevertHandler OnLevelRevert = delegate { };
+
         private void AssignCurrentVertex()
         {
             int oldLevel = _currentSearchData.Level;
             T oldVertex = _currentSearchData.Vertex;
-            
+
             _currentSearchData = _pendingSearches.Pop();
 
             if (_currentSearchData.Level < oldLevel)
@@ -69,12 +77,12 @@
         {
             AssignCurrentVertex();
 
-            if (_visitedNodes.Contains(Current))
+            if (VisitedNodes.Contains(Current))
             {
                 return MoveNext();
             }
 
-            _visitedNodes.Add(Current);
+            VisitedNodes.Add(Current);
 
             PushNeighborsToStack();
 
@@ -84,26 +92,26 @@
         private void PushNeighborsToStack()
         {
             IEnumerable<T> neighborList = _graph[Current];
-            
+
             foreach (T neighbor in neighborList)
             {
-                if (!_visitedNodes.Contains(neighbor))
+                if (!VisitedNodes.Contains(neighbor))
                 {
-                    _pendingSearches.Push(new SearchData(neighbor, _currentSearchData.Level + 1));                    
+                    _pendingSearches.Push(new SearchData(neighbor, _currentSearchData.Level + 1));
                 }
             }
         }
-                
+
         private class SearchData
         {
-            public T Vertex { get; }
-            public int Level { get; }
-
             public SearchData(T vertex, int level)
             {
                 Vertex = vertex;
                 Level = level;
             }
+
+            public T Vertex { get; }
+            public int Level { get; }
         }
     }
 }

@@ -8,6 +8,15 @@
 
     public class Gesture
     {
+        protected List<GestureFrame> _gestureFrames = new List<GestureFrame>();
+
+        public Gesture(IList<GestureFrame> frames)
+        {
+            _gestureFrames.AddRange(frames);
+        }
+
+        public Gesture() { }
+
         public Vector2 MousePositionStart
         {
             get { return FirstFrame.Position; }
@@ -46,11 +55,6 @@
             get { return ElapsedTime > 0f ? (MousePositionCurrent - MousePositionStart) / ElapsedTime : Vector2.zero; }
         }
 
-        public void Add(GestureFrame frame)
-        {
-            _gestureFrames.Add(frame);
-        }
-
         public GestureFrame FirstFrame
         {
             get { return _gestureFrames[0]; }
@@ -74,14 +78,10 @@
             }
         }
 
-        protected List<GestureFrame> _gestureFrames = new List<GestureFrame>();
-
-        public Gesture(IList<GestureFrame> frames)
+        public void Add(GestureFrame frame)
         {
-            _gestureFrames.AddRange(frames);
+            _gestureFrames.Add(frame);
         }
-
-        public Gesture() { }
 
         public Gesture[] Filter(Func<GestureFrame, bool> filterCriteria, bool includeEdgeFrames = false)
         {
@@ -109,6 +109,7 @@
                     {
                         currentGesture.Add(_gestureFrames[frameIndex + 1]);
                     }
+
                     subGestures.Add(currentGesture);
                     currentGesture = null;
                 }

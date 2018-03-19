@@ -5,14 +5,14 @@
     using System.Linq;
 
     using UnityEngine;
+
     using Random = UnityEngine.Random;
 
     public static class RectExt
     {
         public static Rect Subtract(Rect rect1, Rect rect2)
         {
-            return new Rect(rect1.x - rect2.x, rect1.y - rect2.y, rect1.width - rect2.width,
-                            rect1.height - rect2.height);
+            return new Rect(rect1.x - rect2.x, rect1.y - rect2.y, rect1.width - rect2.width, rect1.height - rect2.height);
         }
 
         public static Rect AddToOrigin(Rect sourceRect, Vector2 offset)
@@ -27,14 +27,8 @@
 
             float halfWidth = thisRect.width / 2;
             float halfHeight = thisRect.height / 2;
-            
-            return new List<Tuple<Quadrant, Rect>>
-            {
-                Tuple.Create(Quadrant.UpperLeft, new Rect(xMin, yMin, halfWidth, halfHeight)),
-                Tuple.Create(Quadrant.UpperRight, new Rect(xMin + halfWidth, yMin, halfWidth, halfHeight)),
-                Tuple.Create(Quadrant.LowerRight, new Rect(xMin + halfWidth, yMin + halfHeight, halfWidth, halfHeight)),
-                Tuple.Create(Quadrant.LowerLeft, new Rect(xMin, yMin + halfHeight, halfWidth, halfHeight))
-            };
+
+            return new List<Tuple<Quadrant, Rect>> {Tuple.Create(Quadrant.UpperLeft, new Rect(xMin, yMin, halfWidth, halfHeight)), Tuple.Create(Quadrant.UpperRight, new Rect(xMin + halfWidth, yMin, halfWidth, halfHeight)), Tuple.Create(Quadrant.LowerRight, new Rect(xMin + halfWidth, yMin + halfHeight, halfWidth, halfHeight)), Tuple.Create(Quadrant.LowerLeft, new Rect(xMin, yMin + halfHeight, halfWidth, halfHeight))};
         }
 
         public static IEnumerable<Rect> CreateQuadrants(this Rect thisRect)
@@ -62,20 +56,18 @@
         {
             float randX = Random.Range(0f, thisRect.width);
             float randY = Random.Range(0f, thisRect.height);
-            
+
             return new Vector2(thisRect.xMin + randX, thisRect.yMin + randY);
         }
 
         public static Rect Shrink(this Rect thisRect, float magnitude)
         {
-            return new Rect(thisRect.xMin + magnitude/2, thisRect.yMin + magnitude/2, thisRect.width - magnitude,
-                            thisRect.height - magnitude);
-        }         
-        
+            return new Rect(thisRect.xMin + magnitude / 2, thisRect.yMin + magnitude / 2, thisRect.width - magnitude, thisRect.height - magnitude);
+        }
+
         public static Rect Expand(this Rect thisRect, float magnitude)
         {
-            return new Rect(thisRect.xMin - magnitude/2, thisRect.yMin - magnitude/2, thisRect.width + magnitude,
-                            thisRect.height + magnitude);
-        }                
+            return new Rect(thisRect.xMin - magnitude / 2, thisRect.yMin - magnitude / 2, thisRect.width + magnitude, thisRect.height + magnitude);
+        }
     }
 }

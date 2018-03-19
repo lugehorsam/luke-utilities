@@ -1,8 +1,8 @@
 ﻿namespace Utilities
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Random = UnityEngine.Random;
 
@@ -104,7 +104,7 @@
         public static IEnumerable<Tuple<T, T>> MakeAllPairs<T>(this IEnumerable<T> data)
         {
             List<T> items = data.ToList();
-            
+
             for (var i = 0; i < items.Count; i++)
             {
                 T a = items[i];

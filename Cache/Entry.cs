@@ -1,19 +1,22 @@
-﻿using System;
-
-namespace Utilities.Cache
+﻿namespace Utilities.Cache
 {
+    using System;
+
     using UnityEngine;
 
     public class Entry<T> where T : class
     {
         private readonly string _key;
         private T _value;
-        
-        public T Value => _value ?? (_value = LookupValue());
-        
+
         public Entry(string key)
         {
             _key = key;
+        }
+
+        public T Value
+        {
+            get { return _value ?? (_value = LookupValue()); }
         }
 
         public void SetIfUnassigned(T data)
@@ -25,9 +28,11 @@ namespace Utilities.Cache
         public void Save()
         {
             if (_value == null)
+            {
                 return;
+            }
 
-            var valueAsString = JsonUtility.ToJson(_value);
+            string valueAsString = JsonUtility.ToJson(_value);
 
             if (string.IsNullOrEmpty(valueAsString))
             {
@@ -42,12 +47,12 @@ namespace Utilities.Cache
         private T LookupValue()
         {
             string keyContents = PlayerPrefs.GetString(_key);
-            
+
             Diag.Crumb(this, $"Looking up key contents for {_key} as {keyContents}");
 
             return PlayerPrefs.HasKey(_key) ? JsonUtility.FromJson<T>(keyContents) : GetDefaultValue();
         }
-        
+
         public static implicit operator T(Entry<T> thisEntry)
         {
             return thisEntry.Value;
@@ -57,5 +62,5 @@ namespace Utilities.Cache
         {
             return default(T);
         }
-    }    
+    }
 }

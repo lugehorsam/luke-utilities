@@ -88,8 +88,7 @@
             axisValues.Add(new KeyValuePair<Axis, float>(Axis.Y, yMag));
             axisValues.Add(new KeyValuePair<Axis, float>(Axis.Z, zMag));
 
-            IOrderedEnumerable<KeyValuePair<Axis, float>> sortedAxisValues =
-                    axisValues.OrderByDescending(keyVal => keyVal.Value);
+            IOrderedEnumerable<KeyValuePair<Axis, float>> sortedAxisValues = axisValues.OrderByDescending(keyVal => keyVal.Value);
 
             foreach (KeyValuePair<Axis, float> axisMagnitude in sortedAxisValues)
             {
@@ -193,26 +192,17 @@
 
         public static bool ApproximatelyEquals(this Vector3 thisVector, Vector3 otherVector, float differenceCap)
         {
-            return thisVector.x.ApproximatelyEquals(otherVector.x, differenceCap) &&
-                   thisVector.y.ApproximatelyEquals(otherVector.y, differenceCap) &&
-                   thisVector.z.ApproximatelyEquals(otherVector.z, differenceCap);
+            return thisVector.x.ApproximatelyEquals(otherVector.x, differenceCap) && thisVector.y.ApproximatelyEquals(otherVector.y, differenceCap) && thisVector.z.ApproximatelyEquals(otherVector.z, differenceCap);
         }
-        
+
         public static bool ApproximatelyGreaterThan(this Vector3 thisVector, Vector3 otherVector, float differenceCap)
         {
-            return thisVector.x.ApproximatelyGreaterThan(otherVector.x, differenceCap) &&
-                   thisVector.y.ApproximatelyGreaterThan(otherVector.y, differenceCap) &&
-                   thisVector.z.ApproximatelyGreaterThan(otherVector.z, differenceCap);
+            return thisVector.x.ApproximatelyGreaterThan(otherVector.x, differenceCap) && thisVector.y.ApproximatelyGreaterThan(otherVector.y, differenceCap) && thisVector.z.ApproximatelyGreaterThan(otherVector.z, differenceCap);
         }
 
         public static Vector2[] GetOffsetCombinations(this Vector2 thisVector2, float offsetX, float offsetY)
         {
-            return new[]
-            {
-                thisVector2, new Vector2(thisVector2.x + offsetX, thisVector2.y),
-                new Vector2(thisVector2.x, thisVector2.y + offsetY),
-                new Vector2(thisVector2.x + offsetX, thisVector2.y + offsetY)
-            };
+            return new[] {thisVector2, new Vector2(thisVector2.x + offsetX, thisVector2.y), new Vector2(thisVector2.x, thisVector2.y + offsetY), new Vector2(thisVector2.x + offsetX, thisVector2.y + offsetY)};
         }
 
         public static Vector3 SetX(this Vector3 thisVector, float x)
@@ -329,19 +319,19 @@
 
             return resultVector;
         }
-        
+
         public static Rect AsRect(this Vector2 thisSize)
         {
-            return new Rect(0f, 0f, thisSize.x, thisSize.y);   
+            return new Rect(0f, 0f, thisSize.x, thisSize.y);
         }
 
         public static Vector3 GetMidpoint(this IEnumerable<Vector3> vectors)
         {
             int vectorsCount = vectors.Count();
-            
+
             Vector3 midpoint = Vector3.zero;
-            
-            foreach (var vector in vectors)
+
+            foreach (Vector3 vector in vectors)
             {
                 midpoint += vector;
             }

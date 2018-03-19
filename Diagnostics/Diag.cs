@@ -10,20 +10,16 @@ namespace Utilities
 
     public static class Diag
     {
-        private static bool AllLogsEnabled
-        {
-            get
-            {
-                return CurrentLogType is UtilitiesFeature &&
-                       ((UtilitiesFeature) CurrentLogType == UtilitiesFeature.All);
-            }
-        }
-
         private const float GESTURE_DRAW_DURATION = 1000f; //in seconds
 
         private static string text;
         private static TextAnchor textAlignment;
         private static Color color;
+
+        private static bool AllLogsEnabled
+        {
+            get { return CurrentLogType is UtilitiesFeature && ((UtilitiesFeature) CurrentLogType == UtilitiesFeature.All); }
+        }
 
         public static Enum CurrentLogType { get; set; } = UtilitiesFeature.All;
 

@@ -1,13 +1,11 @@
-﻿using UnityEngine;
-
-namespace TouchDispatch
+﻿namespace TouchDispatch
 {
-	public interface ITouchEventInfo
-	{
-		ITouchState TouchState { get; }
-		RaycastHit[] Hits { get; }
-		Vector3 WorldPosition { get; }
-	}
+    using UnityEngine;
+
+    public interface ITouchEventInfo
+    {
+        ITouchState TouchState { get; }
+        RaycastHit[] Hits { get; }
+        Vector3 WorldPosition { get; }
+    }
 }
-
-

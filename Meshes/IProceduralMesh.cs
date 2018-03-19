@@ -1,12 +1,12 @@
-﻿using UnityEngine;
-using System.Collections.ObjectModel;
-
-namespace Mesh
+﻿namespace Mesh
 {
-	using Mesh = UnityEngine.Mesh;
+    using System.Collections.ObjectModel;
 
-	public interface IProceduralMesh {
-		ReadOnlyCollection<TriangleMesh> TriangleMeshes { get; }
-		Mesh ToUnityMesh();
-	}	
+    using UnityEngine;
+
+    public interface IProceduralMesh
+    {
+        ReadOnlyCollection<TriangleMesh> TriangleMeshes { get; }
+        Mesh ToUnityMesh();
+    }
 }

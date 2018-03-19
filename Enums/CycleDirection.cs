@@ -1,8 +1,8 @@
 ﻿namespace Utilities
 {
-    public enum CycleDirection 
+    public enum CycleDirection
     {
         Clockwise,
         CounterClockwise
-    }    
+    }
 }

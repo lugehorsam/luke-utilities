@@ -7,21 +7,13 @@
 
     public class ObjectPool<T>
     {
-        public event Action<T> OnRelease = obj => { };
-        public event Action<T> OnPool = obj => { };
+        private readonly bool allowResize;
+        private readonly int initialSize;
+        private readonly Func<T> objectFactory;
 
         private readonly Queue<T> pooledObjects = new Queue<T>();
 
-        public ReadOnlyCollection<T> ReleasedObjects
-        {
-            get { return new ReadOnlyCollection<T>(releasedObjects); }
-        }
-
         private readonly List<T> releasedObjects = new List<T>();
-
-        private readonly bool allowResize;
-        private readonly Func<T> objectFactory;
-        private readonly int initialSize;
 
         public ObjectPool(Func<T> objectFactory, int initialSize, bool allowResize = true)
         {
@@ -30,6 +22,14 @@
             this.initialSize = initialSize;
             Init();
         }
+
+        public ReadOnlyCollection<T> ReleasedObjects
+        {
+            get { return new ReadOnlyCollection<T>(releasedObjects); }
+        }
+
+        public event Action<T> OnRelease = obj => { };
+        public event Action<T> OnPool = obj => { };
 
         private void Init()
         {
@@ -46,6 +46,7 @@
             {
                 pooledObjects.Enqueue(objectFactory());
             }
+
             try
             {
                 T objectToRelease = pooledObjects.Dequeue();

@@ -8,8 +8,7 @@
 
     public static class MonoBehaviourExt
     {
-        public static IEnumerator DoAfterDelay(this MonoBehaviour thisBehavior, float interval, Action doAfterDelay,
-            bool repeat)
+        public static IEnumerator DoAfterDelay(this MonoBehaviour thisBehavior, float interval, Action doAfterDelay, bool repeat)
         {
             yield return new WaitForSeconds(interval);
 
@@ -17,8 +16,7 @@
             thisBehavior.StartCoroutine(DoAfterDelay(thisBehavior, interval, doAfterDelay, repeat));
         }
 
-        public static IEnumerator StartParallelCoroutines(this MonoBehaviour thisMonoBehavior,
-            params IEnumerator[] enumerators)
+        public static IEnumerator StartParallelCoroutines(this MonoBehaviour thisMonoBehavior, params IEnumerator[] enumerators)
         {
             var activeCoroutines = new Queue<Coroutine>(enumerators.Length - 1);
 

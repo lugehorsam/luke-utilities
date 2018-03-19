@@ -1,10 +1,12 @@
 ﻿namespace TouchDispatch
 {
     using UnityEngine;
-    using Utilities;
-    
+
     public class TouchLogic
     {
+        private Vector3 _lastPosition;
+
+        private Vector3 _position;
         public bool IsPositionChange { get; private set; }
 
         public bool IsFirstDown { get; private set; }
@@ -22,9 +24,6 @@
 
         public bool IsHold { get; private set; }
         public bool WasHold { get; private set; }
-
-        private Vector3 _position;
-        private Vector3 _lastPosition;
 
         public void UpdateFrame(Vector3 position, bool isDown, bool wasDown, bool isRelease, bool over)
         {

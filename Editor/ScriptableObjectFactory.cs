@@ -59,6 +59,7 @@
             {
                 path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
             }
+
             string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath(path + "/New " + type + ".asset");
             AssetDatabase.CreateAsset(asset, assetPathAndName);
             AssetDatabase.SaveAssets();

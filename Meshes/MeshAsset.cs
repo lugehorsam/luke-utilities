@@ -5,12 +5,10 @@
 
     using UnityEngine;
 
-    [CreateAssetMenu]
-    public class MeshAsset : ScriptableObject
+    [CreateAssetMenu] public class MeshAsset : ScriptableObject
     {
-        [SerializeField] private TriangleMesh[] triangles;
-
         [SerializeField] private MeshAsset[] meshAssets;
+        [SerializeField] private TriangleMesh[] triangles;
 
         public Mesh ToMesh()
         {

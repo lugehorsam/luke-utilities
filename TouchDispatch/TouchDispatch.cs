@@ -2,23 +2,23 @@
 {
     using System.ComponentModel;
 
-    using Utilities;
-
     using UnityEngine;
+
+    using Utilities;
 
     public sealed class TouchDispatch : MonoBehaviour
     {
         public delegate void TouchHandler(TouchEventInfo info);
+
+        [SerializeField] private Dimension _dimension;
+
+        public TouchLogic TouchLogic { get; } = new TouchLogic();
 
         public event TouchHandler OnDown = delegate { };
         public event TouchHandler OnRelease = delegate { };
         public event TouchHandler OnDrag = delegate { };
         public event TouchHandler OnDownOff = delegate { };
         public event TouchHandler OnProcess = delegate { };
-
-        [SerializeField] private Dimension _dimension;
-
-        public TouchLogic TouchLogic { get; } = new TouchLogic();
 
         private void Update()
         {

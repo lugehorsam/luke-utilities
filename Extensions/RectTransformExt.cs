@@ -2,8 +2,6 @@
 {
     using UnityEngine;
 
-    using Utilities;
-
     public static class RectTransformExt
     {
         public static bool Overlaps(this RectTransform rectTrans1, RectTransform rectTrans2, Canvas canvas)

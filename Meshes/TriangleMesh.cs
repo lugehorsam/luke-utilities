@@ -6,11 +6,31 @@
     using System.Linq;
 
     using UnityEngine;
-    
+
     using Utilities;
 
     [Serializable] public class TriangleMesh : SimpleProceduralMesh
     {
+        [SerializeField] private Vertex vertex1;
+        [SerializeField] private Vertex vertex2;
+        [SerializeField] private Vertex vertex3;
+
+        public TriangleMesh(float meshRadius = 1f)
+        {
+            vertex1 = new Vertex(-meshRadius, -meshRadius, 0);
+            vertex2 = new Vertex(0, meshRadius, 0);
+            vertex3 = new Vertex(meshRadius, -meshRadius, 0);
+            _triangles.Add(this);
+        }
+
+        public TriangleMesh(Vertex vertex1, Vertex vertex2, Vertex vertex3)
+        {
+            this.vertex1 = vertex1;
+            this.vertex2 = vertex2;
+            this.vertex3 = vertex3;
+            _triangles.Add(this);
+        }
+
         public ReadOnlyCollection<Vertex> Vertices
         {
             get { return new ReadOnlyCollection<Vertex>(new[] {this[0], this[1], this[2]}); }
@@ -36,10 +56,6 @@
 
             set { vertex3 = value; }
         }
-
-        [SerializeField] private Vertex vertex1;
-        [SerializeField] private Vertex vertex2;
-        [SerializeField] private Vertex vertex3;
 
         public Vertex this[int vertexIndex]
         {
@@ -135,6 +151,7 @@
                     {
                         map[datum] = new List<TriangleMesh>();
                     }
+
                     map[datum].Add(currentTriangle);
                 }
             }
@@ -171,25 +188,9 @@
             return NumSharedVertices(otherTriangle) > 1;
         }
 
-        public TriangleMesh(float meshRadius = 1f)
-        {
-            vertex1 = new Vertex(-meshRadius, -meshRadius, 0);
-            vertex2 = new Vertex(0, meshRadius, 0);
-            vertex3 = new Vertex(meshRadius, -meshRadius, 0);
-            _triangles.Add(this);
-        }
-
-        public TriangleMesh(Vertex vertex1, Vertex vertex2, Vertex vertex3)
-        {
-            this.vertex1 = vertex1;
-            this.vertex2 = vertex2;
-            this.vertex3 = vertex3;
-            _triangles.Add(this);
-        }
-
         public override string ToString()
         {
-            return IEnumerableExt.PrettyPrint(Vertices);
+            return Vertices.PrettyPrint();
         }
 
         public TriangleMesh CreateCopy(Func<Vertex, Vertex> vertexProcessor)

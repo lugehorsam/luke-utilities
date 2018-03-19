@@ -1,10 +1,23 @@
-﻿using System;
+﻿namespace Mesh
+{
+    using System;
 
-namespace Mesh
-{ 
+    [Serializable] public class SquareMesh : SimpleProceduralMesh
+    {
+        public SquareMesh(TriangleMesh tri1, TriangleMesh tri2)
+        {
+            if (!tri1.HasSharedEdge(tri2))
+            {
+                throw new DataMisalignedException();
+            }
 
-    [Serializable]
-    public class SquareMesh : SimpleProceduralMesh {
+            _triangles.Add(tri1);
+            _triangles.Add(tri2);
+        }
+
+        public SquareMesh(float width, float height) : this(new Vertex(width / 2, -height / 2, 0f), new Vertex(-width / 2, -height / 2, 0f), new Vertex(-width / 2, height / 2, 0f), new Vertex(width / 2, height / 2, 0)) { }
+
+        public SquareMesh(Vertex upperLeft, Vertex upperRight, Vertex bottomRight, Vertex bottomLeft) : this(new TriangleMesh(bottomLeft, upperLeft, bottomRight), new TriangleMesh(upperLeft, upperRight, bottomRight)) { }
 
         public float Width
         {
@@ -25,47 +38,25 @@ namespace Mesh
                 _LowerRightVertex.Y = value;
             }
         }
-        
-        private Vertex _UpperLeftVertex => GetSortedVertices()[0];
-        private Vertex _UpperRightVertex => GetSortedVertices()[1];
-        private Vertex _LowerRightVertex => GetSortedVertices()[2];
-        private Vertex _LowerLeftVertex => GetSortedVertices()[3];
 
-        public SquareMesh(TriangleMesh tri1, TriangleMesh tri2)
+        private Vertex _UpperLeftVertex
         {
-            if (!tri1.HasSharedEdge(tri2))
-            {
-                throw new DataMisalignedException();
-            }
-            
-            _triangles.Add(tri1);
-            _triangles.Add(tri2);
+            get { return GetSortedVertices()[0]; }
         }
 
-        public SquareMesh(float width, float height) : this
-        (
-                new Vertex(width/2, -height/2, 0f),
-                new Vertex(-width/2, -height/2, 0f),
-                new Vertex(-width/2, height/2, 0f),
-                new Vertex(width/2, height/2, 0)
-        ) {}
-
-        public SquareMesh(Vertex upperLeft, Vertex upperRight, Vertex bottomRight, Vertex bottomLeft) : this
-            (
-                new TriangleMesh
-                (
-                    bottomLeft,
-                    upperLeft,
-                    bottomRight
-                ),
-                new TriangleMesh
-                (
-                    upperLeft,
-                    upperRight,
-                    bottomRight
-                )
-            )
+        private Vertex _UpperRightVertex
         {
+            get { return GetSortedVertices()[1]; }
+        }
+
+        private Vertex _LowerRightVertex
+        {
+            get { return GetSortedVertices()[2]; }
+        }
+
+        private Vertex _LowerLeftVertex
+        {
+            get { return GetSortedVertices()[3]; }
         }
     }
 }

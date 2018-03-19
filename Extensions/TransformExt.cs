@@ -8,9 +8,7 @@
     {
         public static void IncrementY(this Transform thisTransform, float yOffset)
         {
-            thisTransform.localPosition = new Vector3(thisTransform.localPosition.x,
-                                                      thisTransform.localPosition.y + yOffset,
-                                                      thisTransform.localPosition.z);
+            thisTransform.localPosition = new Vector3(thisTransform.localPosition.x, thisTransform.localPosition.y + yOffset, thisTransform.localPosition.z);
         }
 
         public static void SetX(this Transform thisTransform, float x)
@@ -27,7 +25,7 @@
         {
             thisTransform.localPosition = new Vector3(thisTransform.localPosition.x, thisTransform.localPosition.y, z);
         }
-        
+
         public static void ResetLocalValues(this Transform t)
         {
             t.localPosition = Vector3.zero;

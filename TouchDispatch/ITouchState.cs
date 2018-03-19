@@ -1,8 +1,7 @@
 ﻿namespace TouchDispatch
 {
-	public interface ITouchState
-	{
-		bool IsDown { get; }
-		
-	}	
+    public interface ITouchState
+    {
+        bool IsDown { get; }
+    }
 }

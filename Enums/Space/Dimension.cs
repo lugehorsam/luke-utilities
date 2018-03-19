@@ -1,9 +1,9 @@
 ﻿namespace Utilities
 {
-	public enum Dimension 
-	{
-		None,
-		Two,
-		Three
-	}
+    public enum Dimension
+    {
+        None,
+        Two,
+        Three
+    }
 }

@@ -18,8 +18,7 @@
 
         public static bool ApproximatelyEquals(this Color color, Color otherColor)
         {
-            return (color.r == otherColor.r) && (color.g == otherColor.g) && (color.b == otherColor.b) &&
-                   (color.a == otherColor.a);
+            return (color.r == otherColor.r) && (color.g == otherColor.g) && (color.b == otherColor.b) && (color.a == otherColor.a);
         }
     }
 }

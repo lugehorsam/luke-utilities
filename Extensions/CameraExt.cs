@@ -4,14 +4,11 @@
 
     public static class CameraExt
     {
-        public static Vector3 GetWorldPositionForViewport(this Camera thisCamera, Transform referenceTransform,
-            Vector3 desiredViewportPos)
+        public static Vector3 GetWorldPositionForViewport(this Camera thisCamera, Transform referenceTransform, Vector3 desiredViewportPos)
         {
             Vector3 otherViewportPoint = thisCamera.WorldToViewportPoint(referenceTransform.position);
             Vector3 viewPortDifference = otherViewportPoint - desiredViewportPos;
-            Vector3 newCameraPosition =
-                    thisCamera.ViewportToWorldPoint(viewPortDifference +
-                                                    new Vector3(.5f, .5f, thisCamera.farClipPlane));
+            Vector3 newCameraPosition = thisCamera.ViewportToWorldPoint(viewPortDifference + new Vector3(.5f, .5f, thisCamera.farClipPlane));
             return newCameraPosition;
         }
 
