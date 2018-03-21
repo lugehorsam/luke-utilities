@@ -252,10 +252,10 @@
         {
             Reset();
 
-            var parallelCommand = new SerialCommand();
-            parallelCommand.Add(() => SetToTrue(0));
-            parallelCommand.Add(SetToFalseEnumerator(0));
-            parallelCommand.Run();
+            var serialCommand = new SerialCommand();
+            serialCommand.Add(() => SetToTrue(0));
+            serialCommand.Add(SetToFalseEnumerator(0));
+            serialCommand.Run();
             Compare(new[] {false});
         }
 

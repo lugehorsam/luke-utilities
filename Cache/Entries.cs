@@ -1,12 +1,12 @@
 ﻿namespace Utilities.Cache
 {
-    public class Entries<T> : Entry<Stash<T>>
+    public class Entries<T> : Entry<SerializableList<T>>
     {
         public Entries(string key) : base(key) { }
 
-        protected override Stash<T> GetDefaultValue()
+        protected override SerializableList<T> GetDefaultValue()
         {
-            return new Stash<T>();
+            return new SerializableList<T>();
         }
     }
 }
