@@ -27,6 +27,18 @@
 
         public event CommandCancelHandler OnCancel = delegate { };
 
+        public static T Create<T>(params CommandStep[] commandSteps) where T : Command, new()
+        {
+            var command = new T();
+            
+            foreach (var commandStep in commandSteps)
+            {
+                command.Add(commandStep);    
+            }
+
+            return command;
+        }
+
         public void Add(IEnumerator enumerator)
         {
             _commandSteps.Add(new CommandStep(enumerator));

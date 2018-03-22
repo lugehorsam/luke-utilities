@@ -7,7 +7,7 @@
 
     [Serializable] public class SerializableList<T> : List<T>, ISerializationCallbackReceiver
     {
-        [SerializeField] private T[] array;
+        [SerializeField] private T[] _array;
 
         public SerializableList() { }
 
@@ -21,17 +21,17 @@
 
         public void OnBeforeSerialize()
         {
-            array = ToArray();
+            _array = ToArray();
         }
 
         public void OnAfterDeserialize()
         {
-            if (array == null)
+            if (_array == null)
             {
                 return;
             }
 
-            foreach (T item in array)
+            foreach (T item in _array)
             {
                 Add(item);
             }

@@ -3,6 +3,7 @@
     public class SerialCommand : Command
     {
         private int _currentIndex;
+        
         public override object Current { get; }
 
         protected override bool MoveNextInternal()

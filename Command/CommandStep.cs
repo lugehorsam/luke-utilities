@@ -25,6 +25,16 @@
             _action = action;
         }
 
+        public static implicit operator CommandStep(Action thisAction)
+        {
+            return new CommandStep(thisAction);
+        }
+        
+        public static implicit operator CommandStep(Func<IEnumerator> thisAction)
+        {
+            return new CommandStep(thisAction);            
+        }
+        
         public bool MoveNext()
         {
             if (_action != null)
