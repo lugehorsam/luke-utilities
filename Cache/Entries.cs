@@ -1,12 +1,14 @@
 ﻿namespace Utilities.Cache
 {
-    public class Entries<T> : Entry<SerializableList<T>>
-    {
-        public Entries(string key) : base(key) { }
+	using System.Collections.Generic;
 
-        protected override SerializableList<T> GetDefaultValue()
-        {
-            return new SerializableList<T>();
-        }
-    }
+	public class Entries<T> : Entry<List<T>>
+	{
+		public Entries(string key) : base(key) { }
+
+		protected override List<T> GetDefaultValue()
+		{
+			return new List<T>();
+		}
+	}
 }
